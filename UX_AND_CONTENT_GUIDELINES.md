@@ -78,21 +78,33 @@ These are descriptive constraints which have been provided by Brianna to guide t
 
 ## Fonts
 
-- Headers: PT Serif (Bold or Regular depending on context)
-- Main body text: DM Sans (400 weight)
-- Accent Text: Roboto Extra Light Italic (200 weight)
+- Headers: PT Serif (400 Regular, 400 Italic, 700 Bold, 700 Bold Italic) — static files
+- Body text: DM Sans 400 Regular — variable file
+- Accent text: DM Sans 200 Extra Light Italic — variable file
+- Font files are self-hosted in `/public/fonts/`
+- File names:
+  - `PTSerif-Regular.woff2`
+  - `PTSerif-Italic.woff2`
+  - `PTSerif-Bold.woff2`
+  - `PTSerif-BoldItalic.woff2`
+  - `DMSans-VariableFont.woff2`
+  - `DMSans-Italic-VariableFont.woff2`
 
 ---
 
 
 ## Color Palette
 
---cream:         #fdf8f2   (page background)
---dusty-olive:   #76825fff (accent color 1)
---burnt-peach:   #de7c5aff (accent color 2)
---raw-umber:     #793b02ff (accent color 3)
---coffee-bean:   #1c1317ff (primary text)
---text-muted:    #5a6a7a   (secondary text)
+| Token | Alias | Hex |
+|---|---|---|
+| `--cream` | `--color-bg` | #fdf8f2 |
+| `--dusty-olive` | `--color-accent-1` | #76825f |
+| `--burnt-peach` | `--color-accent-2` | #de7c5a |
+| `--raw-umber` | `--color-accent-3` | #793b02 |
+| `--coffee-bean` | `--color-text` | #1c1317 |
+| `--text-muted` | `--color-text-muted` | #5a6a7a |
+
+Always use the semantic alias (e.g. `--color-accent-2`) in components, not the raw palette name.
 
 ---
 
