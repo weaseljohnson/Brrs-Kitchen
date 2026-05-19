@@ -1,0 +1,253 @@
+/* ============================================================
+   BRRS KITCHEN — GLOBAL STYLESHEET
+   Design tokens, reset, base styles, utilities
+   ============================================================ */
+
+
+/* ------------------------------------------------------------
+   1. FONTS
+   ------------------------------------------------------------ */
+
+/* PT Serif — static files */
+@font-face {
+  font-family: 'PT Serif';
+  src: url('/fonts/PTSerif-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'PT Serif';
+  src: url('/fonts/PTSerif-Italic.woff2') format('woff2');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'PT Serif';
+  src: url('/fonts/PTSerif-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'PT Serif';
+  src: url('/fonts/PTSerif-BoldItalic.woff2') format('woff2');
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* DM Sans — variable files */
+@font-face {
+  font-family: 'DM Sans';
+  src: url('/fonts/DMSans-VariableFont.woff2') format('woff2');
+  font-weight: 200 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'DM Sans';
+  src: url('/fonts/DMSans-Italic-VariableFont.woff2') format('woff2');
+  font-weight: 200 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* ------------------------------------------------------------
+   2. DESIGN TOKENS
+   ------------------------------------------------------------ */
+
+:root {
+
+  /* Colors */
+  --cream:        #fdf8f2;
+  --dusty-olive:  #76825f;
+  --burnt-peach:  #de7c5a;
+  --raw-umber:    #793b02;
+  --coffee-bean:  #1c1317;
+  --text-muted:   #5a6a7a;
+
+  /* Semantic color aliases — use these in components */
+  --color-bg:         var(--cream);
+  --color-text:       var(--coffee-bean);
+  --color-text-muted: var(--text-muted);
+  --color-accent-1:   var(--dusty-olive);
+  --color-accent-2:   var(--burnt-peach);
+  --color-accent-3:   var(--raw-umber);
+
+  /* Typography */
+  --font-serif:  'PT Serif', Georgia, serif;
+  --font-sans:   'DM Sans', system-ui, sans-serif;
+
+  /* Font sizes — fluid scale */
+  --text-xs:   0.75rem;    /*  12px */
+  --text-sm:   0.875rem;   /*  14px */
+  --text-base: 1rem;       /*  16px */
+  --text-lg:   1.125rem;   /*  18px */
+  --text-xl:   1.25rem;    /*  20px */
+  --text-2xl:  1.5rem;     /*  24px */
+  --text-3xl:  1.875rem;   /*  30px */
+  --text-4xl:  2.25rem;    /*  36px */
+
+  /* Spacing scale */
+  --space-1:  0.25rem;   /*  4px */
+  --space-2:  0.5rem;    /*  8px */
+  --space-3:  0.75rem;   /* 12px */
+  --space-4:  1rem;      /* 16px */
+  --space-5:  1.25rem;   /* 20px */
+  --space-6:  1.5rem;    /* 24px */
+  --space-8:  2rem;      /* 32px */
+  --space-10: 2.5rem;    /* 40px */
+  --space-12: 3rem;      /* 48px */
+  --space-16: 4rem;      /* 64px */
+  --space-20: 5rem;      /* 80px */
+
+  /* Layout */
+  --max-width-content: 72rem;   /* 1152px — main content cap */
+  --max-width-prose:   42rem;   /* 672px  — recipe text, readable line length */
+
+  /* Border radius */
+  --radius-sm:   0.25rem;
+  --radius-md:   0.5rem;
+  --radius-lg:   1rem;
+
+  /* Shadows */
+  --shadow-sm:  0 1px 3px rgba(28, 19, 23, 0.08);
+  --shadow-md:  0 4px 12px rgba(28, 19, 23, 0.10);
+  --shadow-lg:  0 8px 24px rgba(28, 19, 23, 0.12);
+
+  /* Transitions */
+  --transition-fast:   150ms ease;
+  --transition-base:   250ms ease;
+  --transition-slow:   400ms ease;
+}
+
+
+/* ------------------------------------------------------------
+   3. RESET
+   ------------------------------------------------------------ */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+img, video, svg {
+  display: block;
+  max-width: 100%;
+}
+
+input, button, textarea, select {
+  font: inherit;
+}
+
+
+/* ------------------------------------------------------------
+   4. BASE STYLES
+   ------------------------------------------------------------ */
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  font-weight: 400;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* Headings */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-serif);
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--color-text);
+}
+
+h1 { font-size: var(--text-4xl); }
+h2 { font-size: var(--text-3xl); }
+h3 { font-size: var(--text-2xl); }
+h4 { font-size: var(--text-xl);  }
+h5 { font-size: var(--text-lg);  }
+h6 { font-size: var(--text-base);}
+
+/* Accent / italic text (DM Sans 200 italic) */
+em, .accent-text {
+  font-family: var(--font-sans);
+  font-weight: 200;
+  font-style: italic;
+}
+
+/* Links */
+a {
+  color: var(--color-accent-2);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: color var(--transition-fast);
+}
+
+a:hover {
+  color: var(--color-accent-3);
+}
+
+/* Paragraphs */
+p {
+  max-width: var(--max-width-prose);
+}
+
+/* Lists */
+ul, ol {
+  padding-left: var(--space-6);
+}
+
+/* Horizontal rule */
+hr {
+  border: none;
+  border-top: 1px solid var(--color-accent-1);
+  opacity: 0.3;
+  margin: var(--space-8) 0;
+}
+
+
+/* ------------------------------------------------------------
+   5. UTILITIES
+   ------------------------------------------------------------ */
+
+/* Layout container */
+.container {
+  width: 100%;
+  max-width: var(--max-width-content);
+  margin-inline: auto;
+  padding-inline: var(--space-6);
+}
+
+/* Screen-reader only (accessibility) */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Muted text */
+.text-muted {
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}

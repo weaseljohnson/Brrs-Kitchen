@@ -79,22 +79,13 @@ These are descriptive constraints which have been provided by Brianna to guide t
 ## Fonts
 
 - Headers: PT Serif (Bold or Regular depending on context)
-- Main body text: Roboto (400 weight)
+- Main body text: DM Sans (400 weight)
 - Accent Text: Roboto Extra Light Italic (200 weight)
 
 ---
 
-## Color Palette Option 1
 
---parchment:     #fdf8f2ff (page background)
---dusty-olive:   #76825fff (accent color 1)
---vintage-grape: #472e4dff (accent color 2)
---thistle:       #cdbde0ff (accent color 3)
---coffee-bean:   #1c1317ff (primary text)
---text-muted:    #5a6a7a   (secondary text)
-
-
-## Color Palette Option 2
+## Color Palette
 
 --cream:         #fdf8f2   (page background)
 --dusty-olive:   #76825fff (accent color 1)
