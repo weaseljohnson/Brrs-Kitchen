@@ -108,24 +108,25 @@ Recipe body / notes in plain Markdown here...
 /
 ├── src/
 │   ├── layouts/
-│   │   ├── RecipeStandard.astro    # main recipe template
-│   │   ├── RecipeDrink.astro       # drinks/cocktails
-│   │   └── RecipeQuick.astro       # simple/short recipes
+│   │   └── Layout.astro
 │   ├── pages/
-│   │   ├── index.astro             # home / category browser
-│   │   └── admin/
-│   │       └── index.astro         # CMS entry point (protected)
-│   └── components/                 # reusable UI pieces
+│   │   ├── index.astro
+│   │   ├── admin/
+│   │   │   └── index.astro
+│   │   └── recipes/
+│   │       └── [slug].astro
+│   ├── styles/
+│   │   └── global.css
+│   └── content.config.ts
 ├── content/
 │   └── recipes/
-│       ├── italian/
-│       ├── drinks/
-│       ├── baking/
-│       └── ...
+│       └── desserts/
+│           └── best-homemade-brownies.md
 ├── public/
-│   └── images/                     # recipe photos
-├── api/                            # Vercel serverless functions
-│   └── save-recipe.js              # handles CMS form submissions
+│   ├── fonts/
+│   └── images/
+├── api/
+│   └── save-recipe.js        # not yet built
 └── astro.config.mjs
 ```
 
@@ -156,3 +157,12 @@ Average time from "save recipe" to "live on site": **~30–60 seconds** (Astro b
 - Imported in base Astro layout (pending — Step 4)
 - Fonts self-hosted in `/public/fonts/`
 - CSS variables use semantic aliases; always reference those in components
+
+### Step 4 — Core Astro Layouts
+🔄 In Progress
+- Dynamic route at `src/pages/recipes/[slug].astro`
+- Content collection defined in `src/content.config.ts`
+- Recipe markdown files stored in `/content/recipes/`
+- Global stylesheet imported via frontmatter in `Layout.astro`
+- Brownie recipe live at `/recipes/best-homemade-brownies`
+- Hardcoded dummy data still in place — frontmatter wiring is next

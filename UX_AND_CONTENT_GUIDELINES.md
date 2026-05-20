@@ -53,21 +53,26 @@ These are descriptive constraints which have been provided by Brianna to guide t
     - Hubby’s favorite, kids favorite, etc…
     - Dietary restriction (dairy free, gluten free, vegan, etc.)
     
-### Recipe Features
+## Recipe Page Features
 
-- In recipe help text or pro tip pop up callouts. Extra help for people who aren’t
-  experienced, but hidden inside tip callouts to avoid making the standard recipe text
-  overly long. Close with an “x” on the corner, or clicking/tapping elsewhere.
-  
-- Feedback and questions section below the recipe
-    - Button that opens a form for users to fill out and submit. They can ask clarifying
-      questions or make suggestions about errors in the recipe or ideas for improvement. 
-    - Responses get pushed to a Questions and Feedback section on the admin page
-    - Questions/Answers will be something that is added to the recipe page via the admin
-      CMS. That way admin controls which questions appear on the recipe page. 
-    - Want to avoid the user based comment and discussion threads common to other recipe
-      blogs. Want to keep the questions and answers to be things that are truly valuable,
-      as decided by the admin. 
+### Implemented
+- Pan size tabs with dynamic ingredient switching
+- Dynamic serving size display
+- Prep / cook time / yield stats bar
+- Category label with accent styling
+- Numbered step directions with titled steps
+
+### Planned
+- Pro tip tooltip callouts — inline in recipe body, dismissible
+- Tags display — "Hubby's Favorite", "Kid's Favorite", dietary restrictions
+- Feedback and questions form — button opens form, responses go to admin
+- Admin-curated Q&A displayed below recipe
+- Glossary term links — inline links to glossary page
+- Skill page links — inline links to cooking fundamentals
+
+### Image Handling
+- TBD — whether images are required or optional per recipe
+- Upload flow to be handled via CMS (Step 5)
 
 
 ### Decorative / Design Decisions

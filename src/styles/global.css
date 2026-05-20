@@ -229,8 +229,10 @@ hr {
 .container {
   width: 100%;
   max-width: var(--max-width-content);
-  margin-inline: auto;
-  padding-inline: var(--space-6);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--space-6);
+  padding-right: var(--space-6);
 }
 
 /* Screen-reader only (accessibility) */
