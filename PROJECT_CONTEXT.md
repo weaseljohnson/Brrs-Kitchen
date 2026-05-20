@@ -23,7 +23,7 @@ To serve as a place where Brianna can store all her favorite recipes, share them
 
 - **Not a Cooking Blog** This site avoids all of the annoying trends of the modern day cooking blog or recipe website. It doesn't have annoying pop ups, doesn't have ads, and doesn't have cookies or store user data
 - **Clean, organized, clear, and creative** This site gets straight to the points. Recipe pages are just that, recipe pages. No distractions or extraneous content. Just pure information, straight to the point. The recipe's don't skip steps, include helpful tips, and explain unfamiliar terms. the page is easily navigable, and enjoyable to interact with.
-
+- **Mobile First Architecture** The site will be primarily designed with mobile users in mind. But the desktop should also be clean, and enjoyable to interface with. 
 ---
 
 ## Tech Stack
