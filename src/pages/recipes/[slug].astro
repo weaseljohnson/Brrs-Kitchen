@@ -1,5 +1,18 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const recipes = await getCollection('recipes');
+  return recipes.map(recipe => ({
+    params: { slug: recipe.id.split('/').pop() },
+    props:  { recipe },
+  }));
+}
+
+const { recipe } = Astro.props;
+const { Content } = await render(recipe);
+const { title, category, prepTime, cookTime, panVariants } = recipe.data;
 ---
 
 <Layout title="THE BEST Homemade Brownies">
