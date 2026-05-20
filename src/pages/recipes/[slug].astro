@@ -39,7 +39,7 @@ const { title, category, prepTime, cookTime, panVariants } = recipe.data;
           </div>
           <div class="stat">
             <span class="stat__label">Yield</span>
-            <span class="stat__value">16 brownies</span>
+            <span class="stat__value" id="servings-display">16 brownies</span>
           </div>
         </div>
       </div>
@@ -52,8 +52,8 @@ const { title, category, prepTime, cookTime, panVariants } = recipe.data;
 
         <!-- Pan size tabs -->
         <div class="pan-tabs" role="tablist" aria-label="Pan size">
-          <button class="pan-tab pan-tab--active" role="tab" aria-selected="true" data-tab="8x8">8×8 Pan</button>
-          <button class="pan-tab" role="tab" aria-selected="false" data-tab="9x13">9×13 Pan</button>
+          <button class="pan-tab pan-tab--active" role="tab" aria-selected="true" data-tab="8x8" data-servings="16">8×8 Pan</button>
+          <button class="pan-tab" role="tab" aria-selected="false" data-tab="9x13" data-servings="32">9×13 Pan</button>
         </div>
 
         <ul class="ingredient-list" data-panel="8x8">
@@ -250,6 +250,14 @@ const { title, category, prepTime, cookTime, panVariants } = recipe.data;
   }
 
   /* ── INGREDIENTS ── */
+
+  /* Mobile padding fix */
+  @media (max-width: 48rem) {
+    .container {
+      padding-inline: var(--space-5);
+    }
+  }
+
   .ingredient-list {
     list-style: none;
     padding: 0;
@@ -294,18 +302,18 @@ const { title, category, prepTime, cookTime, panVariants } = recipe.data;
 
   .step {
     display: grid;
-    grid-template-columns: 2.5rem 1fr;
-    gap: var(--space-5);
+    grid-template-columns: 1.75rem 1fr;
+    gap: var(--space-4);
     align-items: start;
   }
 
   .step__number {
     font-family: var(--font-serif);
-    font-size: var(--text-2xl);
+    font-size: var(--text-xl);
     font-weight: 700;
     color: var(--color-accent-2);
-    line-height: 1;
-    padding-top: 0.15em;
+    line-height: 1.3;
+    padding-top: 0;
   }
 
   .step__title {
@@ -314,6 +322,7 @@ const { title, category, prepTime, cookTime, panVariants } = recipe.data;
     font-weight: 700;
     margin-bottom: var(--space-3);
     color: var(--color-text);
+    line-height: 1.3;
   }
 
   .step__content p {
@@ -324,13 +333,14 @@ const { title, category, prepTime, cookTime, panVariants } = recipe.data;
 </style>
 
 <script>
-  // Tab switching for pan sizes
   const tabs = document.querySelectorAll('.pan-tab');
   const panels = document.querySelectorAll('.ingredient-list');
+  const servingsDisplay = document.getElementById('servings-display');
 
   tabs.forEach(tab => {
     tab.addEventListener('click', () => {
       const target = tab.dataset.tab;
+      const servings = tab.dataset.servings;
 
       tabs.forEach(t => {
         t.classList.remove('pan-tab--active');
@@ -343,6 +353,10 @@ const { title, category, prepTime, cookTime, panVariants } = recipe.data;
       panels.forEach(panel => {
         panel.classList.toggle('ingredient-list--hidden', panel.dataset.panel !== target);
       });
+
+      if (servingsDisplay && servings) {
+        servingsDisplay.textContent = `${servings} brownies`;
+      }
     });
   });
 </script>
