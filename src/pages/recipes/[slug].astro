@@ -12,135 +12,117 @@ export async function getStaticPaths() {
 
 const { recipe } = Astro.props;
 const { Content } = await render(recipe);
-const { title, category, prepTime, cookTime, panVariants } = recipe.data;
+const { title, category, prepTime, cookTime, yield: yieldText, intro, tags, dietary, panVariants, directions, hasNotes } = recipe.data;
 ---
 
-<Layout title="THE BEST Homemade Brownies">
+<Layout title={title}>
   <main class="recipe-page">
 
     <!-- ── HERO ── -->
     <section class="recipe-hero">
       <div class="container">
         <div class="recipe-hero__meta">
-          <span class="recipe-hero__category">Desserts</span>
+          <span class="recipe-hero__category">{category}</span>
         </div>
-        <h1 class="recipe-hero__title">THE BEST Homemade Brownies</h1>
-        <p class="recipe-hero__intro">
-          <strong>It is recommended to measure by weight.</strong> These brownies strike the perfect balance between fudgy and structured — a glossy crackle top, deeply chocolatey interior, and a texture that holds up whether you eat them warm or straight from the fridge.
-        </p>
+        <h1 class="recipe-hero__title">{title}</h1>
+        {intro && (
+          <p class="recipe-hero__intro" set:html={intro} />
+        )}
         <div class="recipe-hero__stats">
-          <div class="stat">
-            <span class="stat__label">Prep</span>
-            <span class="stat__value">15 min</span>
-          </div>
-          <div class="stat">
-            <span class="stat__label">Bake</span>
-            <span class="stat__value">20–25 min</span>
-          </div>
-          <div class="stat">
-            <span class="stat__label">Yield</span>
-            <span class="stat__value" id="servings-display">16 brownies</span>
-          </div>
+          {prepTime && (
+            <div class="stat">
+              <span class="stat__label">Prep</span>
+              <span class="stat__value">{prepTime}</span>
+            </div>
+          )}
+          {cookTime && (
+            <div class="stat">
+              <span class="stat__label">Cook</span>
+              <span class="stat__value">{cookTime}</span>
+            </div>
+          )}
+          {yieldText && (
+            <div class="stat">
+              <span class="stat__label">Yield</span>
+              <span class="stat__value" id="servings-display">{yieldText}</span>
+            </div>
+          )}
         </div>
+        {((tags && tags.length > 0) || (dietary && dietary.length > 0)) && (
+          <div class="recipe-hero__tags">
+            {tags && tags.map(tag => (
+              <span class="tag tag--personal">{tag}</span>
+            ))}
+            {dietary && dietary.map(flag => (
+              <span class="tag tag--dietary">{flag}</span>
+            ))}
+          </div>
+        )}
       </div>
     </section>
 
     <!-- ── INGREDIENTS ── -->
     <section class="recipe-section recipe-section--ingredients">
-      <div class="container">
-        <h2>Ingredients</h2>
+        <div class="container">
+          <h2>Ingredients</h2>
 
-        <!-- Pan size tabs -->
-        <div class="pan-tabs" role="tablist" aria-label="Pan size">
-          <button class="pan-tab pan-tab--active" role="tab" aria-selected="true" data-tab="8x8" data-servings="16">8×8 Pan</button>
-          <button class="pan-tab" role="tab" aria-selected="false" data-tab="9x13" data-servings="32">9×13 Pan</button>
+          {panVariants && panVariants.length > 1 && (
+            <div class="pan-tabs" role="tablist" aria-label="Pan size">
+              {panVariants.map((variant, i) => (
+                <button
+                  class={`pan-tab${i === 0 ? ' pan-tab--active' : ''}`}
+                  role="tab"
+                  aria-selected={i === 0 ? 'true' : 'false'}
+                  data-tab={variant.id}
+                  data-yield={variant.yield}
+                >
+                  {variant.label}
+                </button>
+              ))}
+            </div>
+          )}
+
+          {panVariants && panVariants.map((variant, i) => (
+            <ul
+              class={`ingredient-list${i !== 0 ? ' ingredient-list--hidden' : ''}`}
+              data-panel={variant.id}
+            >
+              {variant.ingredients.map(item => (
+                <li>{item}</li>
+              ))}
+            </ul>
+          ))}
         </div>
-
-        <ul class="ingredient-list" data-panel="8x8">
-          <li>60g (⅔ cup) Dutch-processed cocoa powder</li>
-          <li>½ tsp (2g) salt</li>
-          <li>113g (8 tbsp) unsalted butter</li>
-          <li>75g eggs, room temperature</li>
-          <li>20g (1 large) egg yolk, room temperature</li>
-          <li>165g (1¼ cup + 2 tbsp) powdered sugar</li>
-          <li>7g (1½ tsp) vanilla extract</li>
-          <li>53g (¼ cup) brown sugar, light or dark</li>
-          <li>60g (½ cup) all-purpose flour</li>
-          <li>140g (¾ cup) chocolate chunks or chips</li>
-        </ul>
-
-        <ul class="ingredient-list ingredient-list--hidden" data-panel="9x13">
-          <li>120g (1⅓ cup) Dutch-processed cocoa powder</li>
-          <li>1 tsp (4g) salt</li>
-          <li>226g (1 cup) unsalted butter</li>
-          <li>150g (3 large) eggs, room temperature</li>
-          <li>40g (2 large) egg yolks, room temperature</li>
-          <li>330g (2¾ cups) powdered sugar</li>
-          <li>15g (1 tbsp) vanilla extract</li>
-          <li>107g (½ cup) brown sugar, light or dark</li>
-          <li>120g (1 cup) all-purpose flour</li>
-          <li>280g (1½ cups) chocolate chunks or chips</li>
-        </ul>
-      </div>
-    </section>
+      </section>
 
     <!-- ── DIRECTIONS ── -->
     <section class="recipe-section recipe-section--directions">
       <div class="container">
         <h2>Directions</h2>
         <ol class="step-list">
-          <li class="step">
-            <span class="step__number">1</span>
-            <div class="step__content">
-              <h3 class="step__title">Prep the pan, oven, and eggs</h3>
-              <p>Arrange a rack in the middle of your oven and preheat to 350°F / 180°C. Lightly grease your pan with butter or cooking oil. Place your eggs in a bowl of the hottest tap water, switching out the water a couple of times until the eggs feel slightly warm to the touch.</p>
-            </div>
-          </li>
-          <li class="step">
-            <span class="step__number">2</span>
-            <div class="step__content">
-              <h3 class="step__title">Brown the butter and make the cocoa paste</h3>
-              <p>Add cocoa powder and salt to a heatproof bowl and set aside. Melt butter in a light-colored pan over medium heat. Once melted, watch for a cream-colored foam to rise — if it sputters, lower the heat. Stir often with a spatula, watching for milk solids to form at the edges and bottom. Once solids are light brown, turn off the heat and continue stirring until they reach a dark brown. Immediately pour the butter into the cocoa bowl, scraping in all the milk solids. Stir and set aside until slightly warm, about 5–10 minutes.</p>
-            </div>
-          </li>
-          <li class="step">
-            <span class="step__number">3</span>
-            <div class="step__content">
-              <h3 class="step__title">Mix eggs with powdered sugar</h3>
-              <p>In a large mixing bowl, combine the room-temperature eggs and yolks with the powdered sugar. Mix with a whisk or spatula until no traces of sugar remain. If the sugar is clumpy, smash it with the spatula and let it sit 5–10 minutes while the chocolate mixture cools. The mixture should be pale yellow, slightly thickened, and feel like a smooth paste when rubbed between your fingers.</p>
-            </div>
-          </li>
-          <li class="step">
-            <span class="step__number">4</span>
-            <div class="step__content">
-              <h3 class="step__title">Combine everything</h3>
-              <p>Stir vanilla into the cocoa-butter mixture, then add it to the egg mixture. Stir with a spatula until thick and combined. Fold in the brown sugar (make sure there are no clumps), then fold in the flour. The batter will be very thick.</p>
-            </div>
-          </li>
-          <li class="step">
-            <span class="step__number">5</span>
-            <div class="step__content">
-              <h3 class="step__title">Fill the pan</h3>
-              <p>Pour and spread the batter into your prepared pan. Scatter the chocolate chunks or chips evenly over the top.</p>
-            </div>
-          </li>
-          <li class="step">
-            <span class="step__number">6</span>
-            <div class="step__content">
-              <h3 class="step__title">Bake</h3>
-              <p>Place the pan on the middle rack. For an 8×8, start checking at 18 minutes; for a 9×13, start checking around 20 minutes. The brownies are done when they've puffed with a glossy, crystallized top, are slightly jiggly in the center, and a toothpick comes out with streaks of wet batter (not clean — that's overbaked). If using a thermometer, pull them at around 200°F / 93°C in the center.</p>
-            </div>
-          </li>
-          <li class="step">
-            <span class="step__number">7</span>
-            <div class="step__content">
-              <h3 class="step__title">Cool completely</h3>
-              <p>Let the brownies cool fully in the pan before cutting. In a hurry? Let them cool slightly, then move the pan to the freezer for 20–30 minutes to set.</p>
-            </div>
-          </li>
+          {directions && directions.map((step, i) => (
+            <li class="step">
+              <span class="step__number">{i + 1}</span>
+              <div class="step__content">
+                <h3 class="step__title">{step.title}</h3>
+                <p set:html={step.body} />
+              </div>
+            </li>
+          ))}
         </ol>
       </div>
     </section>
+
+    {hasNotes && (
+      <section class="recipe-section recipe-section--notes">
+        <div class="container">
+          <h2>Notes</h2>
+          <div class="recipe-notes">
+            <Content />
+          </div>
+        </div>
+      </section>
+    )}  
 
   </main>
 </Layout>
@@ -194,6 +176,18 @@ const { title, category, prepTime, cookTime, panVariants } = recipe.data;
     gap: var(--space-8);
   }
 
+  .recipe-notes {
+    font-size: var(--text-base);
+    color: var(--color-text-muted);
+    line-height: 1.75;
+    max-width: var(--max-width-prose);
+  }
+
+  .recipe-notes p {
+    max-width: var(--max-width-prose);
+    margin-bottom: var(--space-4);
+  }
+
   .stat {
     display: flex;
     flex-direction: column;
@@ -213,6 +207,36 @@ const { title, category, prepTime, cookTime, panVariants } = recipe.data;
     font-family: var(--font-serif);
     font-size: var(--text-lg);
     color: var(--color-text);
+  }
+
+  /* ── TAGS ── */
+  .recipe-hero__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin-top: var(--space-6);
+  }
+
+  .tag {
+    font-family: var(--font-sans);
+    font-size: var(--text-xs);
+    font-weight: 400;
+    letter-spacing: 0.04em;
+    padding: var(--space-1) var(--space-3);
+    border-radius: var(--radius-sm);
+    white-space: nowrap;
+  }
+
+  .tag--personal {
+    background: rgba(222, 124, 90, 0.12);
+    color: var(--color-accent-2);
+    border: 1px solid rgba(222, 124, 90, 0.3);
+  }
+
+  .tag--dietary {
+    background: rgba(118, 130, 95, 0.12);
+    color: var(--color-accent-1);
+    border: 1px solid rgba(118, 130, 95, 0.3);
   }
 
   /* ── SECTIONS ── */
@@ -358,8 +382,8 @@ const { title, category, prepTime, cookTime, panVariants } = recipe.data;
         panel.classList.toggle('ingredient-list--hidden', panel.dataset.panel !== target);
       });
 
-      if (servingsDisplay && servings) {
-        servingsDisplay.textContent = `${servings} brownies`;
+      if (servingsDisplay) {
+        servingsDisplay.textContent = tab.dataset.yield;
       }
     });
   });

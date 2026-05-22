@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import Header from '../components/Header.astro';
 
 interface Props {
   title?: string;
@@ -21,6 +22,7 @@ const { title = "Brr's Kitchen", description = "" } = Astro.props;
     <title>{title} | Brr's Kitchen</title>
   </head>
   <body>
+    <Header />
     <slot />
   </body>
 </html>

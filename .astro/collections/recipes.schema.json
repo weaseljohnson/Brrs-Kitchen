@@ -9,10 +9,16 @@
       "type": "string"
     },
     "prepTime": {
-      "type": "number"
+      "type": "string"
     },
     "cookTime": {
-      "type": "number"
+      "type": "string"
+    },
+    "yield": {
+      "type": "string"
+    },
+    "intro": {
+      "type": "string"
     },
     "tags": {
       "type": "array",
@@ -20,19 +26,31 @@
         "type": "string"
       }
     },
-    "image": {
+    "dietary": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "pubDate": {
       "type": "string"
+    },
+    "hasNotes": {
+      "type": "boolean"
     },
     "panVariants": {
       "type": "array",
       "items": {
         "type": "object",
         "properties": {
+          "id": {
+            "type": "string"
+          },
           "label": {
             "type": "string"
           },
-          "servings": {
-            "type": "number"
+          "yield": {
+            "type": "string"
           },
           "ingredients": {
             "type": "array",
@@ -42,9 +60,28 @@
           }
         },
         "required": [
+          "id",
           "label",
-          "servings",
+          "yield",
           "ingredients"
+        ]
+      }
+    },
+    "directions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "body": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "title",
+          "body"
         ]
       }
     },
@@ -54,9 +91,6 @@
   },
   "required": [
     "title",
-    "category",
-    "prepTime",
-    "cookTime",
-    "panVariants"
+    "category"
   ]
 }
