@@ -27,7 +27,7 @@ These are descriptive constraints which have been provided by Brianna to guide t
 
 ## Layout Decisions
 
-### Page Structure & Navigation
+### Page Structure
 
 - Recipe navigation to be done by meal type (mains, desserts, sides, drinks, etc)
     - Mains organized by protein type
@@ -45,6 +45,16 @@ These are descriptive constraints which have been provided by Brianna to guide t
 	- This page contains a glossary of common terms used throughout the site. Specific
 	  food science related things or terms that people might not be familiar with. Ex. The
 	  Maillard reaction, Umami, Carmelize, etc
+	  
+### Navigation
+
+- Sticky header with logo (top left), search bar placeholder, and primary nav
+- Primary nav items: Recipes, Cooking Essentials, Cooking Fundamentals, Glossary, About
+- Recipes, Essentials, and Fundamentals have multi-column hover dropdowns (desktop) / tap-to-toggle (mobile)
+- Recipes dropdown columns: By Type, By Cuisine, Dietary, Favorites
+- Mobile nav: full-screen overlay triggered by hamburger toggle
+- Logo will be replaced with Brianna's custom designed logo when ready
+- Search bar is placeholder only — real search to be wired up post-CMS
 
 
 ### Internal Links, Tags, and Labels
@@ -57,14 +67,16 @@ These are descriptive constraints which have been provided by Brianna to guide t
 
 ### Implemented
 - Pan size tabs with dynamic ingredient switching
-- Dynamic serving size display
-- Prep / cook time / yield stats bar
+- Dynamic yield display (updates when pan tab changes)
+- Prep / cook / yield stats bar
 - Category label with accent styling
 - Numbered step directions with titled steps
+- Tags display — personal labels (burnt-peach) and dietary flags (olive)
+- Freeform notes section below directions (rendered from MD body, gated by `hasNotes` flag)
+- Image placeholder (awaiting CMS image upload flow)
 
 ### Planned
 - Pro tip tooltip callouts — inline in recipe body, dismissible
-- Tags display — "Hubby's Favorite", "Kid's Favorite", dietary restrictions
 - Feedback and questions form — button opens form, responses go to admin
 - Admin-curated Q&A displayed below recipe
 - Glossary term links — inline links to glossary page

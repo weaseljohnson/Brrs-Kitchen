@@ -98,25 +98,14 @@ const navItems = [
 
     <!-- Logo -->
     <a href="/" class="site-logo" aria-label="Brr's Kitchen home">
-      Brr's Kitchen
-    </a>
-
-    <!-- Search -->
-    <div class="header-search">
-      <span class="search-icon" aria-hidden="true">
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="6.5" cy="6.5" r="5" stroke="currentColor" stroke-width="1.5"/>
-          <line x1="10.5" y1="10.5" x2="14.5" y2="14.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-        </svg>
-      </span>
-      <input
-        type="search"
-        class="search-input"
-        placeholder="Search recipes…"
-        aria-label="Search recipes"
-        disabled
+      <img
+        src="/images/logo/BK-Logo-Transparent.png"
+        alt="Brr's Kitchen"
+        class="site-logo__img"
+        width="1536"
+        height="577"
       />
-    </div>
+    </a>
 
     <!-- Mobile menu toggle -->
     <button class="mobile-menu-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="primary-nav">
@@ -165,8 +154,54 @@ const navItems = [
             )}
           </li>
         ))}
+      <li class="nav-item nav-item--search">
+          <button class="nav-link nav-link--search" aria-label="Search" aria-expanded="false">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <circle cx="6.5" cy="6.5" r="5" stroke="currentColor" stroke-width="1.5"/>
+              <line x1="10.5" y1="10.5" x2="14.5" y2="14.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          </button>
+        </li>
       </ul>
+
+      <!-- Mobile search — visible inside hamburger menu only -->
+      <div class="mobile-search">
+        <div class="mobile-search__inner">
+          <span class="mobile-search__icon" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <circle cx="6.5" cy="6.5" r="5" stroke="currentColor" stroke-width="1.5"/>
+              <line x1="10.5" y1="10.5" x2="14.5" y2="14.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          </span>
+          <input
+            type="search"
+            class="mobile-search__input"
+            placeholder="Search recipes…"
+            aria-label="Search recipes"
+          />
+        </div>
+      </div>
+
     </nav>
+
+    <!-- Search overlay -->
+    <div class="search-overlay" id="search-overlay" aria-hidden="true">
+      <div class="search-overlay__inner">
+        <input
+          type="search"
+          class="search-overlay__input"
+          placeholder="Search recipes…"
+          aria-label="Search recipes"
+          id="search-overlay-input"
+        />
+        <button class="search-overlay__close" aria-label="Close search">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <line x1="2" y1="2" x2="14" y2="14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="14" y1="2" x2="2" y2="14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+    </div>
 
   </div>
 </header>
@@ -185,60 +220,25 @@ const navItems = [
     max-width: var(--max-width-content);
     margin-inline: auto;
     padding-inline: var(--space-6);
-    height: 64px;
+    padding-block: var(--space-3);
+    height: 125px;
     display: flex;
     align-items: center;
     gap: var(--space-6);
+    position: relative;
   }
 
   /* ── LOGO ── */
   .site-logo {
-    font-family: var(--font-serif);
-    font-size: var(--text-xl);
-    font-weight: 700;
-    color: var(--color-text);
-    text-decoration: none;
-    white-space: nowrap;
     flex-shrink: 0;
+    display: block;
+    line-height: 0;
   }
 
-  .site-logo:hover {
-    color: var(--color-accent-3);
-  }
-
-  /* ── SEARCH ── */
-  .header-search {
-    flex: 1;
-    max-width: 420px;
-    position: relative;
-    display: flex;
-    align-items: center;
-  }
-
-  .search-icon {
-    position: absolute;
-    left: var(--space-3);
-    color: var(--color-text-muted);
-    display: flex;
-    align-items: center;
-    pointer-events: none;
-  }
-
-  .search-input {
-    width: 100%;
-    background: rgba(118, 130, 95, 0.08);
-    border: 1px solid rgba(118, 130, 95, 0.2);
-    border-radius: var(--radius-lg);
-    padding: var(--space-2) var(--space-4) var(--space-2) var(--space-8);
-    font-family: var(--font-sans);
-    font-size: var(--text-sm);
-    color: var(--color-text);
-    transition: border-color var(--transition-fast), background var(--transition-fast);
-    cursor: not-allowed;
-  }
-
-  .search-input::placeholder {
-    color: var(--color-text-muted);
+  .site-logo__img {
+    height: 120px;
+    width: auto;
+    display: block;
   }
 
   /* ── NAV ── */
@@ -356,6 +356,72 @@ const navItems = [
     }
   }
 
+  /* ── SEARCH OVERLAY ── */
+  .search-overlay {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--color-bg);
+    z-index: 300;
+    align-items: center;
+    padding-inline: var(--space-6);
+  }
+
+  .search-overlay.is-open {
+    display: flex;
+  }
+
+  .search-overlay__inner {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    width: 100%;
+    max-width: var(--max-width-content);
+    margin-inline: auto;
+  }
+
+  .search-overlay__input {
+    flex: 1;
+    background: rgba(118, 130, 95, 0.08);
+    border: 1px solid rgba(118, 130, 95, 0.3);
+    border-radius: var(--radius-lg);
+    padding: var(--space-3) var(--space-5);
+    font-family: var(--font-sans);
+    font-size: var(--text-base);
+    color: var(--color-text);
+    transition: border-color var(--transition-fast);
+  }
+
+  .search-overlay__input:focus {
+    outline: none;
+    border-color: var(--color-accent-1);
+  }
+
+  .search-overlay__input::placeholder {
+    color: var(--color-text-muted);
+  }
+
+  .search-overlay__close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--color-text-muted);
+    padding: var(--space-2);
+    border-radius: var(--radius-sm);
+    transition: color var(--transition-fast);
+    flex-shrink: 0;
+  }
+
+  .search-overlay__close:hover {
+    color: var(--color-text);
+  }
+
   /* ── MOBILE TOGGLE ── */
   .mobile-menu-toggle {
     display: none;
@@ -378,8 +444,22 @@ const navItems = [
     transition: transform var(--transition-fast), opacity var(--transition-fast);
   }
 
+  /* Hidden on desktop, shown only inside mobile nav */
+  .mobile-search {
+    display: none;
+    padding-top: var(--space-4);
+  }
+
   /* ── MOBILE LAYOUT ── */
-  @media (max-width: 768px) {
+  @media (max-width: 900px) {
+    .header-inner {
+      height: 90px;
+    }
+
+    .site-logo__img {
+      height: 72px;
+    }
+
     .mobile-menu-toggle {
       display: flex;
     }
@@ -387,7 +467,7 @@ const navItems = [
     .primary-nav {
       display: none;
       position: fixed;
-      inset: 64px 0 0 0;
+      inset: 72px 0 0 0;
       background: var(--color-bg);
       overflow-y: auto;
       padding: var(--space-6);
@@ -433,7 +513,6 @@ const navItems = [
       padding: 0 0 var(--space-4) var(--space-4);
     }
 
-    /* Mobile: show dropdown on toggle (JS controlled) */
     .nav-item--has-dropdown .dropdown {
       display: none;
     }
@@ -445,11 +524,59 @@ const navItems = [
     .nav-item--has-dropdown.is-open .nav-chevron {
       transform: rotate(180deg);
     }
+
+    /* Search in mobile nav */
+
+    /* Hide desktop search button on mobile */
+    .nav-item--search {
+      display: none;
+    }
+
+    .mobile-search {
+      display: block;
+      padding: var(--space-4) 0;
+      border-bottom: 1px solid rgba(118, 130, 95, 0.1);
+    }
+
+    .mobile-search__inner {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .mobile-search__icon {
+      position: absolute;
+      left: var(--space-3);
+      color: var(--color-text-muted);
+      display: flex;
+      align-items: center;
+      pointer-events: none;
+    }
+
+    .mobile-search__input {
+      width: 100%;
+      background: rgba(118, 130, 95, 0.08);
+      border: 1px solid rgba(118, 130, 95, 0.2);
+      border-radius: var(--radius-lg);
+      padding: var(--space-3) var(--space-4) var(--space-3) var(--space-8);
+      font-family: var(--font-sans);
+      font-size: var(--text-base);
+      color: var(--color-text);
+    }
+
+    .mobile-search__input::placeholder {
+      color: var(--color-text-muted);
+    }
+
+    /* Hide desktop search overlay on mobile */
+    .search-overlay {
+      display: none !important;
+    }
   }
 </style>
 
 <script>
-  // Mobile menu toggle
+  // ── MOBILE MENU TOGGLE ──
   const menuToggle = document.querySelector('.mobile-menu-toggle');
   const primaryNav = document.querySelector('.primary-nav');
 
@@ -458,8 +585,7 @@ const navItems = [
     menuToggle.setAttribute('aria-expanded', String(isOpen));
   });
 
-  // Mobile dropdown toggles (tap to open)
-  // On desktop with no hover support, also tap to open
+  // ── MOBILE DROPDOWN TOGGLES ──
   const dropdownToggles = document.querySelectorAll('.nav-link--toggle');
 
   dropdownToggles.forEach(toggle => {
@@ -470,13 +596,59 @@ const navItems = [
     });
   });
 
-  // Close dropdowns when clicking outside
+  // ── CLOSE DROPDOWNS WHEN CLICKING OUTSIDE ──
   document.addEventListener('click', (e) => {
     if (!(e.target as Element).closest('.nav-item--has-dropdown')) {
       document.querySelectorAll('.nav-item--has-dropdown.is-open').forEach(item => {
         item.classList.remove('is-open');
         item.querySelector('.nav-link--toggle')?.setAttribute('aria-expanded', 'false');
       });
+    }
+  });
+
+  // ── SEARCH OVERLAY ──
+  const searchToggle = document.querySelector('.nav-link--search');
+  const searchOverlay = document.querySelector('.search-overlay');
+  const searchClose = document.querySelector('.search-overlay__close');
+  const searchInput = document.querySelector('#search-overlay-input') as HTMLInputElement;
+
+  function openSearch() {
+    const isMobile = window.innerWidth <= 900;
+
+    if (isMobile) {
+      // On mobile, expand a search input inside the nav menu instead
+      const mobileSearchInput = document.querySelector('.mobile-search__input') as HTMLInputElement;
+      mobileSearchInput?.focus();
+      return;
+    }
+
+    searchOverlay?.classList.add('is-open');
+    searchOverlay?.setAttribute('aria-hidden', 'false');
+    searchToggle?.setAttribute('aria-expanded', 'true');
+    setTimeout(() => searchInput?.focus(), 50);
+  }
+
+  function closeSearch() {
+    searchOverlay?.classList.remove('is-open');
+    searchOverlay?.setAttribute('aria-hidden', 'true');
+    searchToggle?.setAttribute('aria-expanded', 'false');
+    searchInput.value = '';
+  }
+
+  searchToggle?.addEventListener('click', openSearch);
+  searchClose?.addEventListener('click', closeSearch);
+
+  // Close on Escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && searchOverlay?.classList.contains('is-open')) {
+      closeSearch();
+    }
+  });
+
+  // Close when clicking outside the overlay inner area
+  searchOverlay?.addEventListener('click', (e) => {
+    if (!(e.target as Element).closest('.search-overlay__inner')) {
+      closeSearch();
     }
   });
 </script>

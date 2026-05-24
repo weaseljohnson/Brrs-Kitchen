@@ -125,7 +125,19 @@ Recipe body / notes in plain Markdown here...
 ├── public/
 │   ├── fonts/
 │   └── images/
-├── api/
+│       └── logo/
+│       	└── android-chrome-192x192.png
+│       	└── android-chrome-512x512.png
+│       	└── apple-touch-icon.png
+│       	└── BK-Favicon-thin
+│       	└── BK-favicon.png
+│       	└── BK-Logo-Color
+│       	└── BK-Logo-Text
+│       	└── BK-Logo-Transparent
+│       	└── favicon-16x16.png
+│       	└── favicon-32x32.png
+│       	└── favicon.ico
+├── api/	
 │   └── save-recipe.js        # not yet built
 └── astro.config.mjs
 ```
@@ -159,10 +171,18 @@ Average time from "save recipe" to "live on site": **~30–60 seconds** (Astro b
 - CSS variables use semantic aliases; always reference those in components
 
 ### Step 4 — Core Astro Layouts
-🔄 In Progress
+✅ Complete
 - Dynamic route at `src/pages/recipes/[slug].astro`
 - Content collection defined in `src/content.config.ts`
 - Recipe markdown files stored in `/content/recipes/`
 - Global stylesheet imported via frontmatter in `Layout.astro`
+- Header component at `src/components/Header.astro` — sticky nav, dropdown menus, search placeholder
+- Home page at `src/pages/index.astro` — category tiles, latest recipes, about blurb
 - Brownie recipe live at `/recipes/best-homemade-brownies`
-- Hardcoded dummy data still in place — frontmatter wiring is next
+- All recipe data sourced from frontmatter — no hardcoded content in templates
+- MD body reserved for optional freeform notes (gated by `hasNotes` frontmatter flag)
+
+
+
+
+

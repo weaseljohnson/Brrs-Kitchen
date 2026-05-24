@@ -21,6 +21,10 @@ Ongoing log of non-obvious problems, solutions, and decisions made during develo
 
 - **`getStaticPaths()` is required for all dynamic routes** — Any page using `[slug].astro` must export a `getStaticPaths()` function or Astro will throw a build error. This function tells Astro which slugs to generate at build time.
 
+- **`export` keyword outside frontmatter fences crashes the build** — `getStaticPaths()` must live inside the `---` frontmatter block. If the closing `---` is missing, Astro passes the raw JS to esbuild which throws on the `export` keyword with no useful error message pointing to the real cause.
+
+- **JSX attribute syntax in `.map()` blocks is sensitive to copy/paste** — Opening tags (e.g. `<a`) can get silently dropped when inputting code manually, causing attributes like `href={...}` to render as raw text on the page. Always verify the opening tag is present when debugging unexpected raw HTML output.
+
 ---
 
 ## CSS / Styling
@@ -40,3 +44,14 @@ Ongoing log of non-obvious problems, solutions, and decisions made during develo
 - **Vercel build logs don't surface all errors** — Some errors (like an empty collection) appear as warnings in the log without failing the build. The page simply won't be generated. Running `npm run build` locally surfaces more detail.
 
 - **Build cache can mask issues** — Vercel caches build output between deploys. If something seems wrong despite a correct commit, check whether the issue predates your last change.
+
+## Data Modeling
+
+- **`yield` is a reserved word in JavaScript** — Destructuring a frontmatter field named `yield` requires aliasing: `const { yield: yieldText } = recipe.data`. Name the variable anything other than `yield`.
+
+- **Checking for MD body content in Astro collections is not straightforward** — There is no simple boolean to check whether a recipe's markdown body has content. Use a `hasNotes: true` frontmatter flag to gate rendering of the notes section rather than trying to inspect the rendered output.
+
+- **Two-field tag model** — Recipe labels are split into `tags` (freeform personal labels like "Hubby's Favorite") and `dietary` (controlled vocabulary slugs like "gluten-free"). Keep these separate to support future filtering by dietary restriction without conflating it with subjective labels.
+
+
+
