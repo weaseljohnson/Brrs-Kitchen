@@ -11,154 +11,211 @@ const latestRecipes = [...allRecipes]
     const dateB = b.data.pubDate ? new Date(b.data.pubDate).getTime() : 0;
     return dateB - dateA;
   })
-  .slice(0, 3);
-
-const categoryTiles = [
-  { label: 'Mains',    href: '/recipes/mains',    emoji: '🍽️' },
-  { label: 'Desserts', href: '/recipes/desserts',  emoji: '🍰' },
-  { label: 'Sides',    href: '/recipes/sides',     emoji: '🥗' },
-  { label: 'Drinks',   href: '/recipes/drinks',    emoji: '🥤' },
-  { label: 'Snacks',   href: '/recipes/snacks',    emoji: '🧀' },
-];
+  .slice(0, 4);
 ---
 
 <Layout title="Home">
   <main class="home-page">
 
-    <!-- ── CATEGORY TILES ── -->
-    <section class="category-section">
-      <div class="container">
-        <ul class="category-tiles" role="list">
-          {categoryTiles.map(tile => (
-            <li>
-              <a href={tile.href} class="category-tile">
-                <span class="category-tile__emoji" aria-hidden="true">{tile.emoji}</span>
-                <span class="category-tile__label">{tile.label}</span>
-              </a>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </section>
-
-    <!-- ── MAIN CONTENT ── -->
-    <section class="home-content">
-      <div class="container home-content__inner">
-
-        <!-- Latest Recipes — left 2/3 -->
-        <div class="latest-recipes">
-          <h2 class="section-heading">Latest Recipes</h2>
-          {latestRecipes.length === 0 ? (
-            <p class="empty-state">No recipes yet — check back soon.</p>
-          ) : (
-            <ul class="recipe-list" role="list">
-              {latestRecipes.map(recipe => (
-                <li>
-                  <a href={`/recipes/${recipe.id.split('/').pop()}`} class="recipe-card">
-                    <div class="recipe-card__image-placeholder" aria-hidden="true"></div>
-                    <div class="recipe-card__body">
-                      <div class="recipe-card__meta">
-                        <span class="recipe-card__category">{recipe.data.category}</span>
-                      </div>
-                      <h3 class="recipe-card__title">{recipe.data.title}</h3>
-                      <div class="recipe-card__stats">
-                        {recipe.data.prepTime && (
-                          <span class="recipe-card__stat">Prep: {recipe.data.prepTime}</span>
-                        )}
-                        {recipe.data.cookTime && (
-                          <span class="recipe-card__stat">Cook: {recipe.data.cookTime}</span>
-                        )}
-                      </div>
-                    </div>
-                  </a>
-                </li>
-              ))}
-            </ul>
-          )}
+  <!-- ── BANNER ── -->
+  <section class="banner">
+    <img
+      src="/images/HP-Banner.png"
+      alt="Brr's Kitchen — a home for good food and real recipes"
+      class="banner__img"
+    />
+    <div class="banner__overlay">
+      <h1 class="banner__title">
+        <span class="banner__title-line">Welcome to</span>
+        <span class="banner__title-line">Brr's Kitchen!</span>
+      </h1>
+      <nav class="banner__nav" aria-label="Banner quick links">
+        <div class="banner__nav-inner">
+          <a href="/recipes" class="banner__nav-link">Recipes</a>
+          <a href="/about" class="banner__nav-link">About Brr</a>
         </div>
+      </nav>
+    </div>
+  </section>
 
-        <!-- About blurb — right 1/3 -->
-        <aside class="about-blurb">
-          <div class="about-blurb__inner">
-            <p class="about-blurb__greeting">Hello, I'm Brr.</p>
-            <p class="about-blurb__placeholder">
-              This space is coming soon — Brianna will fill this in with her own words.
-            </p>
-            <a href="/about" class="about-blurb__link">Learn more →</a>
+  <!-- ── LATEST RECIPES ── -->
+  <section class="latest-section">
+    <div class="container">
+      <h2 class="section-heading">Latest Recipes</h2>
+
+      {latestRecipes.length === 0 ? (
+        <p class="empty-state">No recipes yet — check back soon.</p>
+      ) : (
+        <div class="latest-grid">
+
+          <!-- Large card — most recent recipe -->
+          {latestRecipes[0] && (
+            <a
+              href={`/recipes/${latestRecipes[0].id.split('/').pop()}`}
+              class="recipe-card recipe-card--large"
+            >
+              <div class="recipe-card__img-wrap">
+                {latestRecipes[0].data.image
+                  ? <img src={latestRecipes[0].data.image} alt={latestRecipes[0].data.title} class="recipe-card__img" />
+                  : <div class="recipe-card__img-placeholder" aria-hidden="true"></div>
+                }
+              </div>
+              <div class="recipe-card__body">
+                <span class="recipe-card__category">{latestRecipes[0].data.category}</span>
+                <h3 class="recipe-card__title">{latestRecipes[0].data.title}</h3>
+                {latestRecipes[0].data.intro && (
+                  <p class="recipe-card__intro">{latestRecipes[0].data.intro}</p>
+                )}
+                <div class="recipe-card__stats">
+                  {latestRecipes[0].data.prepTime && (
+                    <span class="recipe-card__stat">Prep: {latestRecipes[0].data.prepTime}</span>
+                  )}
+                  {latestRecipes[0].data.cookTime && (
+                    <span class="recipe-card__stat">Cook: {latestRecipes[0].data.cookTime}</span>
+                  )}
+                </div>
+              </div>
+            </a>
+          )}
+
+          <!-- Small cards — next up to 3 recipes -->
+          <div class="recipe-card-stack">
+            {latestRecipes.slice(1).map(recipe => (
+              <a
+                href={`/recipes/${recipe.id.split('/').pop()}`}
+                class="recipe-card recipe-card--small"
+              >
+                <div class="recipe-card__img-wrap recipe-card__img-wrap--square">
+                  {recipe.data.image
+                    ? <img src={recipe.data.image} alt={recipe.data.title} class="recipe-card__img" />
+                    : <div class="recipe-card__img-placeholder" aria-hidden="true"></div>
+                  }
+                </div>
+                <div class="recipe-card__body">
+                  <h3 class="recipe-card__title">{recipe.data.title}</h3>
+                  <div class="recipe-card__stats">
+                    {recipe.data.prepTime && (
+                      <span class="recipe-card__stat">Prep: {recipe.data.prepTime}</span>
+                    )}
+                    {recipe.data.cookTime && (
+                      <span class="recipe-card__stat">Cook: {recipe.data.cookTime}</span>
+                    )}
+                  </div>
+                </div>
+              </a>
+            ))}
           </div>
-        </aside>
 
-      </div>
-    </section>
+        </div>
+      )}
+    </div>
+  </section>
 
-  </main>
+</main>
 </Layout>
 
 <style>
+  /* ── HOME PAGE ── */
   .home-page {
     padding-bottom: var(--space-20);
   }
 
-  /* ── CATEGORY TILES ── */
-  .category-section {
-    padding: var(--space-10) 0;
-  }
-
-  .category-tiles {
-    display: flex;
-    gap: var(--space-4);
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    flex-wrap: wrap;
-  }
-
-  .category-tile {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: var(--space-3);
-    width: 140px;
-    height: 140px;
-    background: rgba(118, 130, 95, 0.07);
-    border: 1px solid rgba(118, 130, 95, 0.18);
+  /* ── BANNER ── */
+  .banner {
+    position: relative;
+    width: calc(100% - var(--space-12));
+    max-width: var(--max-width-content);
+    margin-inline: auto;
+    height: 580px;
+    overflow: hidden;
     border-radius: var(--radius-lg);
-    text-decoration: none;
-    color: var(--color-text);
-    transition: background var(--transition-fast), border-color var(--transition-fast), transform var(--transition-fast);
+    border: 1px solid rgba(118, 130, 95, 0.25);
   }
 
-  .category-tile:hover {
-    background: rgba(118, 130, 95, 0.14);
-    border-color: rgba(118, 130, 95, 0.35);
-    transform: translateY(-2px);
+  .banner__img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
   }
 
-  .category-tile__emoji {
-    font-size: 2rem;
-    line-height: 1;
+  .banner__overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to bottom,
+      transparent 25%,
+      rgba(28, 19, 23, 0.65) 100%
+    );
   }
 
-  .category-tile__label {
+  /*
+    96pt ≈ 6rem–8rem in CSS depending on screen DPI.
+    At this size "Welcome to Brr's Kitchen!" wraps to two lines — 
+    that's intentional for hero text. Adjust the clamp max value to taste.
+  */
+  .banner__title {
+    position: absolute;
+    top: 46%;
+    left: 0;
+    right: 0;
+    transform: translateY(-50%);
     font-family: var(--font-serif);
-    font-size: var(--text-sm);
+    font-size: clamp(2.5rem, 6.5vw, 6rem);
     font-weight: 700;
+    color: #fff;
+    line-height: 1.15;
+    text-align: center;
+    padding: 0 var(--space-10);
+    text-shadow: 0 2px 16px rgba(0, 0, 0, 0.45);
   }
 
-  /* ── HOME CONTENT GRID ── */
-  .home-content {
+  /* Desktop: spans run inline (normal heading flow) */
+  /* Mobile: each span becomes its own line */
+  .banner__title-line {
+    display: inline;
+  }
+
+  .banner__nav {
+    position: absolute;
+    bottom: var(--space-6);
+    left: 0;
+    right: 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.55);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.55);
+  }
+
+  .banner__nav-inner {
+    display: flex;
+    justify-content: center;
+    gap: var(--space-10);
+    padding: var(--space-3) var(--space-8);
+  }
+
+  .banner__nav-link {
+    font-family: var(--font-sans);
+    font-size: var(--text-base);
+    font-weight: 400;
+    color: #fff;
+    text-decoration: none;
+    padding: var(--space-2) var(--space-8);
+    border-radius: 999px;
+    transition: background var(--transition-fast);
+  }
+
+  .banner__nav-link:hover {
+    background: rgba(255, 255, 255, 0.18);
+    color: #fff;
+  }
+
+  /* ── LATEST RECIPES SECTION ── */
+  .latest-section {
     padding-top: var(--space-12);
   }
 
-  .home-content__inner {
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-    gap: var(--space-12);
-    align-items: start;
-  }
-
-  /* ── SECTION HEADING ── */
   .section-heading {
     font-size: var(--text-2xl);
     margin-bottom: var(--space-6);
@@ -166,49 +223,36 @@ const categoryTiles = [
     border-bottom: 2px solid rgba(121, 59, 2, 0.12);
   }
 
-  /* ── RECIPE LIST ── */
-  .recipe-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-4);
+  /* 60 / 40 split */
+  .latest-grid {
+    display: grid;
+    grid-template-columns: 3fr 2fr;
+    gap: var(--space-5);
+    align-items: start;
   }
 
+  /* ── RECIPE CARDS — SHARED ── */
   .recipe-card {
-    display: flex;
-    flex-direction: column;
+    display: block;
     border: 1px solid rgba(118, 130, 95, 0.2);
     border-radius: var(--radius-md);
+    overflow: hidden;
     text-decoration: none;
     color: var(--color-text);
-    overflow: hidden;
-    transition: border-color var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
+    transition:
+      border-color var(--transition-fast),
+      transform var(--transition-fast),
+      box-shadow var(--transition-fast);
   }
 
   .recipe-card:hover {
-    border-color: rgba(118, 130, 95, 0.4);
+    border-color: rgba(118, 130, 95, 0.45);
     transform: translateY(-2px);
     box-shadow: var(--shadow-md);
   }
 
-  .recipe-card__image-placeholder {
-    width: 100%;
-    aspect-ratio: 16 / 7;
-    background: rgba(118, 130, 95, 0.08);
-    border-bottom: 1px solid rgba(118, 130, 95, 0.12);
-  }
-
-  .recipe-card__body {
-    padding: var(--space-5) var(--space-6);
-  }
-
-  .recipe-card__meta {
-    margin-bottom: var(--space-2);
-  }
-
   .recipe-card__category {
+    display: block;
     font-family: var(--font-sans);
     font-size: var(--text-xs);
     font-weight: 200;
@@ -216,14 +260,27 @@ const categoryTiles = [
     color: var(--color-accent-2);
     text-transform: uppercase;
     letter-spacing: 0.06em;
+    margin-bottom: var(--space-2);
   }
 
   .recipe-card__title {
     font-family: var(--font-serif);
     font-size: var(--text-xl);
     font-weight: 700;
-    margin-bottom: var(--space-3);
     line-height: 1.3;
+    margin-bottom: var(--space-3);
+  }
+
+  .recipe-card__intro {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    line-height: 1.6;
+    margin-bottom: var(--space-4);
+    /* Clamp to 3 lines so long intros don't dominate */
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
 
   .recipe-card__stats {
@@ -238,62 +295,120 @@ const categoryTiles = [
     font-weight: 200;
   }
 
-  .empty-state {
-    color: var(--color-text-muted);
-    font-style: italic;
+  /* ── LARGE CARD ── */
+  .recipe-card--large {
+    display: flex;
+    flex-direction: column;
   }
 
-  /* ── ABOUT BLURB ── */
-  .about-blurb__inner {
-    background: rgba(222, 124, 90, 0.06);
-    border: 1px solid rgba(222, 124, 90, 0.2);
-    border-radius: var(--radius-lg);
-    padding: var(--space-8) var(--space-6);
+  .recipe-card--large .recipe-card__img-wrap {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+  }
+
+  .recipe-card--large .recipe-card__body {
+    padding: var(--space-5) var(--space-6);
+  }
+
+  /* ── SMALL CARD STACK ── */
+  .recipe-card-stack {
     display: flex;
     flex-direction: column;
     gap: var(--space-4);
   }
 
-  .about-blurb__greeting {
-    font-family: var(--font-serif);
-    font-size: var(--text-2xl);
-    font-weight: 700;
-    color: var(--color-text);
-    max-width: none;
+  .recipe-card--small {
+    display: flex;
+    flex-direction: row;
   }
 
-  .about-blurb__placeholder {
-    font-size: var(--text-sm);
+  .recipe-card--small .recipe-card__img-wrap--square {
+    flex-shrink: 0;
+    width: 96px;
+    align-self: stretch; /* fills full card height */
+  }
+
+  .recipe-card--small .recipe-card__body {
+    padding: var(--space-3) var(--space-4);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .recipe-card--small .recipe-card__title {
+    font-size: var(--text-base);
+    margin-bottom: var(--space-2);
+  }
+
+  /* ── IMAGE PLACEHOLDERS ── */
+  .recipe-card__img-wrap {
+    overflow: hidden;
+  }
+
+  .recipe-card__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .recipe-card__img-placeholder {
+    width: 100%;
+    height: 100%;
+    min-height: 96px; /* fallback for small cards when text is short */
+    background: rgba(118, 130, 95, 0.08);
+  }
+
+  .recipe-card--large .recipe-card__img-placeholder {
+    border-bottom: 1px solid rgba(118, 130, 95, 0.1);
+  }
+
+  .recipe-card--small .recipe-card__img-placeholder {
+    border-right: 1px solid rgba(118, 130, 95, 0.1);
+  }
+
+  /* ── EMPTY STATE ── */
+  .empty-state {
     color: var(--color-text-muted);
     font-style: italic;
-    line-height: 1.6;
-  }
-
-  .about-blurb__link {
-    font-size: var(--text-sm);
-    color: var(--color-accent-2);
-    text-decoration: none;
-    font-weight: 400;
-    transition: color var(--transition-fast);
-  }
-
-  .about-blurb__link:hover {
-    color: var(--color-accent-3);
   }
 
   /* ── RESPONSIVE ── */
   @media (max-width: 768px) {
-    .home-content__inner {
+    .banner {
+      width: calc(100% - var(--space-8));
+      height: 360px;
+    }
+
+    /* Force line break between "Welcome to" and "Brr's Kitchen!" */
+    .banner__title-line {
+      display: block;
+    }
+
+    .banner__title {
+      font-size: clamp(2.5rem, 8vw, 3rem);
+      top: 38%;
+      padding: 0 var(--space-6);
+    }
+
+    .banner__nav {
+      bottom: var(--space-4);
+    }
+
+    .banner__nav-inner {
+      padding: var(--space-2) var(--space-6);
+    }
+
+    .banner__nav-link {
+      font-size: var(--text-sm);
+    }
+
+    .latest-grid {
       grid-template-columns: 1fr;
     }
 
-    .category-tiles {
-      justify-content: center;
-    }
-
-    .category-tile {
-      width: 120px;
-      height: 120px;
+    .recipe-card-stack {
+      gap: var(--space-3);
     }
   }
 </style>

@@ -13,6 +13,7 @@ const recipes = defineCollection({
     tags: z.array(z.string()).optional(),
     dietary: z.array(z.string()).optional(),
     pubDate: z.string().optional(),
+    image: z.string().optional(),
     hasNotes: z.boolean().optional(),
     panVariants: z.array(z.object({
       id: z.string(),

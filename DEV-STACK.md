@@ -176,8 +176,7 @@ Average time from "save recipe" to "live on site": **~30–60 seconds** (Astro b
 - Content collection defined in `src/content.config.ts`
 - Recipe markdown files stored in `/content/recipes/`
 - Global stylesheet imported via frontmatter in `Layout.astro`
-- Header component at `src/components/Header.astro` — sticky nav, dropdown menus, search placeholder
-- Home page at `src/pages/index.astro` — category tiles, latest recipes, about blurb
+- Header component at `src/components/Header.astro` — single-row sticky nav, dropdown menus, desktop search overlay, mobile hamburger menu with integrated search bar- Home page at `src/pages/index.astro` — category tiles, latest recipes, about blurb
 - Brownie recipe live at `/recipes/best-homemade-brownies`
 - All recipe data sourced from frontmatter — no hardcoded content in templates
 - MD body reserved for optional freeform notes (gated by `hasNotes` frontmatter flag)

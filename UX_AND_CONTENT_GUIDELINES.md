@@ -29,32 +29,44 @@ These are descriptive constraints which have been provided by Brianna to guide t
 
 ### Page Structure
 
-- Recipe navigation to be done by meal type (mains, desserts, sides, drinks, etc)
-    - Mains organized by protein type
-    - Desserts by general type (ice cream, baked goods, drinks)
-- Page for Cooking Essentials or Recipe Components
-	- This page contains recipes for homemade versions of commonly storebought recipe
-	  ingredients such as ricotta cheese, yogurt, clarified butter, buttermilk, spice
-	  mixes, and sauces
-- Cooking Fundamentals
-	- This page has how-to videos (youtube links) and instructions for basic cooking
-	  skills such as knife skills, how to chop veggies, etc
-	- The high level items would be things like, chopping veggies, knife skills, etc. then
-	  you’d have sub items or pages below that for specific skills or cases
-- Glossary Page
-	- This page contains a glossary of common terms used throughout the site. Specific
-	  food science related things or terms that people might not be familiar with. Ex. The
-	  Maillard reaction, Umami, Carmelize, etc
+#### Homepage
+- **Banner** — Full-width-within-container image (`HP-Banner.png`) in a rounded rectangle, constrained to the same width as the header content area. Contains:
+  - Splash text: "Welcome to Brr's Kitchen!" in PT Serif bold, centered, positioned roughly halfway up the image. On mobile, forced to two lines: "Welcome to" / "Brr's Kitchen!"
+  - Banner nav: "Recipes" and "About Brr" links, centered, sitting near the bottom of the image with a shared top/bottom border. Ghost pill on hover. No backgrounds on the links themselves.
+  - Dark gradient overlay from ~25% down to bottom for text legibility.
+- **Latest Recipes** — Up to 4 most recent recipes below the banner.
+  - Layout: one large card (left ~60%) + up to 3 small cards stacked (right ~40%)
+  - Large card: recipe header image (16:9), category label, title, intro text (clamped to 3 lines), prep/cook times
+  - Small cards: square-cropped image (left), title, prep/cook times
+  - `intro` frontmatter field supports inline HTML via `set:html`. Long-term, consider splitting into `introHighlight` (bold callout) and plain `intro` text to keep frontmatter HTML-free and CMS-friendly.
+  - Stacks to single column on mobile; large card renders first.
+
+#### Recipe Navigation
+- Organized by meal type (Mains, Desserts, Sides, Drinks, Snacks, etc.)
+  - Mains organized by protein type
+  - Desserts by general type (ice cream, baked goods, drinks)
+
+#### Learn / How-To Page (planned)
+- Replaces the former separate Cooking Essentials and Cooking Fundamentals nav items
+- Cooking Essentials: homemade versions of commonly store-bought recipe ingredients (ricotta, yogurt, clarified butter, buttermilk, spice mixes, sauces)
+- Cooking Fundamentals: how-to videos (YouTube embeds) and instructions for basic cooking skills (knife skills, chopping, etc.) organized hierarchically
+
+#### Other Pages
+- **Glossary** — Common culinary terms used throughout the site (Maillard reaction, umami, caramelize, etc.)
+- **About** — Brianna's personal introduction (content TBD)
 	  
 ### Navigation
 
-- Sticky header with logo (top left), search bar placeholder, and primary nav
-- Primary nav items: Recipes, Cooking Essentials, Cooking Fundamentals, Glossary, About
-- Recipes, Essentials, and Fundamentals have multi-column hover dropdowns (desktop) / tap-to-toggle (mobile)
-- Recipes dropdown columns: By Type, By Cuisine, Dietary, Favorites
-- Mobile nav: full-screen overlay triggered by hamburger toggle
-- Logo will be replaced with Brianna's custom designed logo when ready
-- Search bar is placeholder only — real search to be wired up post-CMS
+- Single-row sticky header: logo (left), nav (right), pill search bar as last nav item
+- Header height: 125px desktop, 90px mobile
+- Logo: transparent PNG, 120px tall on desktop, 72px on mobile. Stored at `/public/images/logo/`
+- Primary nav items: Recipes, Learn / How-To, Glossary, About
+- All nav items are static links — no dropdowns currently active
+- Dropdown infrastructure remains in Header.astro for future use; no current nav items trigger it
+- Desktop search: always-visible pill-shaped input (magnifying glass icon + "Search" placeholder). Input expands from 90px to 150px on focus. Placeholder text clears on focus.
+- Mobile search: magnifying glass icon to the left of the hamburger toggle. Tapping expands a pill-shaped search bar in a row below the header (inside the sticky shell). Opening search closes the hamburger nav, and vice versa.
+- Mobile nav: full-screen overlay triggered by hamburger toggle at 900px breakpoint. No search bar inside the hamburger menu.
+- Logo files stored in `/public/images/logo/`: transparent version (`BK-Logo-Header.png`), color version (`BK-Logo-Color.png`), text-only version (`BK-Logo-Text.png`)
 
 
 ### Internal Links, Tags, and Labels
@@ -116,10 +128,10 @@ These are descriptive constraints which have been provided by Brianna to guide t
 |---|---|---|
 | `--cream` | `--color-bg` | #fdf8f2 |
 | `--dusty-olive` | `--color-accent-1` | #76825f |
-| `--burnt-peach` | `--color-accent-2` | #de7c5a |
+| `--cinnamon-wood` | `--color-accent-2` | #BD7A57 |
 | `--raw-umber` | `--color-accent-3` | #793b02 |
 | `--coffee-bean` | `--color-text` | #1c1317 |
-| `--text-muted` | `--color-text-muted` | #5a6a7a |
+| `--text-muted` | `--color-text-muted` | #64696A |
 
 Always use the semantic alias (e.g. `--color-accent-2`) in components, not the raw palette name.
 

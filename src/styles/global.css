@@ -67,18 +67,20 @@
   /* Colors */
   --cream:        #fdf8f2;
   --dusty-olive:  #76825f;
-  --burnt-peach:  #de7c5a;
+  --cinnamon-wood:#BD7A57;
   --raw-umber:    #793b02;
   --coffee-bean:  #1c1317;
   --text-muted:   #5a6a7a;
+  --ash-grey:     #F5F7F3;
 
   /* Semantic color aliases — use these in components */
   --color-bg:         var(--cream);
   --color-text:       var(--coffee-bean);
   --color-text-muted: var(--text-muted);
   --color-accent-1:   var(--dusty-olive);
-  --color-accent-2:   var(--burnt-peach);
+  --color-accent-2:   var(--cinnamon-wood);
   --color-accent-3:   var(--raw-umber);
+  --color-accent-4:   var(--ash-grey);
 
   /* Typography */
   --font-serif:  'PT Serif', Georgia, serif;

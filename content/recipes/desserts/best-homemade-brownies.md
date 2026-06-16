@@ -4,10 +4,11 @@ category: "Desserts"
 prepTime: "15 min"
 cookTime: "20–25 min"
 yield: "16 brownies"
-intro: "<strong>It is recommended to measure by weight.</strong> These brownies strike the perfect balance between fudgy and structured — a glossy crackle top, deeply chocolatey interior, and a texture that holds up whether you eat them warm or straight from the fridge."
+intro: "These brownies strike the perfect balance between fudgy and structured — a glossy crackle top, deeply chocolatey interior, and a texture that holds up whether you eat them warm or straight from the fridge."
 tags: ["Hubby's Favorite"]
 dietary: []
 pubDate: "2025-05-21"
+image: "/images/recipes/Brownies.jpg"
 
 panVariants:
   - id: "8x8"

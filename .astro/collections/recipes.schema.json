@@ -35,6 +35,9 @@
     "pubDate": {
       "type": "string"
     },
+    "image": {
+      "type": "string"
+    },
     "hasNotes": {
       "type": "boolean"
     },

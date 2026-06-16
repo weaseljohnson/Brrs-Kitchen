@@ -35,6 +35,8 @@ Ongoing log of non-obvious problems, solutions, and decisions made during develo
 
 - **Auto margins require a constrained width** — `margin-left: auto` and `margin-right: auto` only center a block element if it has a `max-width` set and the parent is wider than that max-width.
 
+- **`display: none` outside a media query is not overridden automatically** — If you hide an element with `display: none` in the base CSS, you must explicitly set `display: block` (or equivalent) inside the media query to show it. Adding other properties like `padding` inside the media query without restoring `display` will have no effect — the element stays hidden.
+
 ---
 
 ## Deployment / Vercel

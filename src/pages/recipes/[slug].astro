@@ -12,52 +12,81 @@ export async function getStaticPaths() {
 
 const { recipe } = Astro.props;
 const { Content } = await render(recipe);
-const { title, category, prepTime, cookTime, yield: yieldText, intro, tags, dietary, panVariants, directions, hasNotes } = recipe.data;
+const { title, category, prepTime, cookTime, yield: yieldText, intro, tags, dietary, panVariants, directions, hasNotes, image } = recipe.data;
 ---
 
 <Layout title={title}>
   <main class="recipe-page">
 
-    <!-- ── HERO ── -->
+    <!-- ── RECIPE HEADER ── -->
     <section class="recipe-hero">
       <div class="container">
-        <div class="recipe-hero__meta">
-          <span class="recipe-hero__category">{category}</span>
-        </div>
-        <h1 class="recipe-hero__title">{title}</h1>
-        {intro && (
-          <p class="recipe-hero__intro" set:html={intro} />
-        )}
-        <div class="recipe-hero__stats">
-          {prepTime && (
-            <div class="stat">
-              <span class="stat__label">Prep</span>
-              <span class="stat__value">{prepTime}</span>
-            </div>
-          )}
-          {cookTime && (
-            <div class="stat">
-              <span class="stat__label">Cook</span>
-              <span class="stat__value">{cookTime}</span>
-            </div>
-          )}
-          {yieldText && (
-            <div class="stat">
-              <span class="stat__label">Yield</span>
-              <span class="stat__value" id="servings-display">{yieldText}</span>
-            </div>
-          )}
-        </div>
-        {((tags && tags.length > 0) || (dietary && dietary.length > 0)) && (
-          <div class="recipe-hero__tags">
-            {tags && tags.map(tag => (
-              <span class="tag tag--personal">{tag}</span>
-            ))}
-            {dietary && dietary.map(flag => (
-              <span class="tag tag--dietary">{flag}</span>
-            ))}
+        <div class="recipe-header-box">
+
+          <!-- Image wrapper — straddles the top border of the box -->
+          <div class="recipe-header__img-wrap">
+            {image
+              ? <img src={image} alt={title} class="recipe-header__img" />
+              : <div class="recipe-header__img-placeholder" aria-hidden="true"></div>
+            }
           </div>
-        )}
+
+          <!-- Centered content block -->
+          <div class="recipe-header__content">
+            <span class="recipe-hero__category">{category}</span>
+            <h1 class="recipe-hero__title">{title}</h1>
+            {intro && (
+              <p class="recipe-hero__intro" set:html={intro} />
+            )}
+
+            <div class="recipe-hero__actions">
+              <button class="recipe-btn recipe-btn--print" onclick="window.print()">
+                Print Recipe
+              </button>
+              <a
+                href={`https://pinterest.com/pin/create/button/?url=${encodeURIComponent(Astro.url.href)}&description=${encodeURIComponent(title)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="recipe-btn recipe-btn--pin"
+              >
+                Pin Recipe
+              </a>
+            </div>
+
+            <div class="recipe-hero__stats">
+              {prepTime && (
+                <div class="stat">
+                  <span class="stat__label">Prep</span>
+                  <span class="stat__value">{prepTime}</span>
+                </div>
+              )}
+              {cookTime && (
+                <div class="stat">
+                  <span class="stat__label">Cook</span>
+                  <span class="stat__value">{cookTime}</span>
+                </div>
+              )}
+              {yieldText && (
+                <div class="stat">
+                  <span class="stat__label">Yield</span>
+                  <span class="stat__value" id="servings-display">{yieldText}</span>
+                </div>
+              )}
+            </div>
+
+            {((tags && tags.length > 0) || (dietary && dietary.length > 0)) && (
+              <div class="recipe-hero__tags">
+                {tags && tags.map(tag => (
+                  <span class="tag tag--personal">{tag}</span>
+                ))}
+                {dietary && dietary.map(flag => (
+                  <span class="tag tag--dietary">{flag}</span>
+                ))}
+              </div>
+            )}
+          </div>
+
+        </div>
       </div>
     </section>
 
@@ -140,11 +169,59 @@ const { title, category, prepTime, cookTime, yield: yieldText, intro, tags, diet
 
   /* ── HERO ── */
   .recipe-hero {
-    padding: var(--space-12) 0 var(--space-10);
+    padding: var(--space-6) 0 var(--space-10);
   }
 
-  .recipe-hero__meta {
-    margin-bottom: var(--space-3);
+  .recipe-header-box {
+    position: relative;
+    margin-top: 192px;
+    border: 1px solid var(--color-accent-2);
+    border-radius: var(--radius-lg);
+    padding: 208px var(--space-8) var(--space-10);
+    text-align: center;
+  }
+
+  .recipe-header__img-wrap {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 540px;
+    background: var(--color-bg);
+    padding: var(--space-3);
+    border-radius: calc(var(--radius-md) + var(--space-3));
+  }
+
+  .recipe-header__img-placeholder {
+    width: 100%;
+    aspect-ratio: 3 / 2;
+    background: rgba(118, 130, 95, 0.08);
+    border-radius: var(--radius-md);
+  }
+
+  .recipe-header__img {
+    width: 100%;
+    aspect-ratio: 3 / 2;
+    object-fit: cover;
+    border-radius: var(--radius-md);
+    display: block;
+  }
+
+  @media (max-width: 768px) {
+    .recipe-header__img-wrap {
+      width: 75%;
+    }
+
+    .recipe-header-box {
+      margin-top: 100px;
+      padding-top: 116px;
+    }
+  }
+
+  .recipe-header__content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
 
   .recipe-hero__category {
@@ -155,12 +232,13 @@ const { title, category, prepTime, cookTime, yield: yieldText, intro, tags, diet
     color: var(--color-accent-2);
     letter-spacing: 0.05em;
     text-transform: uppercase;
+    margin-bottom: var(--space-2);
   }
 
   .recipe-hero__title {
     font-size: clamp(var(--text-3xl), 5vw, var(--text-4xl));
     color: var(--color-text);
-    margin-bottom: var(--space-5);
+    margin-bottom: var(--space-4);
   }
 
   .recipe-hero__intro {
@@ -169,11 +247,63 @@ const { title, category, prepTime, cookTime, yield: yieldText, intro, tags, diet
     max-width: var(--max-width-prose);
     margin-bottom: var(--space-8);
     line-height: 1.7;
+    text-align: center;
   }
+
+  /* ── ACTION BUTTONS ── */
+  .recipe-hero__actions {
+    display: flex;
+    justify-content: center;
+    gap: var(--space-3);
+    margin-bottom: var(--space-8);
+  }
+
+  .recipe-btn {
+    font-family: var(--font-sans);
+    font-size: var(--text-sm);
+    font-weight: 400;
+    padding: var(--space-2) var(--space-6);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    transition:
+      background var(--transition-fast),
+      color var(--transition-fast),
+      border-color var(--transition-fast);
+  }
+
+  .recipe-btn--print {
+    background: rgba(206, 212, 196, 0.35);
+    border: 1px solid var(--color-accent-1);
+    color: var(--color-text);
+  }
+
+  .recipe-btn--print:hover {
+    background: rgba(118, 130, 95, 0.25);
+    border-color: var(--color-accent-1);
+    color: var(--color-text);
+  }
+
+  .recipe-btn--pin {
+    background: rgba(189, 8, 28, 0.08);
+    border: 1px solid rgba(189, 8, 28, 0.4);
+    color: #bd081c;
+  }
+
+  .recipe-btn--pin:hover {
+    background: rgba(189, 8, 28, 0.18);
+    border-color: rgba(189, 8, 28, 0.7);
+    color: #9a0616;
+  } 
 
   .recipe-hero__stats {
     display: flex;
+    justify-content: center;
     gap: var(--space-8);
+    margin-bottom: var(--space-6);
   }
 
   .recipe-notes {
@@ -213,8 +343,8 @@ const { title, category, prepTime, cookTime, yield: yieldText, intro, tags, diet
   .recipe-hero__tags {
     display: flex;
     flex-wrap: wrap;
+    justify-content: center;
     gap: var(--space-2);
-    margin-top: var(--space-6);
   }
 
   .tag {
