@@ -38,6 +38,22 @@
     "image": {
       "type": "string"
     },
+    "credit": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string",
+          "format": "uri"
+        }
+      },
+      "required": [
+        "name",
+        "url"
+      ]
+    },
     "hasNotes": {
       "type": "boolean"
     },
@@ -58,7 +74,18 @@
           "ingredients": {
             "type": "array",
             "items": {
-              "type": "string"
+              "type": "object",
+              "properties": {
+                "count": {
+                  "type": "string"
+                },
+                "item": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "item"
+              ]
             }
           }
         },

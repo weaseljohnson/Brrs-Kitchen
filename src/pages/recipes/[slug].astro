@@ -12,7 +12,7 @@ export async function getStaticPaths() {
 
 const { recipe } = Astro.props;
 const { Content } = await render(recipe);
-const { title, category, prepTime, cookTime, yield: yieldText, intro, tags, dietary, panVariants, directions, hasNotes, image } = recipe.data;
+const { title, category, prepTime, cookTime, yield: yieldText, intro, tags, dietary, panVariants, directions, hasNotes, image, credit } = recipe.data;
 ---
 
 <Layout title={title}>
@@ -39,10 +39,23 @@ const { title, category, prepTime, cookTime, yield: yieldText, intro, tags, diet
               <p class="recipe-hero__intro" set:html={intro} />
             )}
 
+            {credit && (
+              <p class="recipe-credit">
+                Credit: <a href={credit.url} target="_blank" rel="noopener noreferrer">{credit.name}</a>
+              </p>
+            )}
+
             <div class="recipe-hero__actions">
-              <button class="recipe-btn recipe-btn--print" onclick="window.print()">
+              <a
+                href={`/recipes/print/${Astro.params.slug}?pan=${panVariants?.[0]?.id ?? ''}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="recipe-btn recipe-btn--print"
+                id="print-btn"
+                data-base-href={`/recipes/print/${Astro.params.slug}`}
+              >
                 Print Recipe
-              </button>
+              </a>
               <a
                 href={`https://pinterest.com/pin/create/button/?url=${encodeURIComponent(Astro.url.href)}&description=${encodeURIComponent(title)}`}
                 target="_blank"
@@ -69,7 +82,7 @@ const { title, category, prepTime, cookTime, yield: yieldText, intro, tags, diet
               {yieldText && (
                 <div class="stat">
                   <span class="stat__label">Yield</span>
-                  <span class="stat__value" id="servings-display">{yieldText}</span>
+                  <span class="stat__value" id="servings-display" data-original={yieldText}>{yieldText}</span>
                 </div>
               )}
             </div>
@@ -111,13 +124,41 @@ const { title, category, prepTime, cookTime, yield: yieldText, intro, tags, diet
             </div>
           )}
 
+          <div class="scale-control" role="group" aria-label="Recipe scale">
+            <span class="scale-control__label">Scale</span>
+            <div class="scale-options">
+              {[
+                { value: '0.5', label: '½×' },
+                { value: '1',   label: '1×' },
+                { value: '2',   label: '2×' },
+              ].map(opt => (
+                <label class="scale-option">
+                  <input
+                    type="radio"
+                    name="recipe-scale"
+                    value={opt.value}
+                    checked={opt.value === '1'}
+                    class="scale-option__input"
+                  />
+                  <span class="scale-option__label">{opt.label}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+
           {panVariants && panVariants.map((variant, i) => (
             <ul
               class={`ingredient-list${i !== 0 ? ' ingredient-list--hidden' : ''}`}
               data-panel={variant.id}
             >
-              {variant.ingredients.map(item => (
-                <li>{item}</li>
+              {variant.ingredients.map(ingredient => (
+                <li data-original={ingredient.count ?? ''}>
+                  <span class="ingredient-text">
+                    {ingredient.count && (
+                      <span class="ingredient-count">{ingredient.count}</span>
+                    )}<span class="ingredient-item">{ingredient.count ? ' ' : ''}{ingredient.item}</span>
+                  </span>
+                </li>
               ))}
             </ul>
           ))}
@@ -369,6 +410,84 @@ const { title, category, prepTime, cookTime, yield: yieldText, intro, tags, diet
     border: 1px solid rgba(118, 130, 95, 0.3);
   }
 
+  /* ── CREDIT ── */
+  .recipe-credit {
+    font-family: var(--font-sans);
+    font-size: var(--text-sm);
+    font-weight: 200;
+    font-style: italic;
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-6);
+    max-width: none;
+    text-align: center;
+  }
+
+  .recipe-credit a {
+    color: var(--color-accent-2);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    font-style: italic;
+  }
+
+  /* ── SCALE CONTROL ── */
+  .scale-control {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    margin-bottom: var(--space-6);
+  }
+
+  .scale-control__label {
+    font-family: var(--font-sans);
+    font-size: var(--text-xs);
+    font-weight: 200;
+    font-style: italic;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    white-space: nowrap;
+  }
+
+  .scale-options {
+    display: flex;
+    gap: 0;
+    border: 1px solid var(--color-accent-1);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+  }
+
+  .scale-option {
+    cursor: pointer;
+  }
+
+  .scale-option__input {
+    display: none;
+  }
+
+  .scale-option__label {
+    display: block;
+    padding: var(--space-2) var(--space-4);
+    font-family: var(--font-sans);
+    font-size: var(--text-sm);
+    color: var(--color-accent-1);
+    border-right: 1px solid var(--color-accent-1);
+    transition: background var(--transition-fast), color var(--transition-fast);
+    user-select: none;
+  }
+
+  .scale-option:last-child .scale-option__label {
+    border-right: none;
+  }
+
+  .scale-option__input:checked + .scale-option__label {
+    background: var(--color-accent-1);
+    color: var(--cream);
+  }
+
+  .scale-option:hover .scale-option__input:not(:checked) + .scale-option__label {
+    background: rgba(118, 130, 95, 0.1);
+  }
+
   /* ── SECTIONS ── */
   .recipe-section {
     padding: var(--space-12) 0;
@@ -447,6 +566,18 @@ const { title, category, prepTime, cookTime, yield: yieldText, intro, tags, diet
     top: -2px;
   }
 
+  .ingredient-text {
+    flex: 1;
+  }
+
+  .ingredient-count {
+    color: var(--color-text);
+  }
+
+  .ingredient-item {
+    color: var(--color-text-muted);
+  }
+
   /* ── STEPS ── */
   .step-list {
     list-style: none;
@@ -491,20 +622,53 @@ const { title, category, prepTime, cookTime, yield: yieldText, intro, tags, diet
 </style>
 
 <script>
-  const tabs = document.querySelectorAll('.pan-tab');
-  const panels = document.querySelectorAll('.ingredient-list');
-  const servingsDisplay = document.getElementById('servings-display');
+  import { scaleCount, scaleYield } from '../../scripts/scaleIngredients';
 
+  // ── STATE ──
+  let currentScale = 1;
+
+  // ── REFS ──
+  const tabs           = document.querySelectorAll<HTMLButtonElement>('.pan-tab');
+  const panels         = document.querySelectorAll<HTMLElement>('.ingredient-list');
+  const servingsDisplay = document.getElementById('servings-display') as HTMLElement | null;
+  const printBtn       = document.getElementById('print-btn') as HTMLAnchorElement | null;
+  const scaleInputs    = document.querySelectorAll<HTMLInputElement>('input[name="recipe-scale"]');
+
+  // ── HELPERS ──
+  function getActivePanId(): string {
+    return document.querySelector<HTMLButtonElement>('.pan-tab--active')?.dataset.tab ?? '';
+  }
+
+  function updatePrintUrl(): void {
+    if (printBtn) {
+      printBtn.href = `${printBtn.dataset.baseHref}?pan=${getActivePanId()}&scale=${currentScale}`;
+    }
+  }
+
+  function applyScaleToVisible(): void {
+    document
+      .querySelectorAll<HTMLLIElement>('.ingredient-list:not(.ingredient-list--hidden) li')
+      .forEach(li => {
+        const countSpan = li.querySelector<HTMLSpanElement>('.ingredient-count');
+        if (countSpan) {
+          countSpan.textContent = scaleCount(li.dataset.original ?? '', currentScale);
+        }
+      });
+
+    if (servingsDisplay?.dataset.original) {
+      servingsDisplay.textContent = scaleYield(servingsDisplay.dataset.original, currentScale);
+    }
+  }
+
+  // ── PAN TABS ──
   tabs.forEach(tab => {
     tab.addEventListener('click', () => {
       const target = tab.dataset.tab;
-      const servings = tab.dataset.servings;
 
       tabs.forEach(t => {
         t.classList.remove('pan-tab--active');
         t.setAttribute('aria-selected', 'false');
       });
-
       tab.classList.add('pan-tab--active');
       tab.setAttribute('aria-selected', 'true');
 
@@ -512,9 +676,25 @@ const { title, category, prepTime, cookTime, yield: yieldText, intro, tags, diet
         panel.classList.toggle('ingredient-list--hidden', panel.dataset.panel !== target);
       });
 
-      if (servingsDisplay) {
-        servingsDisplay.textContent = tab.dataset.yield;
+      // Update yield baseline to this variant, then re-scale
+      if (servingsDisplay && tab.dataset.yield) {
+        servingsDisplay.dataset.original = tab.dataset.yield;
       }
+
+      applyScaleToVisible();
+      updatePrintUrl();
     });
   });
+
+  // ── SCALE CONTROL ──
+  scaleInputs.forEach(input => {
+    input.addEventListener('change', () => {
+      currentScale = parseFloat(input.value);
+      applyScaleToVisible();
+      updatePrintUrl();
+    });
+  });
+
+  // ── INIT ──
+  updatePrintUrl();
 </script>

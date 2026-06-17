@@ -14,12 +14,19 @@ const recipes = defineCollection({
     dietary: z.array(z.string()).optional(),
     pubDate: z.string().optional(),
     image: z.string().optional(),
+    credit: z.object({
+      name: z.string(),
+      url:  z.string().url(),
+    }).optional(),
     hasNotes: z.boolean().optional(),
     panVariants: z.array(z.object({
       id: z.string(),
       label: z.string(),
       yield: z.string(),
-      ingredients: z.array(z.string()),
+      ingredients: z.array(z.object({
+        count: z.string().optional(),
+        item:  z.string(),
+      })),
     })).optional(),
     directions: z.array(z.object({
       title: z.string(),

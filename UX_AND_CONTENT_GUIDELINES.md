@@ -86,6 +86,16 @@ These are descriptive constraints which have been provided by Brianna to guide t
 - Tags display — personal labels (burnt-peach) and dietary flags (olive)
 - Freeform notes section below directions (rendered from MD body, gated by `hasNotes` flag)
 - Image placeholder (awaiting CMS image upload flow)
+- Recipe credit attribution — optional `credit` frontmatter field (`name` + `url`). Renders below the intro text, above the action buttons, as "Credit: [Name]" in muted italic. Also renders on the print page. Neutral label intentionally avoids assuming "adapted from" vs. "by."
+- Ingredient scaling control — segmented ½×/1×/2× radio below the pan selector (or standalone if no pan variants). Scales all measurement tokens in ingredient strings. Metric values (g, kg, ml, l) scale as rounded decimals. Imperial/volume values (tsp, tbsp, cup, oz, lb) snap to nearest common cooking fraction (e.g. ⅔ cup × 2 → 1⅓ cup). Count descriptors (large, medium, small, whole) have their leading number scaled. Yield display scales with the control. Scale state is passed to the print page via `?scale=` query param. Shared utility: `src/scripts/scaleIngredients.ts`.
+
+### Print Page (`/recipes/print/[slug]`)
+- Separate static route at `src/pages/recipes/print/[slug].astro` — no site header, minimal layout optimized for paper
+- Opens in a new tab from the Print Recipe button; auto-triggers `window.print()` on load
+- Reads `?pan=` and `?scale=` query params from the URL to match the user's current selections on the recipe page
+- Print button href updates dynamically as the user switches pan tabs or scale factor
+- Credit attribution displays below intro when present
+- `@media print` block strips container padding for clean paper output
 
 ### Planned
 - Pro tip tooltip callouts — inline in recipe body, dismissible

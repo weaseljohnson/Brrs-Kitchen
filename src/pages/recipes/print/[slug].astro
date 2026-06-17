@@ -1,0 +1,448 @@
+---
+import '../../../styles/global.css';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const recipes = await getCollection('recipes');
+  return recipes.map(recipe => ({
+    params: { slug: recipe.id.split('/').pop() },
+    props: { recipe },
+  }));
+}
+
+const { recipe } = Astro.props;
+const { Content } = await render(recipe);
+const {
+  title, category, prepTime, cookTime,
+  yield: yieldText, intro, tags, dietary,
+  panVariants, directions, hasNotes, image, credit
+} = recipe.data;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex" />
+    <title>{title} — Brr's Kitchen</title>
+  </head>
+  <body class="print-page">
+    <div class="print-container">
+
+      {image && (
+        <div class="print-img-wrap">
+          <img src={image} alt={title} class="print-img" />
+        </div>
+      )}
+
+      <header class="print-header">
+        <span class="print-category">{category}</span>
+        <h1 class="print-title">{title}</h1>
+        {intro && <p class="print-intro" set:html={intro} />}
+
+        {credit && (
+          <p class="print-credit">
+            Credit: <a href={credit.url}>{credit.name}</a>
+          </p>
+        )}
+
+        <div class="print-stats">
+          {prepTime && (
+            <div class="stat">
+              <span class="stat__label">Prep</span>
+              <span class="stat__value">{prepTime}</span>
+            </div>
+          )}
+          {cookTime && (
+            <div class="stat">
+              <span class="stat__label">Cook</span>
+              <span class="stat__value">{cookTime}</span>
+            </div>
+          )}
+          <div class="stat">
+            <span class="stat__label">Yield</span>
+            {panVariants ? (
+              panVariants.map(v => (
+                <span class="stat__value print-yield" data-pan={v.id} data-original={v.yield}>{v.yield}</span>
+              ))
+            ) : (
+              <span class="stat__value">{yieldText}</span>
+            )}
+          </div>
+        </div>
+
+        {((tags && tags.length > 0) || (dietary && dietary.length > 0)) && (
+          <div class="print-tags">
+            {tags && tags.map(tag => (
+              <span class="tag tag--personal">{tag}</span>
+            ))}
+            {dietary && dietary.map(flag => (
+              <span class="tag tag--dietary">{flag}</span>
+            ))}
+          </div>
+        )}
+      </header>
+
+      <hr class="print-divider" />
+
+      <section class="print-section">
+        <h2>Ingredients</h2>
+        {panVariants && panVariants.map(variant => (
+          <div class="print-ingredients" data-pan={variant.id}>
+            {panVariants.length > 1 && (
+              <p class="print-variant-label">{variant.label}</p>
+            )}
+            <ul class="ingredient-list">
+              {variant.ingredients.map(ingredient => (
+                <li data-original={ingredient.count ?? ''}>
+                  <span class="ingredient-text">
+                    {ingredient.count && (
+                      <span class="ingredient-count">{ingredient.count}</span>
+                    )}<span class="ingredient-item">{ingredient.count ? ' ' : ''}{ingredient.item}</span>
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </section>
+
+      <hr class="print-divider" />
+
+      <section class="print-section">
+        <h2>Directions</h2>
+        <ol class="step-list">
+          {directions && directions.map((step, i) => (
+            <li class="step">
+              <span class="step__number">{i + 1}</span>
+              <div class="step__content">
+                <h3 class="step__title">{step.title}</h3>
+                <p set:html={step.body} />
+              </div>
+            </li>
+          ))}
+        </ol>
+      </section>
+
+      {hasNotes && (
+        <>
+          <hr class="print-divider" />
+          <section class="print-section">
+            <h2>Notes</h2>
+            <div class="recipe-notes">
+              <Content />
+            </div>
+          </section>
+        </>
+      )}
+
+      <footer class="print-footer">
+        <p>brrs-kitchen.com</p>
+      </footer>
+
+    </div>
+  </body>
+</html>
+
+<style>
+  .print-page {
+    background: #fff;
+    color: #1c1317;
+  }
+
+  .print-container {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 2rem 2rem 3rem;
+  }
+
+  /* ── IMAGE ── */
+  .print-img-wrap {
+    margin-bottom: 1.5rem;
+  }
+
+  .print-img {
+    width: 100%;
+    max-height: 340px;
+    object-fit: cover;
+    border-radius: 0.5rem;
+    display: block;
+  }
+
+  /* ── HEADER ── */
+  .print-header {
+    margin-bottom: 1.5rem;
+  }
+
+  .print-category {
+    display: block;
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    font-weight: 200;
+    font-style: italic;
+    color: var(--color-accent-2);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-bottom: 0.4rem;
+  }
+
+  .print-title {
+    font-family: var(--font-serif);
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 0.75rem;
+  }
+
+  .print-intro {
+    font-size: 0.9375rem;
+    color: #4a4a4a;
+    line-height: 1.7;
+    margin-bottom: 1rem;
+    max-width: none;
+  }
+
+  .print-credit {
+    font-size: 0.8rem;
+    font-style: italic;
+    color: #888;
+    margin-bottom: 0.75rem;
+    max-width: none;
+  }
+
+  /* ── STATS ── */
+  .print-stats {
+    display: flex;
+    gap: 2rem;
+    margin-bottom: 1rem;
+  }
+
+  .stat {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  .stat__label {
+    font-size: 0.7rem;
+    font-weight: 200;
+    font-style: italic;
+    color: #64696a;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .stat__value {
+    font-family: var(--font-serif);
+    font-size: 1rem;
+    color: #1c1317;
+  }
+
+  /* ── TAGS ── */
+  .print-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: 0.75rem;
+  }
+
+  .tag {
+    font-family: var(--font-sans);
+    font-size: 0.7rem;
+    padding: 0.2rem 0.6rem;
+    border-radius: 0.25rem;
+    white-space: nowrap;
+  }
+
+  .tag--personal {
+    background: rgba(222, 124, 90, 0.12);
+    color: var(--color-accent-2);
+    border: 1px solid rgba(222, 124, 90, 0.3);
+  }
+
+  .tag--dietary {
+    background: rgba(118, 130, 95, 0.12);
+    color: var(--color-accent-1);
+    border: 1px solid rgba(118, 130, 95, 0.3);
+  }
+
+  /* ── DIVIDER ── */
+  .print-divider {
+    border: none;
+    border-top: 1px solid rgba(121, 59, 2, 0.15);
+    margin: 1.5rem 0;
+  }
+
+  /* ── SECTIONS ── */
+  .print-section h2 {
+    font-family: var(--font-serif);
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+  }
+
+  .print-variant-label {
+    font-family: var(--font-sans);
+    font-size: 0.8rem;
+    font-weight: 200;
+    font-style: italic;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-accent-2);
+    margin-bottom: 0.5rem;
+    max-width: none;
+  }
+
+  /* ── INGREDIENTS ── */
+  .ingredient-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .ingredient-list li {
+    font-size: 0.9rem;
+    padding: 0.4rem 0;
+    border-bottom: 1px solid rgba(118, 130, 95, 0.12);
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+  }
+
+  .ingredient-list li::before {
+    content: '';
+    display: inline-block;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--color-accent-2);
+    flex-shrink: 0;
+    position: relative;
+    top: -1px;
+  }
+
+  /* ── STEPS ── */
+  .step-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .step {
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-start;
+  }
+
+  .step__number {
+    font-family: var(--font-serif);
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--color-accent-2);
+    min-width: 1.5rem;
+    flex-shrink: 0;
+    line-height: 1.4;
+  }
+
+  .step__title {
+    font-family: var(--font-serif);
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 0.3rem;
+    line-height: 1.3;
+  }
+
+  .step__content p {
+    font-size: 0.9rem;
+    color: #4a4a4a;
+    line-height: 1.7;
+    max-width: none;
+  }
+
+  /* ── NOTES ── */
+  .recipe-notes {
+    font-size: 0.9rem;
+    color: #4a4a4a;
+    line-height: 1.75;
+  }
+
+  .recipe-notes p {
+    max-width: none;
+    margin-bottom: 0.75rem;
+  }
+
+  /* ── FOOTER ── */
+  .print-footer {
+    margin-top: 2.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(118, 130, 95, 0.2);
+    font-size: 0.75rem;
+    color: #888;
+    font-style: italic;
+  }
+
+  .print-footer p {
+    max-width: none;
+  }
+
+  /* ── PRINT MEDIA ── */
+  @media print {
+    .print-page {
+      background: #fff;
+    }
+
+    .print-container {
+      padding: 0;
+      max-width: 100%;
+    }
+
+    .print-img {
+      max-height: 260px;
+    }
+  }
+</style>
+
+<script>
+  import { scaleCount, scaleYield } from '../../../scripts/scaleIngredients';
+
+  const params     = new URLSearchParams(window.location.search);
+  const firstPanel = document.querySelector<HTMLElement>('.print-ingredients');
+  const activePan  = params.get('pan') || firstPanel?.dataset.pan || null;
+  const scale      = parseFloat(params.get('scale') ?? '1') || 1;
+
+  // Show correct pan variant
+  if (activePan) {
+    document.querySelectorAll<HTMLElement>('.print-ingredients').forEach(el => {
+      el.style.display = el.dataset.pan === activePan ? '' : 'none';
+    });
+    document.querySelectorAll<HTMLElement>('.print-yield').forEach(el => {
+      el.style.display = el.dataset.pan === activePan ? '' : 'none';
+    });
+  }
+
+  // Apply scaling to visible ingredients
+  if (scale !== 1) {
+    document.querySelectorAll<HTMLElement>('.print-ingredients').forEach(panel => {
+      if (!activePan || panel.dataset.pan === activePan) {
+          panel.querySelectorAll<HTMLLIElement>('li').forEach(li => {
+        const countSpan = li.querySelector<HTMLSpanElement>('.ingredient-count');
+        if (countSpan) {
+          countSpan.textContent = scaleCount(li.dataset.original ?? '', scale);
+        }
+      });
+      }
+    });
+
+    document.querySelectorAll<HTMLElement>('.print-yield').forEach(el => {
+      if (!activePan || el.dataset.pan === activePan) {
+        el.textContent = scaleYield(el.dataset.original ?? el.textContent ?? '', scale);
+      }
+    });
+  }
+
+  window.addEventListener('load', () => window.print());
+</script>
