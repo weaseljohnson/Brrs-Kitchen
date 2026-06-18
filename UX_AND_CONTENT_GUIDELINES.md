@@ -78,35 +78,83 @@ These are descriptive constraints which have been provided by Brianna to guide t
 ## Recipe Page Features
 
 ### Implemented
+
 - Pan size tabs with dynamic ingredient switching
-- Dynamic yield display (updates when pan tab changes)
+- Dynamic yield display (updates when pan tab changes or scale is adjusted)
 - Prep / cook / yield stats bar
 - Category label with accent styling
 - Numbered step directions with titled steps
 - Tags display — personal labels (burnt-peach) and dietary flags (olive)
 - Freeform notes section below directions (rendered from MD body, gated by `hasNotes` flag)
-- Image placeholder (awaiting CMS image upload flow)
-- Recipe credit attribution — optional `credit` frontmatter field (`name` + `url`). Renders below the intro text, above the action buttons, as "Credit: [Name]" in muted italic. Also renders on the print page. Neutral label intentionally avoids assuming "adapted from" vs. "by."
-- Ingredient scaling control — segmented ½×/1×/2× radio below the pan selector (or standalone if no pan variants). Scales all measurement tokens in ingredient strings. Metric values (g, kg, ml, l) scale as rounded decimals. Imperial/volume values (tsp, tbsp, cup, oz, lb) snap to nearest common cooking fraction (e.g. ⅔ cup × 2 → 1⅓ cup). Count descriptors (large, medium, small, whole) have their leading number scaled. Yield display scales with the control. Scale state is passed to the print page via `?scale=` query param. Shared utility: `src/scripts/scaleIngredients.ts`.
+- Recipe header image — 3:2 aspect ratio, floats half above the header border box. Cream background padding creates a visual gap between image and box border. Falls back to a muted placeholder if no image is present.
+- Print Recipe button — opens `/recipes/print/[slug]` in a new tab. Print page is a minimal layout (no site header) that auto-triggers `window.print()` on load. Carries `?pan=` and `?scale=` query params so the print page matches the user's current selections.
+- Pin Recipe button — links to Pinterest share endpoint with pre-filled URL and recipe title.
+- Credit attribution — optional `credit` frontmatter field (named object: `name` + `url`). Renders below intro text, above action buttons, as "Credit: [Name]" in muted italic. Also renders on the print page. Neutral label intentionally avoids assuming "adapted from" vs. "by."
+- Ingredient scaling — segmented ½×/1×/2× radio control. Sits below the pan selector when pan variants are present, standalone otherwise. Yield display scales with the control. Scale state is passed to the print page via `?scale=` query param.
 
-### Print Page (`/recipes/print/[slug]`)
-- Separate static route at `src/pages/recipes/print/[slug].astro` — no site header, minimal layout optimized for paper
-- Opens in a new tab from the Print Recipe button; auto-triggers `window.print()` on load
-- Reads `?pan=` and `?scale=` query params from the URL to match the user's current selections on the recipe page
-- Print button href updates dynamically as the user switches pan tabs or scale factor
-- Credit attribution displays below intro when present
-- `@media print` block strips container padding for clean paper output
+### Ingredient Schema
+
+Ingredients are structured named objects, not plain strings. Each ingredient has two fields:
+
+```yaml
+- count: "113g (8 tbsp)"   # optional — omit for uncounted items
+  item: "unsalted butter"
+```
+
+- `count` contains all measurement text (metric, imperial, or both). This is the only field the scaler operates on.
+- `item` contains the ingredient name and any descriptors. Never touched by the scaler.
+- `count` is optional — items with no quantity (e.g. "butter for greasing") omit it entirely.
+- **House style rule:** count items always use a size descriptor so the scaler can anchor on a unit — write `"2 large"` not `"2"` for eggs, `"3 whole"` not `"3"` for cloves, etc. This is the only case where scaling requires authoring discipline.
+
+### Ingredient Scaling Rules (scaleIngredients.ts)
+
+Shared utility at `src/scripts/scaleIngredients.ts`. Exports `scaleCount(str, factor)` and `scaleYield(str, factor)`.
+
+**Metric**
+- `g` and `kg` scale in place. No cross-unit conversion (grams stay as grams).
+- `ml` stays as ml below 1000ml; converts to `l` at 1000ml+.
+
+**Imperial volume — conversion chain**
+- `tsp` → `tbsp` at exact multiples of 3 (3 tsp = 1 tbsp). Chains forward.
+- `tbsp` → `cup` at exact multiples of 4 (4 tbsp = ¼ cup). Chains forward.
+- `cup` → `tbsp`/`tsp` when value drops below ¼ cup. Remainder expressed as `tbsp + tsp` if the tsp value is a whole number, otherwise fractional tbsp.
+- `cup` → `gallon` only at exact 8-cup multiples (8 cups = ½ gallon, 16 cups = 1 gallon). Quarts and pints are not used as intermediate units — cups convert directly to half-gallon / gallon.
+
+**Imperial weight and large volume**
+- `oz`, `lb`, `pint`, `quart`, `gallon` — scale in place, no cross-unit conversion.
+
+**Fractions**
+- Output snaps to nearest common cooking fraction: ⅛, ¼, ⅓, ⅜, ½, ⅔, ¾, ⅞.
+- ⅙ and ⅚ are intentionally excluded from output (not real cooking measurements) but remain in the input parser so authored recipes using them are read correctly.
+- Compound measurements (e.g. `"1 cup + 2 tbsp"`) — each token scales and converts independently. No simplification is attempted.
+
+**Count descriptors**
+- `large`, `medium`, `small`, `whole` are recognized as units. The leading number scales; the descriptor is preserved.
 
 ### Planned
+
 - Pro tip tooltip callouts — inline in recipe body, dismissible
 - Feedback and questions form — button opens form, responses go to admin
 - Admin-curated Q&A displayed below recipe
 - Glossary term links — inline links to glossary page
 - Skill page links — inline links to cooking fundamentals
 
+### Print Page (`/recipes/print/[slug]`)
+
+- Separate static route at `src/pages/recipes/print/[slug].astro` — no site header, minimal layout optimized for paper
+- Opens in a new tab from the Print Recipe button; auto-triggers `window.print()` on load
+- Reads `?pan=` and `?scale=` query params from the URL to match the user's active selections on the recipe page
+- Print button `href` updates dynamically as the user switches pan tabs or scale factor
+- Credit attribution displays below intro when present
+- `@media print` block strips container padding for clean paper output
+- Marked `noindex, nofollow` — must be added explicitly to the print page's own `<head>` since it does not use `Layout.astro` and won't inherit sitewide meta tags
+
 ### Image Handling
-- TBD — whether images are required or optional per recipe
-- Upload flow to be handled via CMS (Step 5)
+
+- Recipe images stored at `/public/images/recipes/`
+- Declared in frontmatter as `image: "/images/recipes/Filename.jpg"`
+- Used in the recipe header (3:2 ratio, floats above border box) and homepage recipe cards (16:9 large card, square-cropped small cards)
+- Image is optional — all templates fall back to a muted olive placeholder
 
 
 ### Decorative / Design Decisions

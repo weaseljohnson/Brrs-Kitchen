@@ -104,39 +104,68 @@ Recipe body / notes in plain Markdown here...
 
 ## Repo Structure (planned)
 
+
+
 ```
 /
 ├── src/
-│   ├── layouts/
-│   │   └── Layout.astro
-│   ├── pages/
-│   │   ├── index.astro
-│   │   ├── admin/
-│   │   │   └── index.astro
-│   │   └── recipes/
-│   │       └── [slug].astro
-│   ├── styles/
-│   │   └── global.css
-│   └── content.config.ts
-├── content/
-│   └── recipes/
-│       └── desserts/
-│           └── best-homemade-brownies.md
+	│   .
+	├── components
+	│   ├── Header.astro
+	│   └── Welcome.astro
+	├── content.config.ts
+	├── layouts
+	│   └── Layout.astro
+	├── pages
+	│   ├── admin
+	│   │   └── index.astro
+	│   ├── index.astro
+	│   └── recipes
+	│       ├── [slug].astro
+	│       └── print
+	│           └── [slug].astro
+	├── scripts
+	│   └── scaleIngredients.ts
+	├── styles
+	│   └── global.css
+	└── utils
+		└── seo.ts
 ├── public/
-│   ├── fonts/
-│   └── images/
-│       └── logo/
-│       	└── android-chrome-192x192.png
-│       	└── android-chrome-512x512.png
-│       	└── apple-touch-icon.png
-│       	└── BK-Favicon-thin
-│       	└── BK-favicon.png
-│       	└── BK-Logo-Color
-│       	└── BK-Logo-Text
-│       	└── BK-Logo-Transparent
-│       	└── favicon-16x16.png
-│       	└── favicon-32x32.png
-│       	└── favicon.ico
+	│   .
+	├── fonts
+	│   ├── DMSans-Italic-VariableFont.woff2
+	│   ├── DMSans-VariableFont.woff2
+	│   ├── PTSerif-Bold.woff2
+	│   ├── PTSerif-BoldItalic.woff2
+	│   ├── PTSerif-Italic.woff2
+	│   └── PTSerif-Regular.woff2
+	└── images
+		├── HP-Banner-Dark.png
+		├── HP-Banner.png
+		├── logo
+		│   ├── android-chrome-192x192.png
+		│   ├── android-chrome-512x512.png
+		│   ├── apple-touch-icon.png
+		│   ├── BK_Logo Original Style Inspiration.png
+		│   ├── BK-Favicon-thin.png
+		│   ├── BK-favicon.png
+		│   ├── BK-Logo-Color.png
+		│   ├── BK-Logo-Header.png
+		│   ├── BK-Logo-Text.png
+		│   ├── favicon-16x16.png
+		│   ├── favicon-32x32.png
+		│   ├── favicon.ico
+		│   └── site.webmanifest
+		├── og
+		│   ├── og-default.jpg
+		│   └── og-default.png
+		└── recipes
+			└── Brownies.jpg
+├── content/
+	└── recipes
+		├── blank.gitkeep
+		└── desserts
+			└── best-homemade-brownies.md
 ├── api/	
 │   └── save-recipe.js        # not yet built
 └── astro.config.mjs
@@ -172,14 +201,23 @@ Average time from "save recipe" to "live on site": **~30–60 seconds** (Astro b
 
 ### Step 4 — Core Astro Layouts
 ✅ Complete
-- Dynamic route at `src/pages/recipes/[slug].astro`
-- Content collection defined in `src/content.config.ts`
-- Recipe markdown files stored in `/content/recipes/`
-- Global stylesheet imported via frontmatter in `Layout.astro`
-- Header component at `src/components/Header.astro` — single-row sticky nav, dropdown menus, desktop search overlay, mobile hamburger menu with integrated search bar- Home page at `src/pages/index.astro` — category tiles, latest recipes, about blurb
-- Brownie recipe live at `/recipes/best-homemade-brownies`
-- All recipe data sourced from frontmatter — no hardcoded content in templates
-- MD body reserved for optional freeform notes (gated by `hasNotes` frontmatter flag)
+✅ Dynamic route at `src/pages/recipes/[slug].astro`
+✅ Content collection defined in `src/content.config.ts`
+✅ Recipe markdown files stored in `/content/recipes/`
+✅ Global stylesheet imported via frontmatter in `Layout.astro`
+✅ Header component at `src/components/Header.astro` — single-row sticky nav, dropdown menus, desktop search overlay, mobile hamburger menu with integrated search bar- Home page at `src/pages/index.astro` — category tiles, latest recipes, about blurb
+✅ Brownie recipe live at `/recipes/best-homemade-brownies`
+✅ All recipe data sourced from frontmatter — no hardcoded content in templates
+✅ MD body reserved for optional freeform notes (gated by `hasNotes` frontmatter flag)
+
+### Step 5 — SEO & Structured Data
+✅ Complete
+- Utility module at `src/utils/seo.ts` — schema builders, ISO 8601 time parser, duration adder, safe JSON-LD serializer
+- `Layout.astro` updated: canonical URL, robots meta, Open Graph tags, Twitter/X Card, JSON-LD `@graph` block, full favicon/icon link set
+- `[slug].astro`: builds and passes `Recipe` schema (with `HowToStep` instructions, ISO durations, ingredients, keywords, image)
+- `index.astro`: builds and passes `WebPage` schema
+- `astro.config.mjs`: `site` option set to `https://brrs-kitchen.com` (required for `Astro.url.origin` in production)
+- Print pages (`/recipes/print/[slug]`): need explicit `noindex, nofollow` meta — no `Layout.astro` inheritance
 
 
 

@@ -1,6 +1,7 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import { getCollection, render } from 'astro:content';
+import { buildRecipeSchema } from '../../utils/seo';
 
 export async function getStaticPaths() {
   const recipes = await getCollection('recipes');
@@ -13,9 +14,18 @@ export async function getStaticPaths() {
 const { recipe } = Astro.props;
 const { Content } = await render(recipe);
 const { title, category, prepTime, cookTime, yield: yieldText, intro, tags, dietary, panVariants, directions, hasNotes, image, credit } = recipe.data;
+
+const recipeSchema = buildRecipeSchema(recipe.data, Astro.url.href, Astro.url.origin);
+const ogImage      = image ?? '/images/og/og-default.jpg';
 ---
 
-<Layout title={title}>
+<Layout
+  title={title}
+  description={intro ?? ''}
+  ogImage={ogImage}
+  ogType="article"
+  schema={[recipeSchema]}
+>
   <main class="recipe-page">
 
     <!-- ── RECIPE HEADER ── -->

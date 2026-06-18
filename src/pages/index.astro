@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import { getCollection } from 'astro:content';
+import { buildWebPageSchema } from '../utils/seo';
 
 const allRecipes = await getCollection('recipes');
 
@@ -12,9 +13,20 @@ const latestRecipes = [...allRecipes]
     return dateB - dateA;
   })
   .slice(0, 4);
+
+const homepageSchema = buildWebPageSchema(
+  "Brr's Kitchen",
+  "A homegrown cookbook by Brianna — real recipes, tips, and culinary knowledge.",
+  Astro.url.href,
+);
 ---
 
-<Layout title="Home">
+<Layout
+  title="Home"
+  description="A homegrown cookbook by Brianna — real recipes, tips, and culinary knowledge."
+  ogImage="/images/og/og-default.jpg"
+  schema={[homepageSchema]}
+>
   <main class="home-page">
 
   <!-- ── BANNER ── -->

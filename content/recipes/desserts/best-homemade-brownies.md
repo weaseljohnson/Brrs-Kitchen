@@ -1,7 +1,7 @@
 ---
 title: "THE BEST Homemade Brownies"
 category: "Desserts"
-prepTime: "15 min"
+prepTime: "35-40 min"
 cookTime: "20–25 min"
 yield: "16 brownies"
 intro: "These brownies strike the perfect balance between fudgy and structured — a glossy crackle top, deeply chocolatey interior, and a texture that holds up whether you eat them warm or straight from the fridge."

@@ -1,13 +1,39 @@
 ---
 import '../styles/global.css';
 import Header from '../components/Header.astro';
+import { buildWebSiteSchema, buildOrganizationSchema, safeJsonLd } from '../utils/seo';
 
 interface Props {
-  title?: string;
+  title?:       string;
   description?: string;
+  ogImage?:     string;
+  ogType?:      'website' | 'article';
+  schema?:      object[];
 }
 
-const { title = "Brr's Kitchen", description = "" } = Astro.props;
+const {
+  title       = "Brr's Kitchen",
+  description = '',
+  ogImage     = '/images/og/og-default.jpg',
+  ogType      = 'website',
+  schema      = [],
+} = Astro.props;
+
+const origin         = Astro.url.origin;
+const canonicalURL   = Astro.url.href;
+const ogImageURL     = `${origin}${ogImage}`;
+
+// Avoid "Brr's Kitchen | Brr's Kitchen" on the default title
+const formattedTitle = title === "Brr's Kitchen"
+  ? "Brr's Kitchen"
+  : `${title} | Brr's Kitchen`;
+
+// Sitewide schemas injected on every page
+const sitewideSchemas = [
+  buildWebSiteSchema(origin),
+  buildOrganizationSchema(origin),
+];
+const allSchemas = [...sitewideSchemas, ...schema];
 ---
 
 <!doctype html>
@@ -15,11 +41,39 @@ const { title = "Brr's Kitchen", description = "" } = Astro.props;
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="icon" href="/favicon.ico" />
+    <link rel="icon" href="/images/logo/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/logo/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/logo/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/logo/favicon-16x16.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/images/logo/android-chrome-192x192.png" />
+    <link rel="icon" type="image/png" sizes="512x512" href="/images/logo/android-chrome-512x512.png" />
+    <link rel="manifest" href="/images/logo/site.webmanifest" />
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={description} />
-    <title>{title} | Brr's Kitchen</title>
+    <link rel="canonical" href={canonicalURL} />
+    <meta name="robots" content="index, follow" />
+    <title>{formattedTitle}</title>
+
+    <!-- Open Graph -->
+    <meta property="og:type"        content={ogType} />
+    <meta property="og:site_name"   content="Brr's Kitchen" />
+    <meta property="og:title"       content={formattedTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url"         content={canonicalURL} />
+    <meta property="og:image"       content={ogImageURL} />
+    <meta property="og:image:alt"   content={formattedTitle} />
+
+    <!-- Twitter / X Card -->
+    <meta name="twitter:card"        content="summary_large_image" />
+    <meta name="twitter:title"       content={formattedTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image"       content={ogImageURL} />
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json" set:html={safeJsonLd({
+      '@context': 'https://schema.org',
+      '@graph':   allSchemas,
+    })} />
   </head>
   <body>
     <Header />
