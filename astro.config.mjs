@@ -1,7 +1,9 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
+import vercel from '@astrojs/vercel';
 
-// https://astro.build/config
 export default defineConfig({
-    site: 'https://brrs-kitchen.com',
+  site: 'https://brrs-kitchen.com',
+  output: 'server',
+  adapter: vercel(),
 });

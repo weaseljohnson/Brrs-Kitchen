@@ -11,6 +11,8 @@ export async function getStaticPaths() {
   }));
 }
 
+export const prerender = true;
+
 const { recipe } = Astro.props;
 const { Content } = await render(recipe);
 const { title, category, prepTime, cookTime, yield: yieldText, intro, tags, dietary, panVariants, directions, hasNotes, image, credit } = recipe.data;

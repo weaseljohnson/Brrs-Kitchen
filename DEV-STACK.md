@@ -2,6 +2,9 @@
 
 ## Stack Summary
 
+> **Note:** Project runs in `output: 'server'` mode (Astro v6). All public-facing
+> pages require `export const prerender = true` in their frontmatter.
+
 | Layer | Tool | Role |
 |---|---|---|
 | Hosting & Functions | Vercel | Serves the site, runs serverless functions |
@@ -121,9 +124,14 @@ Recipe body / notes in plain Markdown here...
 	│   │   └── index.astro
 	│   ├── index.astro
 	│   └── recipes
-	│       ├── [slug].astro
-	│       └── print
-	│           └── [slug].astro
+	│   │   ├── [slug].astro
+	│   │   └── print
+	│   │       └── [slug].astro
+    │   ├── admin/
+    │   │   ├── index.astro        # dashboard (Phase 1 — pending)
+    │   │   └── login.astro        # login page ✅
+    │   ├── api/
+    │   │   └── admin-login.ts     # login POST handler ✅
 	├── scripts
 	│   └── scaleIngredients.ts
 	├── styles
@@ -166,8 +174,8 @@ Recipe body / notes in plain Markdown here...
 		├── blank.gitkeep
 		└── desserts
 			└── best-homemade-brownies.md
-├── api/	
-│   └── save-recipe.js        # not yet built
+├── api/
+│   └── save-recipe.js             # Vercel serverless function (Phase 2 — pending)
 └── astro.config.mjs
 ```
 
@@ -212,12 +220,19 @@ Average time from "save recipe" to "live on site": **~30–60 seconds** (Astro b
 
 ### Step 5 — SEO & Structured Data
 ✅ Complete
-- Utility module at `src/utils/seo.ts` — schema builders, ISO 8601 time parser, duration adder, safe JSON-LD serializer
-- `Layout.astro` updated: canonical URL, robots meta, Open Graph tags, Twitter/X Card, JSON-LD `@graph` block, full favicon/icon link set
-- `[slug].astro`: builds and passes `Recipe` schema (with `HowToStep` instructions, ISO durations, ingredients, keywords, image)
-- `index.astro`: builds and passes `WebPage` schema
-- `astro.config.mjs`: `site` option set to `https://brrs-kitchen.com` (required for `Astro.url.origin` in production)
-- Print pages (`/recipes/print/[slug]`): need explicit `noindex, nofollow` meta — no `Layout.astro` inheritance
+- Utility module at `src/utils/seo.ts`
+- `Layout.astro` updated: canonical URL, robots meta, OG tags, Twitter Card, JSON-LD
+- `[slug].astro`: Recipe schema with HowToStep instructions
+- `index.astro`: WebPage schema
+- Print pages need explicit `noindex, nofollow` — no Layout.astro inheritance
+
+### Step 6 — CMS Phase 0
+✅ Complete
+- Astro config updated to `output: 'server'`; all public pages marked `export const prerender = true`
+- Vercel adapter installed (`@astrojs/vercel` v10)
+- Middleware auth implemented — see CMS.md for full details
+- All required environment variables set in `.env` (local) and Vercel dashboard
+- Next: Phase 1 — Admin UI scaffold (see CMS.md)
 
 
 

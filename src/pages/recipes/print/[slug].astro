@@ -10,6 +10,8 @@ export async function getStaticPaths() {
   }));
 }
 
+export const prerender = true;
+
 const { recipe } = Astro.props;
 const { Content } = await render(recipe);
 const {
