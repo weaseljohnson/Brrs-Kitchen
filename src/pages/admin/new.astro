@@ -738,7 +738,7 @@ const CATEGORIES = ['Desserts', 'Entrees', 'Sides', 'Drinks', 'Snacks', 'Basics'
     }
 
     try {
-        const res  = await fetch('/api/save-recipe.ts', {
+        const res  = await fetch('/api/save-recipe', {
         method:  'POST',
         headers: { 'Content-Type': 'application/json' },
         body:    JSON.stringify(payload),

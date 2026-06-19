@@ -4,7 +4,6 @@
     "moduleResolution": "bundler",
     "allowJs": true,
     "ignoreDeprecations": "6.0",
-    "isolatedModules": true
   },
   "include": [".astro/types.d.ts", "**/*"],
   "exclude": ["dist", "node_modules"]
