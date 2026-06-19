@@ -15,8 +15,7 @@ export const prerender = true;
 
 const { recipe } = Astro.props;
 const { Content } = await render(recipe);
-const { title, category, prepTime, cookTime, yield: yieldText, intro, tags, dietary, panVariants, directions, hasNotes, image, credit } = recipe.data;
-
+const { title, category, prepTime, cookTime, yield: yieldText, intro, tags, dietary, panVariants, ingredients, directions, hasNotes, image, credit } = recipe.data;
 const recipeSchema = buildRecipeSchema(recipe.data, Astro.url.href, Astro.url.origin);
 const ogImage      = image ?? '/images/og/og-default.jpg';
 ---
@@ -133,6 +132,19 @@ const ogImage      = image ?? '/images/og/og-default.jpg';
                   {variant.label}
                 </button>
               ))}
+              {!panVariants && ingredients && (
+                <ul class="ingredient-list" data-panel="single">
+                  {ingredients.map(ingredient => (
+                    <li data-original={ingredient.count ?? ''}>
+                      <span class="ingredient-text">
+                        {ingredient.count && (
+                          <span class="ingredient-count">{ingredient.count}</span>
+                        )}<span class="ingredient-item">{ingredient.count ? ' ' : ''}{ingredient.item}</span>
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
           )}
 

@@ -3,7 +3,7 @@ import type { APIRoute } from 'astro';
 export const prerender = false;
 
 const COOKIE_NAME    = 'brrs_admin_auth';
-const COOKIE_MAX_AGE = 60 * 60 * 24 * 7; // 7 days
+const COOKIE_MAX_AGE = 60 * 60 * 24 * 1; // 7 days
 
 export const POST: APIRoute = async ({ request, cookies, redirect }) => {
   const formData = await request.formData();

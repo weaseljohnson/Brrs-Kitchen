@@ -119,19 +119,20 @@ Recipe body / notes in plain Markdown here...
 	├── content.config.ts
 	├── layouts
 	│   └── Layout.astro
-	├── pages
-	│   ├── admin
-	│   │   └── index.astro
-	│   ├── index.astro
-	│   └── recipes
-	│   │   ├── [slug].astro
-	│   │   └── print
-	│   │       └── [slug].astro
-    │   ├── admin/
-    │   │   ├── index.astro        # dashboard (Phase 1 — pending)
-    │   │   └── login.astro        # login page ✅
-    │   ├── api/
-    │   │   └── admin-login.ts     # login POST handler ✅
+	│   └── AdminLayout.astro
+	|-- Pages
+	│	├── admin
+	│	│   ├── index.astro
+	│	│   ├── login.astro
+	│	│   ├── logout.ts
+	│	│   └── new.astro
+	│	├── api
+	└	│   └── admin-login.ts
+	│	├── index.astro
+	│	└── recipes
+	│		├── [slug].astro
+	│		└── print
+	│			└── [slug].astro
 	├── scripts
 	│   └── scaleIngredients.ts
 	├── styles
@@ -233,6 +234,11 @@ Average time from "save recipe" to "live on site": **~30–60 seconds** (Astro b
 - Middleware auth implemented — see CMS.md for full details
 - All required environment variables set in `.env` (local) and Vercel dashboard
 - Next: Phase 1 — Admin UI scaffold (see CMS.md)
+
+### Step 7 — CMS Phase 1
+✅ Complete
+- Admin layout, dashboard, and recipe form built (see CMS.md for full details)
+- Next: Phase 2 — Create Recipe API (`/api/save-recipe.js`)
 
 
 

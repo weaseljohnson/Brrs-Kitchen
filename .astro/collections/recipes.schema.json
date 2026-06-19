@@ -57,6 +57,23 @@
     "hasNotes": {
       "type": "boolean"
     },
+    "ingredients": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "string"
+          },
+          "item": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "item"
+        ]
+      }
+    },
     "panVariants": {
       "type": "array",
       "items": {

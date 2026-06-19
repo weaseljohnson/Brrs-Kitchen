@@ -1,8 +1,56 @@
 ---
+export const prerender = false;
+import AdminLayout from '../../layouts/AdminLayout.astro';
 ---
-<html>
-  <head><title>Admin</title></head>
-  <body>
-    <h1>Admin — coming soon</h1>
-  </body>
-</html>
+
+<AdminLayout title="Dashboard">
+
+  <div class="dash-head">
+    <h1>Recipes</h1>
+    <a href="/admin/new" class="admin-btn admin-btn--primary">+ New Recipe</a>
+  </div>
+
+  <div class="dash-list">
+    <!--
+      Phase 3: recipe list fetched from GitHub renders here.
+      Each row will have title, category, edit link, delete button.
+    -->
+    <div class="dash-empty">
+      <p>Your recipes will appear here once Phase 3 is complete.</p>
+      <p><a href="/admin/new">Add your first recipe →</a></p>
+    </div>
+  </div>
+
+</AdminLayout>
+
+<style>
+  .dash-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--space-8);
+    padding-bottom: var(--space-5);
+    border-bottom: 2px solid rgba(121, 59, 2, 0.12);
+  }
+
+  .dash-head h1 {
+    font-size: var(--text-3xl);
+  }
+
+  .dash-empty {
+    padding: var(--space-16) var(--space-6);
+    text-align: center;
+    border: 1px dashed rgba(118, 130, 95, 0.3);
+    border-radius: var(--radius-md);
+    color: var(--color-text-muted);
+  }
+
+  .dash-empty p {
+    max-width: none;
+    margin-bottom: var(--space-2);
+  }
+
+  .dash-empty a {
+    color: var(--color-accent-2);
+  }
+</style>

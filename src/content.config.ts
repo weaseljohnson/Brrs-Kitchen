@@ -19,6 +19,10 @@ const recipes = defineCollection({
       url:  z.string().url(),
     }).optional(),
     hasNotes: z.boolean().optional(),
+    ingredients: z.array(z.object({
+      count: z.string().optional(),
+      item: z.string(),
+    })).optional(),
     panVariants: z.array(z.object({
       id: z.string(),
       label: z.string(),

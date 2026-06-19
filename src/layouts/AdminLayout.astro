@@ -1,0 +1,356 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+}
+
+const { title = 'Admin' } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="/images/logo/favicon.ico" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>{title} — Brr's Kitchen Admin</title>
+  </head>
+  <body>
+
+    <header class="admin-topbar">
+      <div class="admin-topbar__inner">
+        <a href="/admin" class="admin-topbar__brand">
+          Brr's Kitchen
+          <span class="admin-topbar__badge">Admin</span>
+        </a>
+        <!-- Logout wired up in a subsequent step -->
+        <a href="/admin/logout" class="admin-topbar__logout">Log out</a>
+      </div>
+    </header>
+
+    <main class="admin-main">
+      <div class="admin-wrap">
+        <slot />
+      </div>
+    </main>
+
+  </body>
+</html>
+
+<style>
+  /* ── TOP BAR ── */
+  .admin-topbar {
+    background: var(--color-bg);
+    border-bottom: 1px solid rgba(118, 130, 95, 0.2);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .admin-topbar__inner {
+    max-width: 960px;
+    margin-inline: auto;
+    padding: var(--space-3) var(--space-6);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .admin-topbar__brand {
+    font-family: var(--font-serif);
+    font-size: var(--text-lg);
+    font-weight: 700;
+    color: var(--color-text);
+    text-decoration: none;
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-2);
+  }
+
+  .admin-topbar__badge {
+    font-family: var(--font-sans);
+    font-size: var(--text-xs);
+    font-weight: 200;
+    font-style: italic;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .admin-topbar__logout {
+    font-family: var(--font-sans);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+  }
+
+  .admin-topbar__logout:hover {
+    color: var(--color-accent-3);
+  }
+
+  /* ── MAIN CONTENT ── */
+  .admin-main {
+    padding: var(--space-10) 0 var(--space-20);
+  }
+
+  .admin-wrap {
+    max-width: 960px;
+    margin-inline: auto;
+    padding-inline: var(--space-6);
+  }
+
+
+  /* ================================================================
+     SHARED ADMIN UTILITIES
+     Defined as :global() so every admin page inherits them.
+     ================================================================ */
+
+  /* ── BUTTONS ── */
+  :global(.admin-btn) {
+    font-family: var(--font-sans);
+    font-size: var(--text-sm);
+    font-weight: 400;
+    padding: var(--space-2) var(--space-5);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    border: 1px solid transparent;
+    line-height: 1;
+    white-space: nowrap;
+    transition:
+      background var(--transition-fast),
+      color var(--transition-fast),
+      border-color var(--transition-fast);
+  }
+
+  /* Filled olive — primary action */
+  :global(.admin-btn--primary) {
+    background: var(--color-accent-1);
+    border-color: var(--color-accent-1);
+    color: var(--cream);
+  }
+  :global(.admin-btn--primary:hover) {
+    background: var(--color-accent-3);
+    border-color: var(--color-accent-3);
+    color: var(--cream);
+  }
+
+  /* Outlined olive — secondary action */
+  :global(.admin-btn--secondary) {
+    background: transparent;
+    border-color: var(--color-accent-1);
+    color: var(--color-accent-1);
+  }
+  :global(.admin-btn--secondary:hover) {
+    background: rgba(118, 130, 95, 0.1);
+  }
+
+  /* Text-only — subtle inline action */
+  :global(.admin-btn--ghost) {
+    background: transparent;
+    border-color: transparent;
+    color: var(--color-text-muted);
+    padding: var(--space-1) var(--space-2);
+    font-size: var(--text-xs);
+  }
+  :global(.admin-btn--ghost:hover) {
+    color: var(--color-accent-3);
+    background: rgba(121, 59, 2, 0.06);
+  }
+
+  /* Red-toned — destructive action */
+  :global(.admin-btn--danger) {
+    background: transparent;
+    border-color: rgba(189, 8, 28, 0.35);
+    color: #bd081c;
+  }
+  :global(.admin-btn--danger:hover) {
+    background: rgba(189, 8, 28, 0.08);
+    border-color: rgba(189, 8, 28, 0.6);
+  }
+
+  :global(.admin-btn:disabled) {
+    opacity: 0.4;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+
+  /* ── FORM SECTIONS ── */
+  :global(.admin-section) {
+    background: rgba(118, 130, 95, 0.03);
+    border: 1px solid rgba(118, 130, 95, 0.18);
+    border-radius: var(--radius-md);
+    padding: var(--space-6) var(--space-8);
+    margin-bottom: var(--space-5);
+  }
+
+  :global(.admin-section-title) {
+    font-family: var(--font-serif);
+    font-size: var(--text-xl);
+    font-weight: 700;
+    color: var(--color-text);
+    margin-bottom: var(--space-6);
+    padding-bottom: var(--space-3);
+    border-bottom: 1px solid rgba(118, 130, 95, 0.15);
+  }
+
+
+  /* ── FIELD LAYOUT ── */
+  :global(.admin-field) {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    margin-bottom: var(--space-5);
+  }
+
+  :global(.admin-field:last-child),
+  :global(.admin-field--no-margin) {
+    margin-bottom: 0;
+  }
+
+  /* 2- and 3-column field grids */
+  :global(.admin-row) {
+    display: grid;
+    gap: var(--space-4);
+    margin-bottom: var(--space-5);
+  }
+  :global(.admin-row--2) { grid-template-columns: 1fr 1fr; }
+  :global(.admin-row--3) { grid-template-columns: 1fr 1fr 1fr; }
+
+
+  /* ── LABELS ── */
+  :global(.admin-label) {
+    font-family: var(--font-sans);
+    font-size: var(--text-xs);
+    font-weight: 400;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  :global(.admin-label--required::after) {
+    content: ' *';
+    color: var(--color-accent-2);
+  }
+
+
+  /* ── INPUTS ── */
+  :global(.admin-input),
+  :global(.admin-textarea),
+  :global(.admin-select) {
+    font-family: var(--font-sans);
+    font-size: var(--text-base);
+    color: var(--color-text);
+    background: var(--color-bg);
+    border: 1px solid rgba(118, 130, 95, 0.3);
+    border-radius: var(--radius-sm);
+    padding: var(--space-2) var(--space-3);
+    width: 100%;
+    outline: none;
+    transition:
+      border-color var(--transition-fast),
+      box-shadow var(--transition-fast);
+  }
+
+  :global(.admin-input:focus),
+  :global(.admin-textarea:focus),
+  :global(.admin-select:focus) {
+    border-color: var(--color-accent-1);
+    box-shadow: 0 0 0 3px rgba(118, 130, 95, 0.12);
+  }
+
+  :global(.admin-textarea) {
+    resize: vertical;
+    min-height: 80px;
+    line-height: 1.6;
+  }
+
+  :global(.admin-hint) {
+    font-family: var(--font-sans);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    font-style: italic;
+  }
+
+
+  /* ── CHECKBOX ── */
+  :global(.admin-checkbox-row) {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    cursor: pointer;
+  }
+
+  :global(.admin-checkbox) {
+    width: 17px;
+    height: 17px;
+    accent-color: var(--color-accent-1);
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+
+  :global(.admin-checkbox-text) {
+    font-family: var(--font-sans);
+    font-size: var(--text-sm);
+    color: var(--color-text);
+  }
+
+
+  /* ── CHIPS (tags) ── */
+  :global(.admin-chip-row) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin-bottom: var(--space-3);
+    min-height: 28px; /* prevents layout jump when empty */
+  }
+
+  :global(.admin-chip) {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-1) var(--space-3);
+    border-radius: 999px;
+    font-family: var(--font-sans);
+    font-size: var(--text-xs);
+    background: rgba(118, 130, 95, 0.12);
+    border: 1px solid rgba(118, 130, 95, 0.28);
+    color: var(--color-text);
+  }
+
+  :global(.admin-chip--dietary) {
+    background: rgba(189, 122, 87, 0.1);
+    border-color: rgba(189, 122, 87, 0.28);
+  }
+
+  :global(.admin-chip__remove) {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--color-text-muted);
+    font-size: 13px;
+    padding: 0;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+  }
+
+  :global(.admin-chip__remove:hover) {
+    color: var(--color-accent-3);
+  }
+
+
+  /* ── DIVIDER ── */
+  :global(.admin-divider) {
+    border: none;
+    border-top: 1px solid rgba(118, 130, 95, 0.15);
+    margin: var(--space-6) 0;
+  }
+</style>

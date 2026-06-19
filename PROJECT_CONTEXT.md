@@ -8,7 +8,7 @@
 A homegrown cookbook manifested as a website. This website hosts all of the culinary creations from the mind of Brr (Brianna). This site and the recipes it contains are primarily targeted for sharing with family and friends, but will also be available to the public if anyone manages to find them via google search. 
 
 
-**GitHub repo:** https://github.com/weaseljohnson/Brr.s-Kitchen/
+**GitHub repo:** https://github.com/weaseljohnson/Brrs-Kitchen/
 **Live URL:** https://brrs-kitchen.com/
 
 ---

@@ -1,0 +1,756 @@
+---
+export const prerender = false;
+import AdminLayout from '../../layouts/AdminLayout.astro';
+
+const CATEGORIES = ['Desserts', 'Entrees', 'Sides', 'Drinks', 'Snacks', 'Basics'];
+---
+<AdminLayout title="New Recipe">
+
+  <div class="form-head">
+    <div>
+      <a href="/admin" class="back-link">← Dashboard</a>
+      <h1>New Recipe</h1>
+    </div>
+    <button type="button" id="submit-btn" class="admin-btn admin-btn--primary">Save Recipe</button>
+  </div>
+
+  <form id="recipe-form" novalidate>
+
+    <!-- ── DETAILS ── -->
+    <div class="admin-section">
+      <h2 class="admin-section-title">Details</h2>
+
+      <div class="admin-field">
+        <label for="f-title" class="admin-label admin-label--required">Title</label>
+        <input type="text" id="f-title" class="admin-input" placeholder="The Best Homemade Brownies" autocomplete="off" />
+      </div>
+
+      <input type="hidden" id="f-slug" />
+      <div class="admin-field admin-field--no-margin">
+        <label for="f-pubdate" class="admin-label">Publish Date</label>
+      <input type="date" id="f-pubdate" class="admin-input" />
+      </div>
+    </div>
+
+    <!-- ── CATEGORY & TIMES ── -->
+    <div class="admin-section">
+      <h2 class="admin-section-title">Category & Times</h2>
+      <div class="admin-row admin-row--3">
+        <div class="admin-field admin-field--no-margin">
+          <label for="f-category" class="admin-label admin-label--required">Category</label>
+          <input type="text" id="f-category" class="admin-input" list="category-options" placeholder="Desserts" autocomplete="off" />
+          <datalist id="category-options">
+            {CATEGORIES.map(c => <option value={c} />)}
+          </datalist>
+        </div>
+        <div class="admin-field admin-field--no-margin">
+          <label for="f-prep" class="admin-label">Prep Time</label>
+          <input type="text" id="f-prep" class="admin-input" placeholder="35–40 min" />
+        </div>
+        <div class="admin-field admin-field--no-margin">
+          <label for="f-cook" class="admin-label">Cook Time</label>
+          <input type="text" id="f-cook" class="admin-input" placeholder="20–25 min" />
+        </div>
+      </div>
+    </div>
+
+    <!-- ── INTRO ── -->
+    <div class="admin-section">
+      <h2 class="admin-section-title">Intro</h2>
+      <div class="admin-field admin-field--no-margin">
+        <label for="f-intro" class="admin-label">Intro Text</label>
+        <textarea id="f-intro" class="admin-textarea" rows="3" placeholder="A brief description shown on the recipe page and in cards..."></textarea>
+        <span class="admin-hint">JPG or PNG</span>
+      </div>
+    </div>
+
+    <!-- ── TAGS & DIETARY ── -->
+    <div class="admin-section">
+      <h2 class="admin-section-title">Tags & Dietary</h2>
+
+      <div class="admin-field">
+        <label class="admin-label">Personal Tags</label>
+        <div class="admin-chip-row" id="tags-chip-row"></div>
+        <div class="chip-add-row">
+          <input type="text" id="f-tag-input" class="admin-input" placeholder="Hubby's Favorite" autocomplete="off" />
+          <button type="button" id="add-tag-btn" class="admin-btn admin-btn--secondary">Add</button>
+        </div>
+        <span class="admin-hint">Press Enter or click Add.</span>
+      </div>
+
+      <hr class="admin-divider" />
+
+      <div class="admin-field admin-field--no-margin">
+        <label class="admin-label">Dietary Flags</label>
+        <div class="admin-chip-row" id="dietary-chip-row"></div>
+        <div class="chip-add-row">
+          <input type="text" id="f-dietary-input" class="admin-input" list="dietary-options" placeholder="Gluten Free" autocomplete="off" />
+          <datalist id="dietary-options">
+            <option value="Gluten Free" />
+            <option value="Dairy Free" />
+            <option value="Vegan" />
+            <option value="Vegetarian" />
+            <option value="Nut Free" />
+            <option value="Egg Free" />
+            <option value="Keto" />
+            <option value="Low Carb" />
+          </datalist>
+          <button type="button" id="add-dietary-btn" class="admin-btn admin-btn--secondary">Add</button>
+        </div>
+        <span class="admin-hint">Press Enter or click Add.</span>
+      </div>
+    </div>
+
+    <!-- ── IMAGE ── -->
+    <div class="admin-section">
+      <h2 class="admin-section-title">Image</h2>
+      <div class="img-upload-area" id="img-upload-area">
+        <div class="img-preview-wrap" id="img-preview-wrap" hidden>
+          <img id="img-preview" src="" alt="Recipe image preview" class="img-preview" />
+          <button type="button" id="img-clear-btn" class="img-clear-btn">Remove</button>
+        </div>
+        <div class="img-placeholder" id="img-placeholder">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+            <rect x="3" y="3" width="18" height="18" rx="2"/>
+            <circle cx="8.5" cy="8.5" r="1.5"/>
+            <polyline points="21 15 16 10 5 21"/>
+          </svg>
+          <p>Drag & drop or <span class="img-browse-btn">browse</span></p>
+          <span class="admin-hint">JPG or PNG · Stored at /public/images/recipes/</span>
+        </div>
+      </div>
+      <input type="file" id="img-file-input" accept="image/jpeg,image/png" style="display:none" />
+    </div>
+
+    <!-- ── INGREDIENTS ── -->
+    <div class="admin-section">
+      <h2 class="admin-section-title">Ingredients</h2>
+
+      <div class="admin-field">
+        <label class="admin-checkbox-row">
+          <input type="checkbox" id="use-variants" class="admin-checkbox" />
+          <span class="admin-checkbox-text">Multiple pan sizes or variants</span>
+        </label>
+      </div>
+
+      <!-- Single pan (default) -->
+      <div id="single-wrap">
+        <div class="admin-row admin-row--2" style="margin-bottom: var(--space-5);">
+          <div class="admin-field admin-field--no-margin">
+            <label for="f-yield" class="admin-label">Yield</label>
+            <input type="text" id="f-yield" class="admin-input" placeholder="16 brownies" />
+          </div>
+        </div>
+        <div class="ing-col-headers">
+          <span class="admin-label">Amount</span>
+          <span class="admin-label">Ingredient</span>
+        </div>
+        <div id="single-ing-list"></div>
+        <button type="button" id="add-single-ing-btn" class="admin-btn admin-btn--ghost" style="margin-top: var(--space-2);">+ Add Ingredient</button>
+      </div>
+
+      <!-- Pan variants (hidden by default) -->
+      <div id="variants-wrap" hidden>
+        <div id="variants-list"></div>
+        <button type="button" id="add-variant-btn" class="admin-btn admin-btn--secondary">+ Add Variant</button>
+      </div>
+    </div>
+
+    <!-- ── DIRECTIONS ── -->
+    <div class="admin-section">
+      <h2 class="admin-section-title">Directions</h2>
+      <div id="steps-list"></div>
+      <button type="button" id="add-step-btn" class="admin-btn admin-btn--secondary" style="margin-top: var(--space-4);">+ Add Step</button>
+    </div>
+
+    <!-- ── NOTES ── -->
+    <div class="admin-section">
+      <h2 class="admin-section-title">Notes</h2>
+      <div class="admin-field">
+        <label class="admin-checkbox-row">
+          <input type="checkbox" id="has-notes" class="admin-checkbox" />
+          <span class="admin-checkbox-text">This recipe includes a notes section</span>
+        </label>
+      </div>
+      <div id="notes-wrap" hidden>
+        <div class="admin-field admin-field--no-margin">
+          <label for="f-notes" class="admin-label">Notes</label>
+          <textarea id="f-notes" class="admin-textarea" rows="6" placeholder="Tips, variations, storage instructions… Supports Markdown."></textarea>
+          <span class="admin-hint">Rendered as Markdown. This becomes the body of the .md file.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── CREDIT ── -->
+    <div class="admin-section">
+      <h2 class="admin-section-title">Credit</h2>
+      <div class="admin-field">
+        <label class="admin-checkbox-row">
+          <input type="checkbox" id="has-credit" class="admin-checkbox" />
+          <span class="admin-checkbox-text">Credit another source for this recipe</span>
+        </label>
+      </div>
+      <div id="credit-wrap" hidden>
+        <div class="admin-row admin-row--2">
+          <div class="admin-field admin-field--no-margin">
+            <label for="f-credit-name" class="admin-label">Name</label>
+            <input type="text" id="f-credit-name" class="admin-input" placeholder="Source or creator name" />
+          </div>
+          <div class="admin-field admin-field--no-margin">
+            <label for="f-credit-url" class="admin-label">URL</label>
+            <input type="url" id="f-credit-url" class="admin-input" placeholder="https://..." />
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </form>
+
+<style is:global>
+
+  /* ── PAGE HEADER ── */
+  .form-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--space-4);
+    margin-bottom: var(--space-8);
+  }
+
+  .back-link {
+    display: inline-block;
+    font-family: var(--font-sans);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    text-decoration: none;
+    margin-bottom: var(--space-2);
+    transition: color var(--transition-fast);
+  }
+
+  .back-link:hover { color: var(--color-accent-3); }
+
+  .form-head h1 { font-size: var(--text-3xl); }
+
+  /* ── CHIP ADD ROW ── */
+  .chip-add-row {
+    display: flex;
+    gap: var(--space-2);
+    align-items: center;
+    margin-top: var(--space-2);
+  }
+
+  .chip-add-row .admin-input { max-width: 280px; }
+
+  /* ── IMAGE UPLOAD ── */
+  .img-upload-area {
+    border: 2px dashed rgba(118, 130, 95, 0.3);
+    border-radius: var(--radius-md);
+    min-height: 160px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    overflow: hidden;
+    transition: border-color var(--transition-fast), background var(--transition-fast);
+  }
+
+  .img-upload-area:hover,
+  .img-upload-area.is-drag-over {
+    border-color: var(--color-accent-1);
+    background: rgba(118, 130, 95, 0.03);
+  }
+
+  .img-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-2);
+    color: var(--color-text-muted);
+    text-align: center;
+    padding: var(--space-8);
+    pointer-events: none;
+  }
+
+  .img-placeholder p {
+    font-size: var(--text-sm);
+    max-width: none;
+    margin: 0;
+  }
+
+  .img-browse-btn {
+    color: var(--color-accent-2);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    pointer-events: auto;
+    cursor: pointer;
+  }
+
+  .img-preview-wrap { position: relative; width: 100%; }
+
+  .img-preview {
+    width: 100%;
+    max-height: 300px;
+    object-fit: cover;
+    display: block;
+  }
+
+  .img-clear-btn {
+    position: absolute;
+    top: var(--space-3);
+    right: var(--space-3);
+    font-family: var(--font-sans);
+    font-size: var(--text-xs);
+    padding: var(--space-1) var(--space-3);
+    background: rgba(28, 19, 23, 0.65);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: background var(--transition-fast);
+  }
+
+  .img-clear-btn:hover { background: rgba(28, 19, 23, 0.85); }
+
+  /* ── INGREDIENT COLUMN HEADERS ── */
+  .ing-col-headers,
+  .variant-ing-headers {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: var(--space-2);
+    /* accounts for gap + remove button width so headers align with inputs */
+    padding-right: calc(var(--space-2) + 28px);
+    margin-bottom: var(--space-2);
+  }
+
+  /* ── INGREDIENT ROWS ── */
+  .ing-row {
+    display: grid;
+    grid-template-columns: 1fr 2fr auto;
+    gap: var(--space-2);
+    align-items: center;
+    margin-bottom: var(--space-2);
+  }
+
+  /* ── VARIANT BLOCKS ── */
+  .variant-block {
+    border: 1px solid rgba(118, 130, 95, 0.2);
+    border-radius: var(--radius-md);
+    padding: var(--space-5) var(--space-6);
+    margin-bottom: var(--space-4);
+    background: rgba(118, 130, 95, 0.02);
+  }
+
+  .variant-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--space-4);
+    padding-bottom: var(--space-3);
+    border-bottom: 1px solid rgba(118, 130, 95, 0.12);
+  }
+
+  .variant-head-label {
+    font-family: var(--font-sans);
+    font-size: var(--text-xs);
+    font-weight: 400;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .variant-meta {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-4);
+    margin-bottom: var(--space-4);
+  }
+
+  /* ── STEP BLOCKS ── */
+  .step-block {
+    display: grid;
+    grid-template-columns: 2rem 1fr auto;
+    gap: var(--space-4);
+    align-items: start;
+    padding-bottom: var(--space-5);
+    margin-bottom: var(--space-5);
+    border-bottom: 1px solid rgba(118, 130, 95, 0.12);
+  }
+
+  .step-block:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+    margin-bottom: 0;
+  }
+
+  .step-num {
+    font-family: var(--font-serif);
+    font-size: var(--text-xl);
+    font-weight: 700;
+    color: var(--color-accent-2);
+    line-height: 2.5rem;
+  }
+
+  .step-fields {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .step-controls {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    padding-top: var(--space-1);
+  }
+
+</style>
+
+<script is:inline>
+
+  // ── HELPERS ──
+
+  function slugify(str) {
+    return str.toLowerCase().trim()
+      .replace(/[^a-z0-9\s-]/g, '')
+      .replace(/\s+/g, '-')
+      .replace(/-+/g, '-');
+  }
+
+  function makeIngRow(count = '', item = '') {
+    const row = document.createElement('div');
+    row.className = 'ing-row';
+    row.innerHTML = `
+      <input type="text" class="admin-input ing-count" placeholder="60g (⅔ cup)" value="${count}" />
+      <input type="text" class="admin-input ing-item" placeholder="ingredient name" value="${item}" />
+      <button type="button" class="admin-btn admin-btn--ghost ing-remove" aria-label="Remove ingredient">✕</button>
+    `;
+    row.querySelector('.ing-remove').addEventListener('click', () => row.remove());
+    return row;
+  }
+
+  function makeVariantBlock(index) {
+    const block = document.createElement('div');
+    block.className = 'variant-block';
+    block.innerHTML = `
+      <div class="variant-head">
+        <span class="variant-head-label">Variant ${index + 1}</span>
+        <button type="button" class="admin-btn admin-btn--danger variant-remove-btn">Remove</button>
+      </div>
+      <div class="variant-meta">
+        <div class="admin-field admin-field--no-margin">
+          <label class="admin-label">Label</label>
+          <input type="text" class="admin-input variant-label" placeholder="8×8 Pan" />
+        </div>
+        <div class="admin-field admin-field--no-margin">
+          <label class="admin-label">Yield</label>
+          <input type="text" class="admin-input variant-yield" placeholder="16 brownies" />
+        </div>
+      </div>
+      <div class="variant-ing-headers">
+        <span class="admin-label">Amount</span>
+        <span class="admin-label">Ingredient</span>
+      </div>
+      <div class="variant-ing-list"></div>
+      <button type="button" class="admin-btn admin-btn--ghost variant-add-ing-btn"
+        style="margin-top: var(--space-2);">+ Add Ingredient</button>
+    `;
+    block.querySelector('.variant-remove-btn').addEventListener('click', () => {
+      block.remove();
+      renumberVariants();
+    });
+    block.querySelector('.variant-add-ing-btn').addEventListener('click', () => {
+      block.querySelector('.variant-ing-list').appendChild(makeIngRow());
+    });
+    // Start with one empty ingredient row
+    block.querySelector('.variant-ing-list').appendChild(makeIngRow());
+    return block;
+  }
+
+  function renumberVariants() {
+    document.querySelectorAll('.variant-block').forEach((b, i) => {
+      b.querySelector('.variant-head-label').textContent = `Variant ${i + 1}`;
+    });
+  }
+
+  function makeStepBlock(index) {
+    const block = document.createElement('div');
+    block.className = 'step-block';
+    block.innerHTML = `
+      <span class="step-num">${index + 1}</span>
+      <div class="step-fields">
+        <input type="text" class="admin-input step-title-input"
+          placeholder="Step title (e.g. Brown the butter)" />
+        <textarea class="admin-textarea step-body-input" rows="3"
+          placeholder="Step instructions..."></textarea>
+      </div>
+      <div class="step-controls">
+        <button type="button" class="admin-btn admin-btn--ghost step-up-btn" aria-label="Move step up">↑</button>
+        <button type="button" class="admin-btn admin-btn--ghost step-dn-btn" aria-label="Move step down">↓</button>
+        <button type="button" class="admin-btn admin-btn--ghost step-rm-btn" aria-label="Remove step">✕</button>
+      </div>
+    `;
+    block.querySelector('.step-up-btn').addEventListener('click', () => {
+      const prev = block.previousElementSibling;
+      if (prev) block.parentNode.insertBefore(block, prev);
+      renumberSteps();
+    });
+    block.querySelector('.step-dn-btn').addEventListener('click', () => {
+      const next = block.nextElementSibling;
+      if (next) block.parentNode.insertBefore(next, block);
+      renumberSteps();
+    });
+    block.querySelector('.step-rm-btn').addEventListener('click', () => {
+      block.remove();
+      renumberSteps();
+    });
+    return block;
+  }
+
+  function renumberSteps() {
+    document.querySelectorAll('.step-block').forEach((b, i) => {
+      b.querySelector('.step-num').textContent = i + 1;
+    });
+  }
+
+  function addChip(container, value, type) {
+    const chip = document.createElement('span');
+    chip.className = 'admin-chip' + (type === 'dietary' ? ' admin-chip--dietary' : '');
+    chip.dataset.value = value;
+    chip.innerHTML = `${value}<button type="button" class="admin-chip__remove"
+      aria-label="Remove ${value}">✕</button>`;
+    chip.querySelector('.admin-chip__remove').addEventListener('click', () => chip.remove());
+    container.appendChild(chip);
+  }
+
+</script>
+
+<script is:inline>
+
+  // ── SLUG ──
+  const titleInput = document.getElementById('f-title');
+  const slugInput  = document.getElementById('f-slug');
+  let slugLocked   = false;
+
+  // If the user clears the slug field, auto-gen resumes
+  slugInput.addEventListener('input', () => {
+    slugLocked = slugInput.value.trim() !== '';
+  });
+  titleInput.addEventListener('input', () => {
+    if (!slugLocked) slugInput.value = slugify(titleInput.value);
+  });
+
+  // ── TAGS ──
+  const tagsRow  = document.getElementById('tags-chip-row');
+  const tagInput = document.getElementById('f-tag-input');
+
+  function submitTag() {
+    const v = tagInput.value.trim();
+    if (!v) return;
+    addChip(tagsRow, v, 'personal');
+    tagInput.value = '';
+    tagInput.focus();
+  }
+  document.getElementById('add-tag-btn').addEventListener('click', submitTag);
+  tagInput.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); submitTag(); } });
+
+  // ── DIETARY ──
+  const dietaryRow   = document.getElementById('dietary-chip-row');
+  const dietaryInput = document.getElementById('f-dietary-input');
+
+  function submitDietary() {
+    const v = dietaryInput.value.trim();
+    if (!v) return;
+    addChip(dietaryRow, v, 'dietary');
+    dietaryInput.value = '';
+    dietaryInput.focus();
+  }
+  document.getElementById('add-dietary-btn').addEventListener('click', submitDietary);
+  dietaryInput.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); submitDietary(); } });
+
+  // ── IMAGE ──
+  const uploadArea  = document.getElementById('img-upload-area');
+  const fileInput   = document.getElementById('img-file-input');
+  const previewWrap = document.getElementById('img-preview-wrap');
+  const previewImg  = document.getElementById('img-preview');
+  const placeholder = document.getElementById('img-placeholder');
+  let imageFile     = null;
+
+  function showPreview(file) {
+    imageFile = file;
+    const reader = new FileReader();
+    reader.onload = e => {
+      previewImg.src = e.target.result;
+      previewWrap.hidden = false;
+      placeholder.hidden = true;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function clearImage() {
+    imageFile = null;
+    fileInput.value = '';
+    previewImg.src = '';
+    previewWrap.hidden = true;
+    placeholder.hidden = false;
+  }
+
+  uploadArea.addEventListener('click', () => fileInput.click());
+  fileInput.addEventListener('change', () => { if (fileInput.files[0]) showPreview(fileInput.files[0]); });
+  document.getElementById('img-clear-btn').addEventListener('click', e => {
+    e.stopPropagation(); // prevent uploadArea click from re-opening file picker
+    clearImage();
+  });
+  uploadArea.addEventListener('dragover', e => { e.preventDefault(); uploadArea.classList.add('is-drag-over'); });
+  uploadArea.addEventListener('dragleave', () => uploadArea.classList.remove('is-drag-over'));
+  uploadArea.addEventListener('drop', e => {
+    e.preventDefault();
+    uploadArea.classList.remove('is-drag-over');
+    const f = e.dataTransfer.files[0];
+    if (f?.type.startsWith('image/')) showPreview(f);
+  });
+
+  // ── INGREDIENTS ──
+  const useVariants   = document.getElementById('use-variants');
+  const singleWrap    = document.getElementById('single-wrap');
+  const variantsWrap  = document.getElementById('variants-wrap');
+  const singleIngList = document.getElementById('single-ing-list');
+  const variantsList  = document.getElementById('variants-list');
+
+  singleIngList.appendChild(makeIngRow()); // start with one empty row
+
+  useVariants.addEventListener('change', () => {
+    const on = useVariants.checked;
+    singleWrap.hidden   = on;
+    variantsWrap.hidden = !on;
+    if (on && variantsList.children.length === 0) {
+      variantsList.appendChild(makeVariantBlock(0));
+    }
+  });
+
+  document.getElementById('add-single-ing-btn').addEventListener('click', () => {
+    singleIngList.appendChild(makeIngRow());
+  });
+  document.getElementById('add-variant-btn').addEventListener('click', () => {
+    variantsList.appendChild(makeVariantBlock(variantsList.children.length));
+  });
+
+  // ── STEPS ──
+  const stepsList = document.getElementById('steps-list');
+  stepsList.appendChild(makeStepBlock(0)); // start with one empty step
+
+  document.getElementById('add-step-btn').addEventListener('click', () => {
+    stepsList.appendChild(makeStepBlock(stepsList.children.length));
+  });
+
+  // ── SIMPLE TOGGLES ──
+  const hasNotesChk = document.getElementById('has-notes');
+  const notesWrap   = document.getElementById('notes-wrap');
+  hasNotesChk.addEventListener('change', () => { notesWrap.hidden = !hasNotesChk.checked; });
+
+  const hasCreditChk = document.getElementById('has-credit');
+  const creditWrap   = document.getElementById('credit-wrap');
+  hasCreditChk.addEventListener('change', () => { creditWrap.hidden = !hasCreditChk.checked; });
+
+  // ── IMAGE → BASE64 ──
+    function readImageAsBase64(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload  = e => {
+        const base64 = e.target.result.split(',')[1];
+        const ext    = file.name.split('.').pop().toLowerCase();
+        resolve({ data: base64, ext });
+        };
+        reader.onerror = () => reject(new Error('Failed to read image file.'));
+        reader.readAsDataURL(file);
+    });
+    }
+
+  // ── COLLECT PAYLOAD ──
+  function collectPayload() {
+    const usingVariants = useVariants.checked;
+
+    const payload = {
+      title:    document.getElementById('f-title').value.trim(),
+      slug:     document.getElementById('f-slug').value.trim(),
+      category: document.getElementById('f-category').value.trim(),
+      pubDate:  document.getElementById('f-pubdate').value || undefined,
+      prepTime: document.getElementById('f-prep').value.trim() || undefined,
+      cookTime: document.getElementById('f-cook').value.trim() || undefined,
+      intro:    document.getElementById('f-intro').value.trim() || undefined,
+      tags:     [...tagsRow.querySelectorAll('.admin-chip')].map(c => c.dataset.value),
+      dietary:  [...dietaryRow.querySelectorAll('.admin-chip')].map(c => c.dataset.value),
+      hasNotes: hasNotesChk.checked,
+      notes:    hasNotesChk.checked ? document.getElementById('f-notes').value.trim() : undefined,
+      credit:   hasCreditChk.checked ? {
+        name: document.getElementById('f-credit-name').value.trim(),
+        url:  document.getElementById('f-credit-url').value.trim(),
+      } : undefined,
+      // imageFile is kept as a variable for Phase 2 upload; only the name is in the payload preview
+      imageFileName: imageFile?.name,
+    };
+
+    if (usingVariants) {
+      payload.panVariants = [...variantsList.querySelectorAll('.variant-block')].map((block, i) => ({
+        id:    slugify(block.querySelector('.variant-label').value) || `variant-${i + 1}`,
+        label: block.querySelector('.variant-label').value.trim(),
+        yield: block.querySelector('.variant-yield').value.trim() || undefined,
+        ingredients: [...block.querySelectorAll('.ing-row')]
+          .map(row => ({
+            count: row.querySelector('.ing-count').value.trim() || undefined,
+            item:  row.querySelector('.ing-item').value.trim(),
+          }))
+          .filter(ing => ing.item),
+      }));
+    } else {
+      payload.yield = document.getElementById('f-yield').value.trim() || undefined;
+      payload.ingredients = [...singleIngList.querySelectorAll('.ing-row')]
+        .map(row => ({
+          count: row.querySelector('.ing-count').value.trim() || undefined,
+          item:  row.querySelector('.ing-item').value.trim(),
+        }))
+        .filter(ing => ing.item);
+    }
+
+    payload.directions = [...stepsList.querySelectorAll('.step-block')]
+      .map(block => ({
+        title: block.querySelector('.step-title-input').value.trim(),
+        body:  block.querySelector('.step-body-input').value.trim(),
+      }))
+      .filter(s => s.title || s.body);
+
+    return payload;
+  }
+
+  // ── SUBMIT ──
+    document.getElementById('submit-btn').addEventListener('click', async () => {
+    const payload = collectPayload();
+
+    // Attach image data if an image was selected
+    if (imageFile) {
+        payload.image = await readImageAsBase64(imageFile);
+    }
+
+    try {
+        const res  = await fetch('/api/save-recipe', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify(payload),
+        });
+        const data = await res.json();
+
+        if (!res.ok) {
+        const msg = data.errors?.join('\n') ?? data.error ?? 'Unknown error.';
+        alert(`Save failed:\n\n${msg}`);
+        return;
+        }
+
+        alert('Recipe saved! It will be live after Vercel rebuilds (~30–60 seconds).');
+        window.location.href = '/admin';
+    } catch (err) {
+        alert(`Network error: ${err.message}`);
+    }
+    });
+
+</script>
+
+</AdminLayout>
