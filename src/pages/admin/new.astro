@@ -60,7 +60,7 @@ const CATEGORIES = ['Desserts', 'Entrees', 'Sides', 'Drinks', 'Snacks', 'Basics'
       <div class="admin-field admin-field--no-margin">
         <label for="f-intro" class="admin-label">Intro Text</label>
         <textarea id="f-intro" class="admin-textarea" rows="3" placeholder="A brief description shown on the recipe page and in cards..."></textarea>
-        <span class="admin-hint">JPG or PNG</span>
+        <span class="admin-hint">Add a fun description!</span>
       </div>
     </div>
 
@@ -727,7 +727,21 @@ const CATEGORIES = ['Desserts', 'Entrees', 'Sides', 'Drinks', 'Snacks', 'Basics'
 
     // Attach image data if an image was selected
     if (imageFile) {
-        payload.image = await readImageAsBase64(imageFile);
+      try {
+        const dataUrl = await readImageAsBase64(imageFile);
+        // Split "data:image/png;base64,iVBORw..." into the metadata and raw base64 string
+        const [meta, base64Data] = dataUrl.split(',base64,');
+        const ext = meta.split('image/')[1].split(';')[0]; // extracts 'png', 'jpeg', etc.
+
+        payload.image = {
+          data: base64Data,
+          ext: ext
+        };
+      } catch (imgErr) {
+        console.error("Image processing failed:", imgErr);
+        alert("Failed to process the selected image file.");
+        return;
+      }
     }
 
     try {
