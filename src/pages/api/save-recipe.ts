@@ -139,38 +139,85 @@ async function githubWrite(path, content, isBase64 = false) {
 }
 
 // ── MAIN HANDLER ──
-export default async function handler(req, res) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed.' });
-  }
+// export default async function handler(req, res) {
+//   if (req.method !== 'POST') {
+//     return res.status(405).json({ error: 'Method not allowed.' });
+//   }
 
-  // 2a — Validate
-  const payload = req.body;
-  const errors  = validate(payload);
-  if (errors.length) {
-    return res.status(400).json({ errors });
-  }
+//   // 2a — Validate
+//   const payload = req.body;
+//   const errors  = validate(payload);
+//   if (errors.length) {
+//     return res.status(400).json({ errors });
+//   }
 
+//   try {
+//     // 2b — Build the markdown file string
+//     const mdContent = buildMarkdown(payload);
+
+//     // 2c — Commit .md file to GitHub
+//     const folder = CATEGORY_FOLDERS[payload.category];
+//     const mdPath = `content/recipes/${folder}/${payload.slug}.md`;
+//     await githubWrite(mdPath, mdContent);
+
+//     // 2d — Commit image to GitHub (if one was uploaded)
+//     if (payload.image?.data) {
+//       const imgPath = `public/images/recipes/${payload.slug}.${payload.image.ext}`;
+//       await githubWrite(imgPath, payload.image.data, true);
+//     }
+
+//     // 2e — Success
+//     return res.status(200).json({ ok: true, slug: payload.slug });
+
+//   } catch (err) {
+//     console.error('[save-recipe]', err);
+//     return res.status(500).json({ error: err.message ?? 'Internal server error.' });
+//   }
+// }
+
+// ── REPLACE THE MAIN HANDLER AT THE BOTTOM OF YOUR src/pages/api/save-recipe.ts ──
+
+import type { APIRoute } from 'astro';
+
+export const POST: APIRoute = async ({ request }) => {
   try {
-    // 2b — Build the markdown file string
+    // Extract the JSON body using standard Web Request APIs
+    const payload = await request.json();
+    
+    // Validate the payload
+    const errors = validate(payload);
+    if (errors.length) {
+      return new Response(JSON.stringify({ errors }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
+
+    // Build the markdown file string
     const mdContent = buildMarkdown(payload);
 
-    // 2c — Commit .md file to GitHub
-    const folder = CATEGORY_FOLDERS[payload.category];
+    // Commit .md file to GitHub
+    const folder = CATEGORY_FOLDERS[payload.category as CategoryKey];
     const mdPath = `content/recipes/${folder}/${payload.slug}.md`;
     await githubWrite(mdPath, mdContent);
 
-    // 2d — Commit image to GitHub (if one was uploaded)
-    if (payload.image?.data) {
+    // Commit image to GitHub (if one was uploaded)
+    if (payload.image?.data && payload.image?.ext) {
       const imgPath = `public/images/recipes/${payload.slug}.${payload.image.ext}`;
       await githubWrite(imgPath, payload.image.data, true);
     }
 
-    // 2e — Success
-    return res.status(200).json({ ok: true, slug: payload.slug });
+    // Return native Web Response wrapper instead of res.status().json()
+    return new Response(JSON.stringify({ ok: true, slug: payload.slug }), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' }
+    });
 
-  } catch (err) {
+  } catch (err: any) {
     console.error('[save-recipe]', err);
-    return res.status(500).json({ error: err.message ?? 'Internal server error.' });
+    return new Response(JSON.stringify({ error: err.message ?? 'Internal server error.' }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' }
+    });
   }
-}
+};

@@ -2,8 +2,10 @@
   "extends": "astro/tsconfigs/strict",
   "compilerOptions": {
     "moduleResolution": "bundler",
-    "allowJs": true
+    "allowJs": true,
+    "ignoreDeprecations": "6.0",
+    "isolatedModules": true
   },
   "include": [".astro/types.d.ts", "**/*"],
-  "exclude": ["dist"]
+  "exclude": ["dist", "node_modules"]
 }
