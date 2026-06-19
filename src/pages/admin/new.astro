@@ -728,15 +728,8 @@ const CATEGORIES = ['Desserts', 'Entrees', 'Sides', 'Drinks', 'Snacks', 'Basics'
     // Attach image data if an image was selected
     if (imageFile) {
       try {
-        const dataUrl = await readImageAsBase64(imageFile);
-        // Split "data:image/png;base64,iVBORw..." into the metadata and raw base64 string
-        const [meta, base64Data] = dataUrl.split(',base64,');
-        const ext = meta.split('image/')[1].split(';')[0]; // extracts 'png', 'jpeg', etc.
-
-        payload.image = {
-          data: base64Data,
-          ext: ext
-        };
+        // Your native function already returns the exact { data, ext } object needed!
+        payload.image = await readImageAsBase64(imageFile);
       } catch (imgErr) {
         console.error("Image processing failed:", imgErr);
         alert("Failed to process the selected image file.");
