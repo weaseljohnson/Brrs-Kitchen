@@ -5,6 +5,7 @@ prepTime: 20-25 min
 cookTime: 11-13 min
 intro: This is the legendary cookie recipe of the great Maha, owner of the Magic Kitchen, and baker of wonders. Eat them and weep with joy.
 image: /images/recipes/mahas-best-chocolate-chip-cookies.jpg
+pubDate: "2025-05-21"
 yield: 2.5 Dozen
 ingredients:
   - count: 1 Cup

@@ -89,8 +89,8 @@ Astro's middleware virtual module parser breaks on special characters (`.` `'`) 
 - Image filename: `{slug}.{ext}` (jpg or png). Extension derived from the uploaded file client-side.
 - Update flow (edit mode, Phase 3) is already supported: `githubWrite()` fetches the existing file's SHA before writing, so PUT calls work for both create and update.
 
-#### Known issue — single-pan ingredient rendering
-`[slug].astro` only renders the `panVariants` ingredient list. Single-pan recipes that use the top-level `ingredients` field will save correctly but ingredients will not display on the recipe page. Fix needed in `[slug].astro` before publishing single-pan recipes.
+#### Single-pan ingredient rendering — resolved
+`[slug].astro` now renders both the flat top-level `ingredients` list (single-pan) and `panVariants` ingredient lists. The dead fallback block that was incorrectly nested inside the pan-tabs conditional was moved to a proper sibling block after the scale control.
 
 ### Phase 3 — Edit Mode
 
