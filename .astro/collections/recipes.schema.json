@@ -8,6 +8,9 @@
     "category": {
       "type": "string"
     },
+    "draft": {
+      "type": "boolean"
+    },
     "prepTime": {
       "type": "string"
     },
@@ -18,6 +21,12 @@
       "type": "string"
     },
     "intro": {
+      "type": "string"
+    },
+    "pubDate": {
+      "type": "string"
+    },
+    "image": {
       "type": "string"
     },
     "tags": {
@@ -32,11 +41,11 @@
         "type": "string"
       }
     },
-    "pubDate": {
-      "type": "string"
-    },
-    "image": {
-      "type": "string"
+    "notes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
     },
     "credit": {
       "type": "object",
@@ -54,23 +63,53 @@
         "url"
       ]
     },
-    "hasNotes": {
-      "type": "boolean"
-    },
     "ingredients": {
       "type": "array",
       "items": {
-        "type": "object",
-        "properties": {
-          "count": {
-            "type": "string"
+        "anyOf": [
+          {
+            "type": "object",
+            "properties": {
+              "groupName": {
+                "type": "string"
+              },
+              "ingredients": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "count": {
+                      "type": "string"
+                    },
+                    "item": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "item"
+                  ]
+                }
+              }
+            },
+            "required": [
+              "groupName",
+              "ingredients"
+            ]
           },
-          "item": {
-            "type": "string"
+          {
+            "type": "object",
+            "properties": {
+              "count": {
+                "type": "string"
+              },
+              "item": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "item"
+            ]
           }
-        },
-        "required": [
-          "item"
         ]
       }
     },
@@ -91,17 +130,50 @@
           "ingredients": {
             "type": "array",
             "items": {
-              "type": "object",
-              "properties": {
-                "count": {
-                  "type": "string"
+              "anyOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "groupName": {
+                      "type": "string"
+                    },
+                    "ingredients": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "count": {
+                            "type": "string"
+                          },
+                          "item": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "item"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "groupName",
+                    "ingredients"
+                  ]
                 },
-                "item": {
-                  "type": "string"
+                {
+                  "type": "object",
+                  "properties": {
+                    "count": {
+                      "type": "string"
+                    },
+                    "item": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "item"
+                  ]
                 }
-              },
-              "required": [
-                "item"
               ]
             }
           }
@@ -131,6 +203,9 @@
           "body"
         ]
       }
+    },
+    "hasNotes": {
+      "type": "boolean"
     },
     "$schema": {
       "type": "string"

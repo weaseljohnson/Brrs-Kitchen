@@ -25,8 +25,18 @@ const isMultiple = (n: number, d: number) => near(n % d, 0) || near(n % d, d);
 
 /** Parses an integer, decimal, unicode fraction, or mixed number (e.g. "1¼"). */
 function parseNum(str: string): number | null {
+  const trimmed = str.trim();
+
+  // ASCII slash fraction — "3/4", "1/2", etc.
+  const slashM = trimmed.match(/^(\d+)\/(\d+)$/);
+  if (slashM) {
+    const den = parseInt(slashM[2]);
+    return den !== 0 ? parseInt(slashM[1]) / den : null;
+  }
+
+  // Integer, decimal, unicode fraction, or mixed number (e.g. "1¼")
   const re = new RegExp(`^(\\d+\\.?\\d*)?([${FRAC_CHARS}])?$`);
-  const m  = str.trim().match(re);
+  const m  = trimmed.match(re);
   if (!m || (!m[1] && !m[2])) return null;
   let v = m[1] ? parseFloat(m[1]) : 0;
   if (m[2]) v += FRAC_MAP[m[2]] ?? 0;
@@ -162,13 +172,13 @@ function convertUnit(value: number, unit: string): string {
 
 // ── REGEX ──────────────────────────────────────────────────────────────────
 
-const NUM_PAT  = `[${FRAC_CHARS}\\d][${FRAC_CHARS}\\d\\.]*`;
+const NUM_PAT  = `[${FRAC_CHARS}\\d][${FRAC_CHARS}\\d\\.]*(?:\\/\\d+)?`;
 const UNIT_PAT =
   'tbsp|tsp|fl\\.?\\s*oz|cups?|gallons?|pints?|quarts?|ml|lbs?|oz|kg|g|l|large|medium|small|whole';
 
 const MEASURE_RE = new RegExp(
   `(?<![a-zA-Z])(${NUM_PAT})\\s*(${UNIT_PAT})(?=[^a-zA-Z]|$)`,
-  'g',
+  'gi',
 );
 
 // ── PUBLIC API ─────────────────────────────────────────────────────────────

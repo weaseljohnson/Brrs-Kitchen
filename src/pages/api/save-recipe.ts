@@ -35,7 +35,7 @@ function buildMarkdown(payload) {
   fm.category = payload.category;
 
   // Optional metadata
-  if (payload.pubDate)  fm.pubDate  = payload.pubDate;
+  fm.pubDate = payload.pubDate ?? new Date().toISOString().split('T')[0];
   if (payload.prepTime) fm.prepTime = payload.prepTime;
   if (payload.cookTime) fm.cookTime = payload.cookTime;
   if (payload.intro)    fm.intro    = payload.intro;
@@ -50,7 +50,8 @@ function buildMarkdown(payload) {
     fm.credit = { name: payload.credit.name, url: payload.credit.url };
   }
 
-  if (payload.hasNotes) fm.hasNotes = true;
+  if (payload.draft) fm.draft = true;
+  if (payload.notes?.length) fm.notes = payload.notes;  
 
   // Ingredients — pan variants vs. single pan
   if (payload.panVariants?.length) {
@@ -87,9 +88,7 @@ function buildMarkdown(payload) {
   const yamlStr = yaml.dump(fm, { lineWidth: -1 });
 
   // MD body is only used when hasNotes is true
-  const body = (payload.hasNotes && payload.notes) ? payload.notes.trim() : '';
-
-  return `---\n${yamlStr}---\n${body ? '\n' + body + '\n' : ''}`;
+  return `---\n${yamlStr}---\n`;
 }
 
 // ── GITHUB FILE WRITER ──
