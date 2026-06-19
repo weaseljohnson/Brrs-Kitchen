@@ -95,7 +95,11 @@ function buildMarkdown(payload) {
 // ── GITHUB FILE WRITER ──
 // Handles both create and update (fetches SHA for existing files).
 async function githubWrite(path, content, isBase64 = false) {
-  const { GITHUB_TOKEN, GITHUB_OWNER, GITHUB_REPO, GITHUB_BRANCH } = process.env;
+  // const { GITHUB_TOKEN, GITHUB_OWNER, GITHUB_REPO, GITHUB_BRANCH } = process.env;
+  const GITHUB_TOKEN  = import.meta.env.GITHUB_TOKEN;
+  const GITHUB_OWNER  = import.meta.env.GITHUB_OWNER;
+  const GITHUB_REPO   = import.meta.env.GITHUB_REPO;
+  const GITHUB_BRANCH = import.meta.env.GITHUB_BRANCH;
 
   const url = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${path}`;
   const authHeader = {
@@ -139,16 +143,53 @@ async function githubWrite(path, content, isBase64 = false) {
 }
 
 // ── MAIN HANDLER ──
-export default async function handler(req, res) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed.' });
-  }
+// export default async function handler(req, res) {
+//   if (req.method !== 'POST') {
+//     return res.status(405).json({ error: 'Method not allowed.' });
+//   }
 
-  // 2a — Validate
-  const payload = req.body;
+//   // 2a — Validate
+//   const payload = req.body;
+//   const errors  = validate(payload);
+//   if (errors.length) {
+//     return res.status(400).json({ errors });
+//   }
+
+//   try {
+//     // 2b — Build the markdown file string
+//     const mdContent = buildMarkdown(payload);
+
+//     // 2c — Commit .md file to GitHub
+//     const folder = CATEGORY_FOLDERS[payload.category];
+//     const mdPath = `content/recipes/${folder}/${payload.slug}.md`;
+//     await githubWrite(mdPath, mdContent);
+
+//     // 2d — Commit image to GitHub (if one was uploaded)
+//     if (payload.image?.data) {
+//       const imgPath = `public/images/recipes/${payload.slug}.${payload.image.ext}`;
+//       await githubWrite(imgPath, payload.image.data, true);
+//     }
+
+//     // 2e — Success
+//     return res.status(200).json({ ok: true, slug: payload.slug });
+
+//   } catch (err) {
+//     console.error('[save-recipe]', err);
+//     return res.status(500).json({ error: err.message ?? 'Internal server error.' });
+//   }
+// }
+
+// ── MAIN HANDLER (Astro Syntax) ──
+export const POST = async ({ request }) => {
+  // 2a — Parse and Validate
+  const payload = await request.json();
   const errors  = validate(payload);
+  
   if (errors.length) {
-    return res.status(400).json({ errors });
+    return new Response(JSON.stringify({ errors }), {
+      status: 400,
+      headers: { 'Content-Type': 'application/json' }
+    });
   }
 
   try {
@@ -167,10 +208,16 @@ export default async function handler(req, res) {
     }
 
     // 2e — Success
-    return res.status(200).json({ ok: true, slug: payload.slug });
+    return new Response(JSON.stringify({ ok: true, slug: payload.slug }), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' }
+    });
 
   } catch (err) {
     console.error('[save-recipe]', err);
-    return res.status(500).json({ error: err.message ?? 'Internal server error.' });
+    return new Response(JSON.stringify({ error: err.message ?? 'Internal server error.' }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' }
+    });
   }
 }
