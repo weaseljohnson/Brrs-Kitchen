@@ -37,7 +37,7 @@ directions:
   - title: Cream the Wet Ingredients
     body: |-
       Add the softened butter, brown sugar, granulated sugar, vanilla extract, and eggs to an electric stand mixer and mix on medium low speed until you have a light creamy consistency. 
-      I find it easiest to just leave it mixing while you complete step 3.
+      I find it easiest to just leave it mixing while you mix the dry ingredients.
   - title: Mix the Dry Ingredients
     body: Add the flour, cinnamon, salt, and baking soda to a separate mixing bowl. Whisk ingredients together.
   - title: Add Dry Ingredients to Wet Ingredients
