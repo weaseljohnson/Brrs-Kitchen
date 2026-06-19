@@ -103,4 +103,8 @@ Astro's middleware virtual module parser breaks on special characters (`.` `'`) 
 - [ ] 4a: Client-side + server-side form validation
 - [ ] 4b: Inline success/error feedback on the form (no full page reload)
 - [ ] 4c: Unsaved changes warning before navigating away
-- [ ] 4d: Basic admin dashboard styling — clean, functional, doesn't need to match the public site
+- [ ] 4d: Basic admin dashboard styling — clean, functional, doesn't need to match the
+- [ ] 4e: UI Improvements:
+		- Reorder ingredients
+		- Move yield up by category and times		
+public site
