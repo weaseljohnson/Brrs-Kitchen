@@ -1,6 +1,10 @@
 import type { APIRoute } from 'astro';
 import { Redis } from '@upstash/redis';
 
+// ── 1. FORCE DYNAMIC ROUTING ──
+// This ensures Astro never tries to compile this as a static file.
+export const prerender = false; 
+
 const redis = new Redis({
   url:   import.meta.env.UPSTASH_REDIS_REST_URL,
   token: import.meta.env.UPSTASH_REDIS_REST_TOKEN,
@@ -58,6 +62,11 @@ export const POST: APIRoute = async ({ params, request }) => {
 function json(data: object, status = 200) {
   return new Response(JSON.stringify(data), {
     status,
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 
+      'Content-Type': 'application/json',
+      // ── 2. PREVENT CACHING ──
+      // Forces browsers and CDNs to always fetch the live rating
+      'Cache-Control': 'no-store, max-age=0, must-revalidate'
+    },
   });
 }
