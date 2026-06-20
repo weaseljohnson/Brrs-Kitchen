@@ -1,15 +1,17 @@
 ---
 title: Maha's Best Chocolate Chip Cookies
 category: Desserts
+pubDate: '2026-06-20'
 prepTime: 20-25 min
 cookTime: 11-13 min
 intro: This is the legendary cookie recipe of the great Maha, owner of the Magic Kitchen, and baker of wonders. Eat them and weep with joy.
 image: /images/recipes/mahas-best-chocolate-chip-cookies.jpg
-pubDate: "2025-06-19"
 yield: 2.5 Dozen
 ingredients:
   - count: 1 Cup
     item: Salted Butter
+  - count: 2 Large
+    item: Eggs
   - count: 1 Cup
     item: Packed Brown Sugar
   - count: 3/4 Cup
@@ -26,8 +28,6 @@ ingredients:
     item: Baking Soda
   - count: 2 Cups
     item: Chocolate chips
-  - count: 2 Large
-    item: Eggs
 directions:
   - title: Preheat the oven to 350 degrees
     body: ''
