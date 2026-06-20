@@ -33,7 +33,7 @@ const isGroup = (e: IngItem | IngGroup): e is IngGroup => 'groupName' in e;
   ogType="article"
   schema={[recipeSchema]}
 >
-  <main class="recipe-page">
+  <main class="recipe-page" data-pagefind-body>
 
     <!-- ── RECIPE HEADER ── -->
     <section class="recipe-hero">
@@ -43,7 +43,7 @@ const isGroup = (e: IngItem | IngGroup): e is IngGroup => 'groupName' in e;
           <!-- Image wrapper — straddles the top border of the box -->
           <div class="recipe-header__img-wrap">
             {image
-              ? <img src={image} alt={title} class="recipe-header__img" />
+              ? <img src={image} alt={title} class="recipe-header__img" data-pagefind-meta="image[src]" />
               : <div class="recipe-header__img-placeholder" aria-hidden="true"></div>
             }
           </div>
@@ -52,6 +52,8 @@ const isGroup = (e: IngItem | IngGroup): e is IngGroup => 'groupName' in e;
           <div class="recipe-header__content">
             <span class="recipe-hero__category">{category}</span>
             <h1 class="recipe-hero__title">{title}</h1>
+            <span data-pagefind-meta="category" style="display:none">{category}</span>
+            {intro && <span data-pagefind-meta="intro" style="display:none" set:html={intro} />}
             {intro && (
               <p class="recipe-hero__intro" set:html={intro} />
             )}
@@ -146,7 +148,7 @@ const isGroup = (e: IngItem | IngGroup): e is IngGroup => 'groupName' in e;
         <h2>Ingredients</h2>
 
         {panVariants && panVariants.length > 1 && (
-          <div class="pan-tabs" role="tablist" aria-label="Pan size">
+          <div class="pan-tabs" role="tablist" aria-label="Pan size" data-pagefind-ignore>
             {panVariants.map((variant, i) => (
               <button
                 class={`pan-tab${i === 0 ? ' pan-tab--active' : ''}`}
@@ -161,7 +163,7 @@ const isGroup = (e: IngItem | IngGroup): e is IngGroup => 'groupName' in e;
           </div>
         )}
 
-        <div class="scale-control" role="group" aria-label="Recipe scale">
+        <div class="scale-control" role="group" aria-label="Recipe scale" data-pagefind-ignore>
           <span class="scale-control__label">Scale</span>
           <div class="scale-options">
             {[

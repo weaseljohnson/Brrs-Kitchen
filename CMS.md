@@ -92,13 +92,26 @@ Astro's middleware virtual module parser breaks on special characters (`.` `'`) 
 #### Single-pan ingredient rendering — resolved
 `[slug].astro` now renders both the flat top-level `ingredients` list (single-pan) and `panVariants` ingredient lists. The dead fallback block that was incorrectly nested inside the pan-tabs conditional was moved to a proper sibling block after the scale control.
 
-### Phase 3 — Edit Mode
-**Note that this implementation needs to be easy to scale later to include other site pages such as glossary or learning pages. 
-- [ ] 3a: Recipe list view — fetches all recipes from GitHub and renders them as a selectable list. List view includes both published and draft recipes. 
-- [ ] 3b: Pre-populate the form when a recipe is selected for editing
-- [ ] 3c: GitHub API — update existing file (requires fetching the file's current SHA first)
-- [ ] 3d: Delete with confirmation modal
-- [ ] 3e: Wire up website header search bar to be able to find recipes
+### Phase 3 — Edit Mode & Search ✅ Complete
+
+- [x] 3a: Recipe list view — live-fetched from GitHub on every dashboard load via GitHub Trees API. Renders in three tabs: Published, Drafts, Archived. Fetch and frontmatter parsing happen server-side in `index.astro` frontmatter block (no separate API route needed).
+- [x] 3b: Separate edit page at `src/pages/admin/edit/[slug].astro` — fetches recipe from GitHub by slug + category folder, parses frontmatter, pre-populates form via `initEditMode()`. Submits to the same `/api/save-recipe` endpoint as the new recipe form.
+- [x] 3c: GitHub API update already supported by `githubWrite()` in `save-recipe.ts` — fetches existing file SHA before writing, so PUT calls handle both create and update transparently.
+- [x] 3d: Delete with confirmation modal — hard deletes `.md` file and associated image from GitHub. Implemented in `src/pages/api/delete-recipe.ts`.
+- [x] 3e: Archive system — `archived: true` frontmatter flag (same pattern as `draft`). Archived recipes excluded from public site, visible in dashboard Archived tab. Toggle handled by `src/pages/api/archive-recipe.ts` which parses and rewrites only the frontmatter field, preserving the rest of the file exactly. Unarchive removes the flag entirely rather than setting `false`.
+- [x] 3f: Search — Pagefind static search index built at deploy time. Header inputs (desktop + mobile) show inline top-3 dropdown as user types. Enter navigates to `/search?q=`. Full results page at `src/pages/search.astro` with live search, URL state sync, and recipe cards.
+
+#### Key decisions made during Phase 3
+
+- **No separate get-recipes API route** — dashboard fetches recipes server-side directly in `index.astro` frontmatter. Simpler, one fewer file, data ready before page renders.
+- **Edit URL pattern: `/admin/edit/[slug]?cat={folderName}`** — slug alone is ambiguous (same slug could theoretically exist in different category folders). Category folder is passed as a query param from the dashboard, which knows both values.
+- **Slug locked on edit** — changing a recipe's slug would orphan the old file in GitHub and break any existing links. The slug field is locked (`slugLocked = true`) on the edit page and auto-generation is disabled.
+- **Shared form helpers** — all DOM-building functions (`makeIngRow`, `makeStepBlock`, `makeVariantBlock`, etc.) extracted to `src/scripts/adminFormHelpers.js` and imported by both `new.astro` and `edit/[slug].astro`. Keeps logic DRY and both forms consistent.
+- **Existing image preservation on edit** — `save-recipe.ts` checks for `existingImagePath` in the payload when no new image is uploaded, so the image frontmatter field is not lost on edit.
+- **Archive vs. delete** — archive sets `archived: true` in frontmatter, keeping the file in GitHub. Hard delete removes the `.md` and image file permanently. Dashboard modal warns users to consider archiving before deleting.
+- **Pagefind chosen for search** — static index built at deploy time, no external services, no API calls at runtime. Scales to any number of recipes with no performance cost. Fails silently in `astro dev` (index only exists after `astro build`). Test search with `astro build && astro preview`.
+- **Search index scope** — `data-pagefind-body` on `<main>` in `[slug].astro`. Pan tabs and scale controls tagged `data-pagefind-ignore` to keep ingredient amounts out of results. Category, intro, and image path exposed via `data-pagefind-meta` for structured result display.
+- **Search URL state** — `/search` page syncs `?q=` param via `history.replaceState` as user types, keeping results shareable and back-button friendly without page reloads.
 
 
 ### Phase 4 — Polish
@@ -107,5 +120,6 @@ Astro's middleware virtual module parser breaks on special characters (`.` `'`) 
 - [ ] 4c: Unsaved changes warning before navigating away
 - [ ] 4d: Basic admin dashboard styling — clean, functional, doesn't need to match the
 - [ ] 4e: UI Improvements:
-		- Move yield up by category and times		
+      - Move yield field up next to category and times
+- [ ] 4f: Extend search index to Glossary and Learn pages — add `data-pagefind-body` to those page templates when built. No other changes required.	
 public site

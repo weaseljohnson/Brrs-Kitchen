@@ -193,6 +193,19 @@ Average time from "save recipe" to "live on site": **~30–60 seconds** (Astro b
 
 ---
 
+### Known Dev Constraints
+
+**Pagefind (search) does not work in `astro dev`.**
+Pagefind indexes the *built* output, not the dev server. Search will silently
+do nothing locally. To test search, run:
+
+    astro build && astro preview
+
+The header dropdown and `/search` page will both work correctly in preview and
+production. This is an expected limitation of static search indexing.
+
+---
+
 ## Build Log
 
 ### Step 1 — Vercel ↔ GitHub Connection

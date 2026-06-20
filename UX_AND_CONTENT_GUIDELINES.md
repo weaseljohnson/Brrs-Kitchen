@@ -69,6 +69,18 @@ These are descriptive constraints which have been provided by Brianna to guide t
 - Logo files stored in `/public/images/logo/`: transparent version (`BK-Logo-Header.png`), color version (`BK-Logo-Color.png`), text-only version (`BK-Logo-Text.png`)
 
 
+### Search Page (/search)
+
+- Prerendered static page at `/search`
+- Reads `?q=` from the URL on load and runs the initial search automatically
+- Full-width pill search bar at the top mirrors the header style
+- Results render as vertical cards: 80×80 thumbnail (left), category label, title, and a 2-line excerpt with matching terms highlighted in `--color-accent-3`
+- Result count shown above the list ("N results for 'query'")
+- URL updates via `history.replaceState` as the user types — keeps results shareable and back-button friendly without full page reloads
+- No results state: displays "No results for 'query'" in muted italic
+- Search index covers recipe title, category, intro, and directions body. Ingredients and scale controls are excluded from the index (`data-pagefind-ignore`)
+- Extending to Glossary or Learn pages in the future requires only adding `data-pagefind-body` to those page templates — no other changes needed
+
 ### Internal Links, Tags, and Labels
 
 - Tags that show on page to help highlight things about the recipes

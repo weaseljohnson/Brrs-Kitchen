@@ -90,6 +90,13 @@ const navItems = [
               placeholder="Search"
               aria-label="Search recipes"
             />
+            <ul
+              class="search-dropdown"
+              id="desktop-search-dropdown"
+              role="listbox"
+              aria-label="Search suggestions"
+              hidden
+            ></ul>
           </div>
         </li>
       </ul>
@@ -112,6 +119,13 @@ const navItems = [
         placeholder="Search recipes…"
         aria-label="Search recipes"
       />
+      <ul
+        class="search-dropdown search-dropdown--mobile"
+        id="mobile-search-dropdown"
+        role="listbox"
+        aria-label="Search suggestions"
+        hidden
+      ></ul>
     </div>
   </div>
 </header>
@@ -433,6 +447,107 @@ const navItems = [
     color: var(--color-text);
   }
 
+  /* ── SEARCH DROPDOWN ── */
+  .search-dropdown {
+    position: absolute;
+    top: calc(100% + var(--space-2));
+    left: 0;
+    right: 0;
+    background: var(--color-bg);
+    border: 1px solid rgba(118, 130, 95, 0.22);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-lg);
+    list-style: none;
+    padding: var(--space-2) 0;
+    margin: 0;
+    z-index: 300;
+    min-width: 280px;
+  }
+
+  .search-dropdown[hidden] { display: none; }
+
+  .search-dropdown__item a {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-2) var(--space-4);
+    text-decoration: none;
+    color: var(--color-text);
+    transition: background var(--transition-fast);
+  }
+
+  .search-dropdown__item a:hover {
+    background: rgba(118, 130, 95, 0.07);
+    color: var(--color-text);
+  }
+
+  .search-dropdown__img {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: var(--radius-sm);
+    flex-shrink: 0;
+    background: rgba(118, 130, 95, 0.08);
+  }
+
+  .search-dropdown__img-placeholder {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-sm);
+    flex-shrink: 0;
+    background: rgba(118, 130, 95, 0.08);
+  }
+
+  .search-dropdown__text { min-width: 0; }
+
+  .search-dropdown__category {
+    font-family: var(--font-sans);
+    font-size: var(--text-xs);
+    font-style: italic;
+    color: var(--color-accent-2);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .search-dropdown__title {
+    font-family: var(--font-serif);
+    font-size: var(--text-sm);
+    font-weight: 700;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .search-dropdown__see-all {
+    display: block;
+    text-align: center;
+    padding: var(--space-2) var(--space-4);
+    font-family: var(--font-sans);
+    font-size: var(--text-xs);
+    color: var(--color-accent-2);
+    border-top: 1px solid rgba(118, 130, 95, 0.12);
+    margin-top: var(--space-1);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+  }
+
+  .search-dropdown__see-all:hover { color: var(--color-accent-3); }
+
+  /* Mobile dropdown sits below the input row, full-width */
+  .search-dropdown--mobile {
+    position: static;
+    border-radius: 0 0 var(--radius-md) var(--radius-md);
+    border-top: none;
+    box-shadow: none;
+    min-width: 0;
+  }
+
+  /* The mobile search bar needs relative positioning for the desktop variant
+    but the mobile variant is static, so no extra CSS needed there */
+  .nav-item--search-bar {
+    position: relative;
+  }
+
   /* ── MOBILE TOGGLE ── */
   .mobile-menu-toggle {
     display: none;
@@ -612,6 +727,112 @@ const navItems = [
       mobileSearchBar.classList.remove('is-open');
       mobileSearchBar.setAttribute('aria-hidden', 'true');
       mobileSearchToggle?.setAttribute('aria-expanded', 'false');
+    }
+  });
+
+  // ── SEARCH ──
+  const desktopInput    = document.getElementById('site-search')            as HTMLInputElement;
+  const mobileInput     = document.getElementById('mobile-search-input')    as HTMLInputElement;
+  const desktopDropdown = document.getElementById('desktop-search-dropdown') as HTMLElement;
+  const mobileDropdown  = document.getElementById('mobile-search-dropdown')  as HTMLElement;
+
+  let pagefind: any = null;
+
+  async function loadPagefind() {
+    if (pagefind) return;
+    try {
+      pagefind = await import('/pagefind/pagefind.js' as string);
+      await pagefind.init();
+    } catch {
+      pagefind = null;
+    }
+  }
+
+  function buildDropdownHTML(results: any[], query: string): string {
+    const items = results.map(r => {
+      const img      = r.meta?.image ?? '';
+      const category = r.meta?.category ?? '';
+      const imgEl    = img
+        ? `<img src="${img}" alt="" class="search-dropdown__img" loading="lazy" />`
+        : `<div class="search-dropdown__img-placeholder" aria-hidden="true"></div>`;
+      return `
+        <li class="search-dropdown__item">
+          <a href="${r.url}">
+            ${imgEl}
+            <div class="search-dropdown__text">
+              ${category ? `<p class="search-dropdown__category">${category}</p>` : ''}
+              <p class="search-dropdown__title">${r.meta?.title ?? 'Untitled'}</p>
+            </div>
+          </a>
+        </li>
+      `;
+    }).join('');
+
+    const seeAll = `<a href="/search?q=${encodeURIComponent(query)}" class="search-dropdown__see-all">See all results →</a>`;
+    return items + seeAll;
+  }
+
+  async function runHeaderSearch(query: string, inputEl: HTMLInputElement, dropdownEl: HTMLElement) {
+    if (!query.trim()) {
+      dropdownEl.hidden = true;
+      return;
+    }
+
+    await loadPagefind();
+    if (!pagefind) return; // Fail silently in dev
+
+    const search  = await pagefind.search(query);
+    const top3    = await Promise.all(search.results.slice(0, 3).map((r: any) => r.data()));
+
+    if (top3.length === 0) {
+      dropdownEl.hidden = true;
+      return;
+    }
+
+    dropdownEl.innerHTML = buildDropdownHTML(top3, query);
+    dropdownEl.hidden    = false;
+  }
+
+  function closeDropdowns() {
+    desktopDropdown.hidden = true;
+    mobileDropdown.hidden  = true;
+  }
+
+  function navigateToSearch(query: string) {
+    if (query.trim()) {
+      window.location.href = `/search?q=${encodeURIComponent(query.trim())}`;
+    }
+  }
+
+  // Desktop input
+  let desktopTimer: ReturnType<typeof setTimeout>;
+  desktopInput?.addEventListener('input', () => {
+    clearTimeout(desktopTimer);
+    desktopTimer = setTimeout(() => runHeaderSearch(desktopInput.value, desktopInput, desktopDropdown), 250);
+  });
+  desktopInput?.addEventListener('keydown', e => {
+    if (e.key === 'Enter') { e.preventDefault(); navigateToSearch(desktopInput.value); }
+    if (e.key === 'Escape') closeDropdowns();
+  });
+
+  // Mobile input
+  let mobileTimer: ReturnType<typeof setTimeout>;
+  mobileInput?.addEventListener('input', () => {
+    clearTimeout(mobileTimer);
+    mobileTimer = setTimeout(() => runHeaderSearch(mobileInput.value, mobileInput, mobileDropdown), 250);
+  });
+  mobileInput?.addEventListener('keydown', e => {
+    if (e.key === 'Enter') { e.preventDefault(); navigateToSearch(mobileInput.value); }
+    if (e.key === 'Escape') closeDropdowns();
+  });
+
+  // Close dropdowns on outside click
+  document.addEventListener('click', e => {
+    if (
+      !(e.target as Element).closest('.nav-item--search-bar') &&
+      !(e.target as Element).closest('.mobile-search-bar')
+    ) {
+      closeDropdowns();
     }
   });
 </script>

@@ -151,7 +151,7 @@ const archived  = recipes.filter(r =>  r.archived);
             {r.pubDate && <span class="dash-row__date">{r.pubDate}</span>}
             <div class="dash-row__actions">
               <a href={`/admin/edit/${r.slug}?cat=${r.folderName}`} class="admin-btn admin-btn--secondary">Edit</a>
-              <button type="button" class="admin-btn admin-btn--ghost"
+              <button type="button" class="admin-btn admin-btn--tertiary"
                 data-action="archive" data-slug={r.slug} data-folder={r.folderName} data-archived="false">
                 Archive
               </button>
