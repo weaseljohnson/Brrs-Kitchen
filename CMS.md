@@ -98,6 +98,8 @@ Astro's middleware virtual module parser breaks on special characters (`.` `'`) 
 - [ ] 3b: Pre-populate the form when a recipe is selected for editing
 - [ ] 3c: GitHub API — update existing file (requires fetching the file's current SHA first)
 - [ ] 3d: Delete with confirmation modal
+- [ ] 3e: Wire up website header search bar to be able to find recipes
+
 
 ### Phase 4 — Polish
 - [ ] 4a: Client-side + server-side form validation

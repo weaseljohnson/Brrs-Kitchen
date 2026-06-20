@@ -44,6 +44,8 @@ function buildMarkdown(payload) {
 
   if (payload.image?.ext) {
     fm.image = `/images/recipes/${payload.slug}.${payload.image.ext}`;
+  } else if (payload.existingImagePath) {
+    fm.image = payload.existingImagePath;
   }
 
   if (payload.credit?.name && payload.credit?.url) {
@@ -51,6 +53,7 @@ function buildMarkdown(payload) {
   }
 
   if (payload.draft) fm.draft = true;
+  if (payload.archived) fm.archived = true;
   if (payload.notes?.length) fm.notes = payload.notes;  
 
   // Ingredients — pan variants vs. single pan

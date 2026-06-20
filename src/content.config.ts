@@ -27,7 +27,7 @@ const recipes = defineCollection({
     title:    z.string(),
     category: z.string(),
     draft:    z.boolean().optional(),   // true = excluded from public site
-
+    archived: z.boolean().optional(),  // true = hidden from public, kept in GitHub
     prepTime: z.string().optional(),
     cookTime: z.string().optional(),
     yield:    z.string().optional(),

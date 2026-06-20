@@ -11,6 +11,9 @@
     "draft": {
       "type": "boolean"
     },
+    "archived": {
+      "type": "boolean"
+    },
     "prepTime": {
       "type": "string"
     },

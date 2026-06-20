@@ -1,15 +1,61 @@
 ---
 export const prerender = false;
-import AdminLayout from '../../layouts/AdminLayout.astro';
+import AdminLayout from '../../../layouts/AdminLayout.astro';
+import yaml from 'js-yaml';
+
+const { slug } = Astro.params;
+const cat = Astro.url.searchParams.get('cat');
+
+// cat is required to locate the file in GitHub
+if (!cat) return Astro.redirect('/admin');
+
+const GITHUB_TOKEN  = import.meta.env.GITHUB_TOKEN;
+const GITHUB_OWNER  = import.meta.env.GITHUB_OWNER;
+const GITHUB_REPO   = import.meta.env.GITHUB_REPO;
+const GITHUB_BRANCH = import.meta.env.GITHUB_BRANCH;
+
+const authHeader = {
+  Authorization: `Bearer ${GITHUB_TOKEN}`,
+  Accept: 'application/vnd.github+json',
+};
+
+let recipeData: Record<string, any> | null = null;
+let fetchError: string | null = null;
+
+try {
+  const filePath = `content/recipes/${cat}/${slug}.md`;
+  const url = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${filePath}`;
+
+  const res = await fetch(url, { headers: authHeader });
+  if (!res.ok) throw new Error(`Recipe not found (${res.status})`);
+
+  const fileData   = await res.json();
+  const rawContent = Buffer.from(fileData.content, 'base64').toString('utf8');
+  const match      = rawContent.match(/^---\r?\n([\s\S]*?)\r?\n---/);
+
+  if (!match) throw new Error('Could not parse recipe frontmatter.');
+
+  const fm   = yaml.load(match[1]) as Record<string, any>;
+  recipeData = { ...fm, slug };
+} catch (err: any) {
+  fetchError = err.message;
+}
 
 const CATEGORIES = ['Desserts', 'Entrees', 'Sides', 'Drinks', 'Snacks', 'Basics'];
 ---
+
 <AdminLayout title="New Recipe">
+
+  {fetchError && (
+    <div class="edit-error">
+      ⚠️ Could not load recipe: {fetchError}
+    </div>
+  )}
 
   <div class="form-head">
     <div>
       <a href="/admin" class="back-link">← Dashboard</a>
-      <h1>New Recipe</h1>
+      <h1>Edit Recipe</h1>
     </div>
     <div class="form-head-actions">
       <button type="button" id="draft-btn" class="admin-btn admin-btn--secondary">Save as Draft</button>
@@ -223,7 +269,21 @@ const CATEGORIES = ['Desserts', 'Entrees', 'Sides', 'Drinks', 'Snacks', 'Basics'
 
   </form>
 
-  <style is:global>
+  <script type="application/json" id="recipe-edit-data" set:html={JSON.stringify(recipeData)} />
+
+</AdminLayout>
+
+<style is:global>
+
+  .edit-error {
+    background: rgba(189, 8, 28, 0.06);
+    border: 1px solid rgba(189, 8, 28, 0.25);
+    border-radius: var(--radius-md);
+    padding: var(--space-4) var(--space-5);
+    margin-bottom: var(--space-6);
+    color: #bd081c;
+    font-size: var(--text-sm);
+  }
 
     /* ── PAGE HEADER ── */
     .form-head {
@@ -528,24 +588,23 @@ const CATEGORIES = ['Desserts', 'Entrees', 'Sides', 'Drinks', 'Snacks', 'Basics'
 </style>
 
 <script>
-  import { slugify, makeIngRow, makeNoteEntry, makeVariantBlock, renumberVariants, makeIngredientGroupBlock, makeStepBlock, renumberSteps, addChip } from '../../scripts/adminFormHelpers.js';
+  import {
+    slugify, makeIngRow, makeNoteEntry, makeVariantBlock, renumberVariants,
+    makeIngredientGroupBlock, makeStepBlock, renumberSteps, addChip
+  } from '../../../scripts/adminFormHelpers.js';
 
   // ── SLUG ──
-  const titleInput = document.getElementById('f-title');
-  const slugInput  = document.getElementById('f-slug');
-  let slugLocked   = false;
+  const titleInput = document.getElementById('f-title') as HTMLInputElement;
+  const slugInput  = document.getElementById('f-slug')  as HTMLInputElement;
+  let slugLocked   = true; // Always locked on edit — slug must never change
 
-  // If the user clears the slug field, auto-gen resumes
-  slugInput.addEventListener('input', () => {
-    slugLocked = slugInput.value.trim() !== '';
-  });
   titleInput.addEventListener('input', () => {
     if (!slugLocked) slugInput.value = slugify(titleInput.value);
   });
 
   // ── TAGS ──
-  const tagsRow  = document.getElementById('tags-chip-row');
-  const tagInput = document.getElementById('f-tag-input');
+  const tagsRow  = document.getElementById('tags-chip-row')!;
+  const tagInput = document.getElementById('f-tag-input') as HTMLInputElement;
 
   function submitTag() {
     const v = tagInput.value.trim();
@@ -554,12 +613,12 @@ const CATEGORIES = ['Desserts', 'Entrees', 'Sides', 'Drinks', 'Snacks', 'Basics'
     tagInput.value = '';
     tagInput.focus();
   }
-  document.getElementById('add-tag-btn').addEventListener('click', submitTag);
+  document.getElementById('add-tag-btn')!.addEventListener('click', submitTag);
   tagInput.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); submitTag(); } });
 
   // ── DIETARY ──
-  const dietaryRow   = document.getElementById('dietary-chip-row');
-  const dietaryInput = document.getElementById('f-dietary-input');
+  const dietaryRow   = document.getElementById('dietary-chip-row')!;
+  const dietaryInput = document.getElementById('f-dietary-input') as HTMLInputElement;
 
   function submitDietary() {
     const v = dietaryInput.value.trim();
@@ -568,42 +627,44 @@ const CATEGORIES = ['Desserts', 'Entrees', 'Sides', 'Drinks', 'Snacks', 'Basics'
     dietaryInput.value = '';
     dietaryInput.focus();
   }
-  document.getElementById('add-dietary-btn').addEventListener('click', submitDietary);
+  document.getElementById('add-dietary-btn')!.addEventListener('click', submitDietary);
   dietaryInput.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); submitDietary(); } });
 
   // ── IMAGE ──
-  const uploadArea  = document.getElementById('img-upload-area');
-  const fileInput   = document.getElementById('img-file-input');
-  const previewWrap = document.getElementById('img-preview-wrap');
-  const previewImg  = document.getElementById('img-preview');
-  const placeholder = document.getElementById('img-placeholder');
-  let imageFile     = null;
+  const uploadArea  = document.getElementById('img-upload-area')!;
+  const fileInput   = document.getElementById('img-file-input') as HTMLInputElement;
+  const previewWrap = document.getElementById('img-preview-wrap')!;
+  const previewImg  = document.getElementById('img-preview') as HTMLImageElement;
+  const placeholder = document.getElementById('img-placeholder')!;
+  let imageFile: File | null     = null;
+  let existingImagePath: string | null = null; // populated by initEditMode
 
-  function showPreview(file) {
+  function showPreview(file: File) {
     imageFile = file;
     const reader = new FileReader();
     reader.onload = e => {
-      previewImg.src = e.target.result;
+      previewImg.src = (e.target as FileReader).result as string;
       previewWrap.hidden = false;
       placeholder.hidden = true;
-      uploadArea.classList.add('has-image'); // Add this line
+      uploadArea.classList.add('has-image');
     };
     reader.readAsDataURL(file);
   }
 
   function clearImage() {
     imageFile = null;
+    existingImagePath = null;
     fileInput.value = '';
     previewImg.src = '';
     previewWrap.hidden = true;
     placeholder.hidden = false;
-    uploadArea.classList.remove('has-image'); // Add this line
+    uploadArea.classList.remove('has-image');
   }
 
   uploadArea.addEventListener('click', () => fileInput.click());
-  fileInput.addEventListener('change', () => { if (fileInput.files[0]) showPreview(fileInput.files[0]); });
-  document.getElementById('img-clear-btn').addEventListener('click', e => {
-    e.stopPropagation(); // prevent uploadArea click from re-opening file picker
+  fileInput.addEventListener('change', () => { if (fileInput.files![0]) showPreview(fileInput.files![0]); });
+  document.getElementById('img-clear-btn')!.addEventListener('click', e => {
+    e.stopPropagation();
     clearImage();
   });
   uploadArea.addEventListener('dragover', e => { e.preventDefault(); uploadArea.classList.add('is-drag-over'); });
@@ -611,29 +672,27 @@ const CATEGORIES = ['Desserts', 'Entrees', 'Sides', 'Drinks', 'Snacks', 'Basics'
   uploadArea.addEventListener('drop', e => {
     e.preventDefault();
     uploadArea.classList.remove('is-drag-over');
-    const f = e.dataTransfer.files[0];
+    const f = (e as DragEvent).dataTransfer?.files[0];
     if (f?.type.startsWith('image/')) showPreview(f);
   });
 
   // ── INGREDIENTS ──
-  const useVariants    = document.getElementById('use-variants');
-  const useGroups      = document.getElementById('use-groups');
-  const useGroupsField = document.getElementById('use-groups-field');
-  const singleWrap     = document.getElementById('single-wrap');
-  const singleFlat     = document.getElementById('single-flat');
-  const singleGrouped  = document.getElementById('single-grouped');
-  const variantsWrap   = document.getElementById('variants-wrap');
-  const singleIngList  = document.getElementById('single-ing-list');
-  const singleGroupList = document.getElementById('single-group-list');
-  const variantsList   = document.getElementById('variants-list');
-
-  singleIngList.appendChild(makeIngRow()); // start with one empty row
+  const useVariants     = document.getElementById('use-variants')     as HTMLInputElement;
+  const useGroups       = document.getElementById('use-groups')        as HTMLInputElement;
+  const useGroupsField  = document.getElementById('use-groups-field')!;
+  const singleWrap      = document.getElementById('single-wrap')!;
+  const singleFlat      = document.getElementById('single-flat')!;
+  const singleGrouped   = document.getElementById('single-grouped')!;
+  const variantsWrap    = document.getElementById('variants-wrap')!;
+  const singleIngList   = document.getElementById('single-ing-list')!;
+  const singleGroupList = document.getElementById('single-group-list')!;
+  const variantsList    = document.getElementById('variants-list')!;
 
   useVariants.addEventListener('change', () => {
     const on = useVariants.checked;
     singleWrap.hidden    = on;
     variantsWrap.hidden  = !on;
-    useGroupsField.hidden = on; // groups and variants are mutually exclusive for now
+    useGroupsField.hidden = on;
     if (on && variantsList.children.length === 0) {
       variantsList.appendChild(makeVariantBlock(0));
     }
@@ -643,69 +702,37 @@ const CATEGORIES = ['Desserts', 'Entrees', 'Sides', 'Drinks', 'Snacks', 'Basics'
     const on = useGroups.checked;
     singleFlat.hidden    = on;
     singleGrouped.hidden = !on;
-
-    if (on) {
-      // ── MOVING: FLAT TO GROUPED ──
-      // Only run this transfer if the groups list is currently empty
-      if (singleGroupList.children.length === 0) {
-        const firstGroup = makeIngredientGroupBlock();
-        const groupList = firstGroup.querySelector('.ing-group-list');
-        
-        // Remove the default empty row that makeIngredientGroupBlock adds automatically
-        groupList.innerHTML = '';
-
-        // Physically move all existing rows from the flat list to the new group
-        while (singleIngList.firstElementChild) {
-          groupList.appendChild(singleIngList.firstElementChild);
-        }
-
-        // Fallback: If the flat list was completely empty, add one blank row
-        if (groupList.children.length === 0) {
-          groupList.appendChild(makeIngRow());
-        }
-
-        singleGroupList.appendChild(firstGroup);
+    if (on && singleGroupList.children.length === 0) {
+      const firstGroup = makeIngredientGroupBlock();
+      const groupList  = firstGroup.querySelector('.ing-group-list')!;
+      groupList.innerHTML = '';
+      while (singleIngList.firstElementChild) {
+        groupList.appendChild(singleIngList.firstElementChild);
       }
-    } else {
-      // ── MOVING: GROUPED TO FLAT ──
-      // Grab every single ingredient row from inside every group
-      const allRows = singleGroupList.querySelectorAll('.ing-row');
-      
-      // Move them all back into the flat list container
-      allRows.forEach(row => singleIngList.appendChild(row));
-
-      // Clear out the group containers so it starts fresh next time it's toggled
+      if (groupList.children.length === 0) groupList.appendChild(makeIngRow());
+      singleGroupList.appendChild(firstGroup);
+    } else if (!on) {
+      singleGroupList.querySelectorAll('.ing-row').forEach(row => singleIngList.appendChild(row));
       singleGroupList.innerHTML = '';
-
-      // Fallback: If they deleted everything, provide one blank row
-      if (singleIngList.children.length === 0) {
-        singleIngList.appendChild(makeIngRow());
-      }
+      if (singleIngList.children.length === 0) singleIngList.appendChild(makeIngRow());
     }
   });
 
-  document.getElementById('add-single-ing-btn').addEventListener('click', () => {
-    singleIngList.appendChild(makeIngRow());
-  });
-  document.getElementById('add-single-group-btn').addEventListener('click', () => {
-    singleGroupList.appendChild(makeIngredientGroupBlock());
-  });
-  document.getElementById('add-variant-btn').addEventListener('click', () => {
-    variantsList.appendChild(makeVariantBlock(variantsList.children.length));
-  });
+  document.getElementById('add-single-ing-btn')!.addEventListener('click', () => singleIngList.appendChild(makeIngRow()));
+  document.getElementById('add-single-group-btn')!.addEventListener('click', () => singleGroupList.appendChild(makeIngredientGroupBlock()));
+  document.getElementById('add-variant-btn')!.addEventListener('click', () => variantsList.appendChild(makeVariantBlock(variantsList.children.length)));
 
   // ── STEPS ──
-  const stepsList = document.getElementById('steps-list');
-  stepsList.appendChild(makeStepBlock(0)); // start with one empty step
+  const stepsList = document.getElementById('steps-list')!;
 
-  document.getElementById('add-step-btn').addEventListener('click', () => {
+  document.getElementById('add-step-btn')!.addEventListener('click', () => {
     stepsList.appendChild(makeStepBlock(stepsList.children.length));
   });
 
-  // ── SIMPLE TOGGLES ──
-  const hasNotesChk = document.getElementById('has-notes');
-  const notesWrap   = document.getElementById('notes-wrap');
-  const notesList   = document.getElementById('notes-list');
+  // ── NOTES ──
+  const hasNotesChk = document.getElementById('has-notes')  as HTMLInputElement;
+  const notesWrap   = document.getElementById('notes-wrap')!;
+  const notesList   = document.getElementById('notes-list')!;
 
   hasNotesChk.addEventListener('change', () => {
     notesWrap.hidden = !hasNotesChk.checked;
@@ -714,93 +741,192 @@ const CATEGORIES = ['Desserts', 'Entrees', 'Sides', 'Drinks', 'Snacks', 'Basics'
     }
   });
 
-  document.getElementById('add-note-btn').addEventListener('click', () => {
-    notesList.appendChild(makeNoteEntry(''));
-  });
+  document.getElementById('add-note-btn')!.addEventListener('click', () => notesList.appendChild(makeNoteEntry('')));
 
-  const hasCreditChk = document.getElementById('has-credit');
-  const creditWrap   = document.getElementById('credit-wrap');
+  // ── CREDIT ──
+  const hasCreditChk = document.getElementById('has-credit') as HTMLInputElement;
+  const creditWrap   = document.getElementById('credit-wrap')!;
   hasCreditChk.addEventListener('change', () => { creditWrap.hidden = !hasCreditChk.checked; });
 
-  // ── IMAGE → BASE64 ──
-    function readImageAsBase64(file) {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload  = e => {
-        const base64 = e.target.result.split(',')[1];
-        const ext    = file.name.split('.').pop().toLowerCase();
-        resolve({ data: base64, ext });
-        };
-        reader.onerror = () => reject(new Error('Failed to read image file.'));
-        reader.readAsDataURL(file);
-    });
+  // ── INIT EDIT MODE ──
+  function initEditMode(data: Record<string, any>) {
+    // Slug — lock it; changing slug on edit would orphan the old file
+    slugInput.value = data.slug ?? '';
+    slugLocked = true;
+
+    // Basic fields
+    (document.getElementById('f-title')    as HTMLInputElement).value = data.title    ?? '';
+    (document.getElementById('f-category') as HTMLInputElement).value = data.category ?? '';
+    (document.getElementById('f-prep')     as HTMLInputElement).value = data.prepTime ?? '';
+    (document.getElementById('f-cook')     as HTMLInputElement).value = data.cookTime ?? '';
+    (document.getElementById('f-intro')    as HTMLTextAreaElement).value = data.intro ?? '';
+
+    // Tags + dietary
+    (data.tags    ?? []).forEach((t: string) => addChip(tagsRow,    t, 'personal'));
+    (data.dietary ?? []).forEach((t: string) => addChip(dietaryRow, t, 'dietary'));
+
+    // Existing image — show preview using the public URL path
+    if (data.image) {
+      existingImagePath = data.image;
+      previewImg.src    = data.image;
+      previewWrap.hidden = false;
+      placeholder.hidden = true;
+      uploadArea.classList.add('has-image');
     }
 
+    // Ingredients
+    if (data.panVariants?.length) {
+      useVariants.checked = true;
+      useVariants.dispatchEvent(new Event('change'));
+      variantsList.innerHTML = '';
+
+      data.panVariants.forEach((variant: any, i: number) => {
+        const block = makeVariantBlock(i);
+        (block.querySelector('.variant-label') as HTMLInputElement).value = variant.label ?? '';
+        (block.querySelector('.variant-yield') as HTMLInputElement).value = variant.yield ?? '';
+        const ingList = block.querySelector('.variant-ing-list')!;
+        ingList.innerHTML = '';
+        (variant.ingredients ?? []).forEach((ing: any) => {
+          ingList.appendChild(makeIngRow(ing.count ?? '', ing.item ?? ''));
+        });
+        variantsList.appendChild(block);
+      });
+      renumberVariants();
+
+    } else if (data.ingredients?.length) {
+      const isGrouped = 'groupName' in data.ingredients[0];
+
+      if (isGrouped) {
+        useGroups.checked = true;
+        useGroups.dispatchEvent(new Event('change'));
+        singleGroupList.innerHTML = '';
+
+        data.ingredients.forEach((group: any) => {
+          const block = makeIngredientGroupBlock();
+          (block.querySelector('.ing-group-name') as HTMLInputElement).value = group.groupName ?? '';
+          const groupList = block.querySelector('.ing-group-list')!;
+          groupList.innerHTML = '';
+          (group.ingredients ?? []).forEach((ing: any) => {
+            groupList.appendChild(makeIngRow(ing.count ?? '', ing.item ?? ''));
+          });
+          singleGroupList.appendChild(block);
+        });
+
+      } else {
+        singleIngList.innerHTML = '';
+        data.ingredients.forEach((ing: any) => {
+          singleIngList.appendChild(makeIngRow(ing.count ?? '', ing.item ?? ''));
+        });
+      }
+
+      if (data.yield) {
+        (document.getElementById('f-yield') as HTMLInputElement).value = data.yield;
+      }
+    }
+
+    // Directions
+    stepsList.innerHTML = '';
+    (data.directions ?? []).forEach((step: any, i: number) => {
+      const block = makeStepBlock(i);
+      (block.querySelector('.step-title-input') as HTMLInputElement).value  = step.title ?? '';
+      (block.querySelector('.step-body-input')  as HTMLTextAreaElement).value = step.body ?? '';
+      stepsList.appendChild(block);
+    });
+    if (stepsList.children.length === 0) stepsList.appendChild(makeStepBlock(0));
+
+    // Notes
+    if (data.notes?.length) {
+      hasNotesChk.checked = true;
+      notesWrap.hidden    = false;
+      notesList.innerHTML = '';
+      data.notes.forEach((note: string) => notesList.appendChild(makeNoteEntry(note)));
+    }
+
+    // Credit
+    if (data.credit?.name) {
+      hasCreditChk.checked = true;
+      creditWrap.hidden    = false;
+      (document.getElementById('f-credit-name') as HTMLInputElement).value = data.credit.name;
+      (document.getElementById('f-credit-url')  as HTMLInputElement).value = data.credit.url ?? '';
+    }
+  }
+
   // ── COLLECT PAYLOAD ──
+  function readImageAsBase64(file: File): Promise<{ data: string; ext: string }> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload  = e => {
+        const base64 = ((e.target as FileReader).result as string).split(',')[1];
+        const ext    = file.name.split('.').pop()!.toLowerCase();
+        resolve({ data: base64, ext });
+      };
+      reader.onerror = () => reject(new Error('Failed to read image file.'));
+      reader.readAsDataURL(file);
+    });
+  }
+
   function collectPayload() {
-
-    const payload = {
-      title:    document.getElementById('f-title').value.trim(),
-      slug:     document.getElementById('f-slug').value.trim(),
-      category: document.getElementById('f-category').value.trim(),
-      prepTime: document.getElementById('f-prep').value.trim() || undefined,
-      cookTime: document.getElementById('f-cook').value.trim() || undefined,
-      intro:    document.getElementById('f-intro').value.trim() || undefined,
-      tags:     [...tagsRow.querySelectorAll('.admin-chip')].map(c => c.dataset.value),
-      dietary:  [...dietaryRow.querySelectorAll('.admin-chip')].map(c => c.dataset.value),
-      notes: hasNotesChk.checked
-        ? [...notesList.querySelectorAll('.note-input')]
-            .map(el => el.value.trim())
-            .filter(Boolean)
-        : undefined,
-      credit:   hasCreditChk.checked ? {
-        name: document.getElementById('f-credit-name').value.trim(),
-        url:  document.getElementById('f-credit-url').value.trim(),
-      } : undefined,
-      // imageFile is kept as a variable for Phase 2 upload; only the name is in the payload preview
-      imageFileName: imageFile?.name,
-    };
-
     const usingVariants = useVariants.checked;
     const usingGroups   = useGroups.checked;
 
+    const payload: Record<string, any> = {
+      title:    (document.getElementById('f-title')    as HTMLInputElement).value.trim(),
+      slug:     (document.getElementById('f-slug')     as HTMLInputElement).value.trim(),
+      category: (document.getElementById('f-category') as HTMLInputElement).value.trim(),
+      prepTime: (document.getElementById('f-prep')     as HTMLInputElement).value.trim() || undefined,
+      cookTime: (document.getElementById('f-cook')     as HTMLInputElement).value.trim() || undefined,
+      intro:    (document.getElementById('f-intro')    as HTMLTextAreaElement).value.trim() || undefined,
+      tags:     [...tagsRow.querySelectorAll<HTMLElement>('.admin-chip')].map(c => c.dataset.value!),
+      dietary:  [...dietaryRow.querySelectorAll<HTMLElement>('.admin-chip')].map(c => c.dataset.value!),
+      notes: hasNotesChk.checked
+        ? [...notesList.querySelectorAll<HTMLInputElement>('.note-input')]
+            .map(el => el.value.trim()).filter(Boolean)
+        : undefined,
+      credit: hasCreditChk.checked ? {
+        name: (document.getElementById('f-credit-name') as HTMLInputElement).value.trim(),
+        url:  (document.getElementById('f-credit-url')  as HTMLInputElement).value.trim(),
+      } : undefined,
+      // Preserve existing image path if no new image was uploaded
+      existingImagePath: !imageFile && existingImagePath ? existingImagePath : undefined,
+    };
+
     if (usingVariants) {
-      payload.panVariants = [...variantsList.querySelectorAll('.variant-block')].map((block, i) => ({
-        id:    slugify(block.querySelector('.variant-label').value) || `variant-${i + 1}`,
-        label: block.querySelector('.variant-label').value.trim(),
-        yield: block.querySelector('.variant-yield').value.trim() || undefined,
-        ingredients: [...block.querySelectorAll('.ing-row')]
+      payload.panVariants = [...variantsList.querySelectorAll<HTMLElement>('.variant-block')].map((block, i) => ({
+        id:    slugify((block.querySelector('.variant-label') as HTMLInputElement).value) || `variant-${i + 1}`,
+        label: (block.querySelector('.variant-label') as HTMLInputElement).value.trim(),
+        yield: (block.querySelector('.variant-yield') as HTMLInputElement).value.trim() || undefined,
+        ingredients: [...block.querySelectorAll<HTMLElement>('.ing-row')]
           .map(row => ({
-            count: row.querySelector('.ing-count').value.trim() || undefined,
-            item:  row.querySelector('.ing-item').value.trim(),
+            count: (row.querySelector('.ing-count') as HTMLInputElement).value.trim() || undefined,
+            item:  (row.querySelector('.ing-item')  as HTMLInputElement).value.trim(),
           }))
           .filter(ing => ing.item),
       }));
     } else if (usingGroups) {
-      payload.yield = document.getElementById('f-yield').value.trim() || undefined;
-      payload.ingredients = [...singleGroupList.querySelectorAll('.ing-group-block')].map(block => ({
-        groupName: block.querySelector('.ing-group-name').value.trim() || 'Ingredients',
-        ingredients: [...block.querySelectorAll('.ing-row')]
+      payload.yield = (document.getElementById('f-yield') as HTMLInputElement).value.trim() || undefined;
+      payload.ingredients = [...singleGroupList.querySelectorAll<HTMLElement>('.ing-group-block')].map(block => ({
+        groupName: (block.querySelector('.ing-group-name') as HTMLInputElement).value.trim() || 'Ingredients',
+        ingredients: [...block.querySelectorAll<HTMLElement>('.ing-row')]
           .map(row => ({
-            count: row.querySelector('.ing-count').value.trim() || undefined,
-            item:  row.querySelector('.ing-item').value.trim(),
+            count: (row.querySelector('.ing-count') as HTMLInputElement).value.trim() || undefined,
+            item:  (row.querySelector('.ing-item')  as HTMLInputElement).value.trim(),
           }))
           .filter(ing => ing.item),
       }));
     } else {
-      payload.yield = document.getElementById('f-yield').value.trim() || undefined;
-      payload.ingredients = [...singleIngList.querySelectorAll('.ing-row')]
+      payload.yield = (document.getElementById('f-yield') as HTMLInputElement).value.trim() || undefined;
+      payload.ingredients = [...singleIngList.querySelectorAll<HTMLElement>('.ing-row')]
         .map(row => ({
-          count: row.querySelector('.ing-count').value.trim() || undefined,
-          item:  row.querySelector('.ing-item').value.trim(),
+          count: (row.querySelector('.ing-count') as HTMLInputElement).value.trim() || undefined,
+          item:  (row.querySelector('.ing-item')  as HTMLInputElement).value.trim(),
         }))
         .filter(ing => ing.item);
     }
 
-    payload.directions = [...stepsList.querySelectorAll('.step-block')]
+    payload.directions = [...stepsList.querySelectorAll<HTMLElement>('.step-block')]
       .map(block => ({
-        title: block.querySelector('.step-title-input').value.trim(),
-        body:  block.querySelector('.step-body-input').value.trim(),
+        title: (block.querySelector('.step-title-input') as HTMLInputElement).value.trim(),
+        body:  (block.querySelector('.step-body-input')  as HTMLTextAreaElement).value.trim(),
       }))
       .filter(s => s.title || s.body);
 
@@ -808,45 +934,51 @@ const CATEGORIES = ['Desserts', 'Entrees', 'Sides', 'Drinks', 'Snacks', 'Basics'
   }
 
   // ── SUBMIT ──
-    async function submitRecipe(isDraft) {
-      const payload = collectPayload();
-      payload.draft = isDraft;
+  async function submitRecipe(isDraft: boolean) {
+    const payload = collectPayload();
+    payload.draft = isDraft;
 
-      if (imageFile) {
-        try {
-          payload.image = await readImageAsBase64(imageFile);
-        } catch (imgErr) {
-          console.error('Image processing failed:', imgErr);
-          alert('Failed to process the selected image file.');
-          return;
-        }
-      }
-
+    if (imageFile) {
       try {
-        const res  = await fetch('/api/save-recipe', {
-          method:  'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body:    JSON.stringify(payload),
-        });
-        const data = await res.json();
-
-        if (!res.ok) {
-          const msg = data.errors?.join('\n') ?? data.error ?? 'Unknown error.';
-          alert(`Save failed:\n\n${msg}`);
-          return;
-        }
-
-        const label = isDraft ? 'Draft saved!' : 'Recipe published!';
-        alert(`${label} ${isDraft ? 'It will appear in your drafts list.' : 'It will be live after Vercel rebuilds (~30–60 seconds).'}`);
-        window.location.href = '/admin';
-      } catch (err) {
-        alert(`Network error: ${err.message}`);
+        payload.image = await readImageAsBase64(imageFile);
+      } catch {
+        alert('Failed to process the selected image file.');
+        return;
       }
     }
 
-    document.getElementById('submit-btn').addEventListener('click', () => submitRecipe(false));
-    document.getElementById('draft-btn').addEventListener('click', () => submitRecipe(true));
+    try {
+      const res  = await fetch('/api/save-recipe', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify(payload),
+      });
+      const data = await res.json();
 
+      if (!res.ok) {
+        const msg = data.errors?.join('\n') ?? data.error ?? 'Unknown error.';
+        alert(`Save failed:\n\n${msg}`);
+        return;
+      }
+
+      alert('Recipe updated! It will be live after Vercel rebuilds (~30–60 seconds).');
+      window.location.href = '/admin';
+    } catch (err: any) {
+      alert(`Network error: ${err.message}`);
+    }
+  }
+
+  document.getElementById('submit-btn')!.addEventListener('click', () => submitRecipe(false));
+  document.getElementById('draft-btn')!.addEventListener('click',  () => submitRecipe(true));
+
+  // ── BOOT: read data bridge and populate form ──
+  const dataEl = document.getElementById('recipe-edit-data');
+  if (dataEl) {
+    try {
+      const data = JSON.parse(dataEl.textContent ?? '{}');
+      if (data) initEditMode(data);
+    } catch {
+      console.error('Failed to parse recipe edit data.');
+    }
+  }
 </script>
-
-</AdminLayout>
