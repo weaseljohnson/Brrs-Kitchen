@@ -93,8 +93,8 @@ Astro's middleware virtual module parser breaks on special characters (`.` `'`) 
 `[slug].astro` now renders both the flat top-level `ingredients` list (single-pan) and `panVariants` ingredient lists. The dead fallback block that was incorrectly nested inside the pan-tabs conditional was moved to a proper sibling block after the scale control.
 
 ### Phase 3 — Edit Mode
-
-- [ ] 3a: Recipe list view — fetches all recipes from GitHub and renders them as a selectable list
+**Note that this implementation needs to be easy to scale later to include other site pages such as glossary or learning pages. 
+- [ ] 3a: Recipe list view — fetches all recipes from GitHub and renders them as a selectable list. List view includes both published and draft recipes. 
 - [ ] 3b: Pre-populate the form when a recipe is selected for editing
 - [ ] 3c: GitHub API — update existing file (requires fetching the file's current SHA first)
 - [ ] 3d: Delete with confirmation modal
@@ -105,6 +105,5 @@ Astro's middleware virtual module parser breaks on special characters (`.` `'`) 
 - [ ] 4c: Unsaved changes warning before navigating away
 - [ ] 4d: Basic admin dashboard styling — clean, functional, doesn't need to match the
 - [ ] 4e: UI Improvements:
-		- Reorder ingredients
 		- Move yield up by category and times		
 public site

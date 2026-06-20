@@ -335,6 +335,19 @@ const CATEGORIES = ['Desserts', 'Entrees', 'Sides', 'Drinks', 'Snacks', 'Basics'
 
   .img-clear-btn:hover { background: rgba(28, 19, 23, 0.85); }
 
+  /* Image Preview Takeover */
+  .img-upload-area.has-image {
+    border-color: transparent;
+    background: transparent;
+    min-height: auto;
+  }
+
+  /* Force elements to actually disappear when the 'hidden' attribute is applied */
+  .img-placeholder[hidden],
+  .img-preview-wrap[hidden] {
+    display: none !important;
+  }
+
   /* ── INGREDIENT COLUMN HEADERS ── */
   .ing-col-headers,
   .variant-ing-headers {
@@ -455,6 +468,63 @@ const CATEGORIES = ['Desserts', 'Entrees', 'Sides', 'Drinks', 'Snacks', 'Basics'
     margin-bottom: var(--space-2);
   }
 
+  /* ── UNIVERSAL PADDING REDUCTIONS (Step 7) ── */
+  .ing-group-block {
+    padding: var(--space-3) var(--space-4); /* Reduced from space-4 space-5 */
+  }
+
+  .variant-block {
+    padding: var(--space-4) var(--space-4); /* Reduced from space-5 space-6 */
+  }
+
+  .step-block {
+    gap: var(--space-3); /* Micro-adjust gap between number and inputs */
+  }
+
+  /* ── MOBILE BREAKPOINT RESTRUCTURES (Steps 3, 4, 5) ── */
+  @media (max-width: 768px) {
+    
+    /* Step 3: Stack Top Header cleanly */
+    .form-head {
+      flex-direction: column;
+      align-items: stretch;
+    }
+    
+    .form-head-actions {
+      justify-content: flex-end;
+    }
+
+    /* Step 4: Stack Category and Times (targets your 3-col and 2-col grids) */
+    .admin-row--3,
+    .admin-row--2 {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-4);
+    }
+
+    /* Step 5: Stack Ingredient Actions and Expand Inputs */
+    .ing-row {
+      display: flex;
+      align-items: flex-start;
+    }
+
+    /* Give inputs max room */
+    .ing-count { width: 35%; }
+    .ing-item { width: 65%; flex-grow: 1; }
+
+    /* Stack up/down arrows and X vertically */
+    .ing-controls {
+      flex-direction: column; 
+      margin-left: auto;
+    }
+
+    /* Hide column headers on mobile as they no longer align with flex inputs */
+    .ing-col-headers,
+    .variant-ing-headers {
+      display: none;
+    }
+  }
+
 </style>
 
 <script is:inline>
@@ -561,7 +631,7 @@ const CATEGORIES = ['Desserts', 'Entrees', 'Sides', 'Drinks', 'Snacks', 'Basics'
       <div class="ing-group-head">
         <input type="text" class="admin-input ing-group-name"
           placeholder="Group name (e.g. For the Sauce)" />
-        <button type="button" class="admin-btn admin-btn--danger ing-group-remove">Remove Group</button>
+        <button type="button" class="admin-btn admin-btn--danger ing-group-remove" aria-label="Remove Group">✕</button>
       </div>
       <div class="ing-col-headers">
         <span class="admin-label">Amount</span>
@@ -689,6 +759,7 @@ const CATEGORIES = ['Desserts', 'Entrees', 'Sides', 'Drinks', 'Snacks', 'Basics'
       previewImg.src = e.target.result;
       previewWrap.hidden = false;
       placeholder.hidden = true;
+      uploadArea.classList.add('has-image'); // Add this line
     };
     reader.readAsDataURL(file);
   }
@@ -699,6 +770,7 @@ const CATEGORIES = ['Desserts', 'Entrees', 'Sides', 'Drinks', 'Snacks', 'Basics'
     previewImg.src = '';
     previewWrap.hidden = true;
     placeholder.hidden = false;
+    uploadArea.classList.remove('has-image'); // Add this line
   }
 
   uploadArea.addEventListener('click', () => fileInput.click());
@@ -816,7 +888,7 @@ const CATEGORIES = ['Desserts', 'Entrees', 'Sides', 'Drinks', 'Snacks', 'Basics'
   });
 
   document.getElementById('add-note-btn').addEventListener('click', () => {
-    notesList.appendChild(makeNoteEntry());
+    notesList.appendChild(makeNoteEntry(''));
   });
 
   const hasCreditChk = document.getElementById('has-credit');
