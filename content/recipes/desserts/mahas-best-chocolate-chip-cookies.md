@@ -47,5 +47,4 @@ directions:
     body: Either with the mixer on slow speed, or folding in by hand, add the chocolate chips to the cookie dough.
   - title: Bake the Cookies
     body: Add 2tbsp (standard cookie scoop) balls of cookie dough to a baking sheet. Bake between 11-13 minutes. You'll know the cookies are done when the bottom edge of the cookie looks set and has a nice light golden brown color.
-archived: true
 ---
