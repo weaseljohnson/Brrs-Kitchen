@@ -133,6 +133,9 @@ Recipe body / notes in plain Markdown here...
 	│		├── [slug].astro
 	│		└── print
 	│			└── [slug].astro
+			│   ├── index.astro
+		    └── category
+		        └── [category].astro
 	├── scripts
 	│   └── scaleIngredients.ts
 	├── styles
@@ -170,7 +173,11 @@ Recipe body / notes in plain Markdown here...
 		│   └── og-default.png
 		└── recipes
 			└── Brownies.jpg
-├── content/
+	    ├── recipes-page
+	    │   └── recipes-banner.jpg
+  		 ── categories
+        	└── [category-slug].jpg
+── content/
 	└── recipes
 		├── blank.gitkeep
 		└── desserts

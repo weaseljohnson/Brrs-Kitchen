@@ -1,0 +1,396 @@
+---
+export const prerender = true;
+import Layout from '../../../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+import { buildWebPageSchema } from '../../../utils/seo';
+
+export async function getStaticPaths() {
+  const allRecipes = await getCollection('recipes', ({ data }) => !data.draft);
+
+  // Group recipes by category
+  const categoryMap = new Map<string, typeof allRecipes>();
+  for (const recipe of allRecipes) {
+    const cat = recipe.data.category;
+    if (!categoryMap.has(cat)) categoryMap.set(cat, []);
+    categoryMap.get(cat)!.push(recipe);
+  }
+
+  return [...categoryMap.entries()].map(([categoryName, recipes]) => {
+    const slug = categoryName
+      .toLowerCase()
+      .replace(/\s+/g, '-')
+      .replace(/[^a-z0-9-]/g, '');
+    return {
+      params: { category: slug },
+      props:  { categoryName, recipes },
+    };
+  });
+}
+
+type Recipe = Awaited<ReturnType<typeof getCollection<'recipes'>>>[number];
+
+interface Props {
+  categoryName: string;
+  recipes: Recipe[];
+}
+
+const { categoryName, recipes } = Astro.props;
+
+// Sort newest first
+const sortedRecipes = [...recipes].sort((a, b) => {
+  const dateA = a.data.pubDate ? new Date(a.data.pubDate).getTime() : 0;
+  const dateB = b.data.pubDate ? new Date(b.data.pubDate).getTime() : 0;
+  return dateB - dateA;
+});
+
+// Collect all unique tags and dietary flags for the filter bar
+const allPersonalTags = [...new Set(sortedRecipes.flatMap(r => r.data.tags    ?? []))].sort();
+const allDietaryTags  = [...new Set(sortedRecipes.flatMap(r => r.data.dietary ?? []))].sort();
+const hasFilters = allPersonalTags.length > 0 || allDietaryTags.length > 0;
+
+const pageSchema = buildWebPageSchema(
+  categoryName,
+  `Browse all ${categoryName} recipes on Brr's Kitchen.`,
+  Astro.url.href,
+);
+---
+
+<Layout
+  title={categoryName}
+  description={`Browse all ${categoryName} recipes on Brr's Kitchen.`}
+  schema={[pageSchema]}
+>
+  <main class="category-page">
+    <div class="container">
+
+      <!-- ── PAGE HEADER ── -->
+      <div class="category-header">
+        <a href="/recipes" class="back-link">← All Recipes</a>
+        <h1 class="category-title">{categoryName}</h1>
+        <p class="category-count">
+          {sortedRecipes.length} recipe{sortedRecipes.length !== 1 ? 's' : ''}
+        </p>
+      </div>
+
+      <!-- ── TAG FILTER BAR ── -->
+      {hasFilters && (
+        <div class="tag-filters" id="tag-filters" role="group" aria-label="Filter by tag">
+          <button class="tag-filter tag-filter--active" data-tag="all">All</button>
+          {allPersonalTags.map(tag => (
+            <button class="tag-filter tag-filter--personal" data-tag={tag}>{tag}</button>
+          ))}
+          {allDietaryTags.map(tag => (
+            <button class="tag-filter tag-filter--dietary" data-tag={tag}>{tag}</button>
+          ))}
+        </div>
+      )}
+
+      <!-- ── RECIPE LIST ── -->
+      {sortedRecipes.length === 0 ? (
+        <p class="empty-state">No recipes here yet — check back soon!</p>
+      ) : (
+        <ul class="recipe-list" id="recipe-list" role="list">
+          {sortedRecipes.map(recipe => {
+            const slug      = recipe.id.split('/').pop();
+            const tags      = recipe.data.tags    ?? [];
+            const dietary   = recipe.data.dietary ?? [];
+            const allTags   = [...tags, ...dietary];
+            return (
+              <li data-tags={JSON.stringify(allTags)}>
+                <a href={`/recipes/${slug}`} class="result-card">
+                  {recipe.data.image
+                    ? <img src={recipe.data.image} alt={recipe.data.title} class="result-card__img" loading="lazy" />
+                    : <div class="result-card__img-placeholder" aria-hidden="true"></div>
+                  }
+                  <div class="result-card__body">
+                    {recipe.data.intro && (
+                      <p class="result-card__intro">{recipe.data.intro}</p>
+                    )}
+                    <h2 class="result-card__title">{recipe.data.title}</h2>
+                    {allTags.length > 0 && (
+                      <div class="result-card__tags">
+                        {tags.map(tag    => <span class="tag tag--personal">{tag}</span>)}
+                        {dietary.map(tag => <span class="tag tag--dietary">{tag}</span>)}
+                      </div>
+                    )}
+                    <div class="result-card__stats">
+                      {recipe.data.prepTime && <span>Prep: {recipe.data.prepTime}</span>}
+                      {recipe.data.cookTime && <span>Cook: {recipe.data.cookTime}</span>}
+                    </div>
+                  </div>
+                </a>
+              </li>
+            );
+          })}
+        </ul>
+      )}
+
+      <p class="no-results" id="no-results" hidden>
+        No recipes match that filter.
+      </p>
+
+    </div>
+  </main>
+</Layout>
+
+<style>
+  /* ── PAGE ── */
+  .category-page {
+    padding: var(--space-10) 0 var(--space-20);
+  }
+
+  .category-page .container {
+    max-width: 860px;
+  }
+
+  /* ── HEADER ── */
+  .category-header {
+    margin-bottom: var(--space-8);
+    padding-bottom: var(--space-6);
+    border-bottom: 2px solid rgba(121, 59, 2, 0.12);
+  }
+
+  .back-link {
+    display: inline-block;
+    font-family: var(--font-sans);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    text-decoration: none;
+    margin-bottom: var(--space-3);
+    transition: color var(--transition-fast);
+  }
+
+  .back-link:hover {
+    color: var(--color-accent-3);
+  }
+
+  .category-title {
+    font-size: clamp(var(--text-3xl), 5vw, var(--text-4xl));
+    margin-bottom: var(--space-2);
+  }
+
+  .category-count {
+    font-family: var(--font-sans);
+    font-size: var(--text-sm);
+    font-weight: 200;
+    font-style: italic;
+    color: var(--color-text-muted);
+    max-width: none;
+  }
+
+  /* ── TAG FILTER BAR ── */
+  .tag-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin-bottom: var(--space-8);
+  }
+
+  .tag-filter {
+    font-family: var(--font-sans);
+    font-size: var(--text-xs);
+    padding: var(--space-1) var(--space-4);
+    border-radius: 999px;
+    border: 1px solid rgba(118, 130, 95, 0.3);
+    background: transparent;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    transition:
+      background var(--transition-fast),
+      color var(--transition-fast),
+      border-color var(--transition-fast);
+  }
+
+  .tag-filter:hover {
+    border-color: var(--color-accent-1);
+    color: var(--color-text);
+  }
+
+  /* "All" button active state */
+  .tag-filter--active {
+    background: var(--color-accent-1);
+    border-color: var(--color-accent-1);
+    color: var(--cream);
+  }
+
+  /* Personal tag active state */
+  .tag-filter--personal.tag-filter--active {
+    background: rgba(222, 124, 90, 0.18);
+    border-color: rgba(222, 124, 90, 0.5);
+    color: var(--color-accent-2);
+  }
+
+  /* Dietary tag active state */
+  .tag-filter--dietary.tag-filter--active {
+    background: rgba(118, 130, 95, 0.18);
+    border-color: rgba(118, 130, 95, 0.5);
+    color: var(--color-accent-1);
+  }
+
+  /* ── RECIPE LIST ── */
+  .recipe-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .recipe-list li[hidden] {
+    display: none;
+  }
+
+  /* ── RESULT CARDS (matches /search style) ── */
+  .result-card {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: var(--space-6);
+    padding: var(--space-4);
+    border: 1px solid rgba(118, 130, 95, 0.15);
+    border-radius: var(--radius-md);
+    text-decoration: none;
+    color: inherit;
+    transition:
+      background var(--transition-fast),
+      border-color var(--transition-fast);
+  }
+
+  .result-card:hover {
+    background: rgba(118, 130, 95, 0.04);
+    border-color: rgba(118, 130, 95, 0.3);
+  }
+
+  .result-card__img,
+  .result-card__img-placeholder {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: var(--radius-md);
+    flex-shrink: 0;
+    background: rgba(118, 130, 95, 0.08);
+    display: block;
+  }
+
+  .result-card__body {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    gap: var(--space-2);
+    min-width: 0;
+  }
+
+  .result-card__title {
+    font-family: var(--font-serif);
+    font-size: var(--text-2xl);
+    font-weight: 700;
+    color: var(--color-text);
+    line-height: 1.2;
+    margin: 0;
+  }
+
+  .result-card__intro {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    line-height: 1.7;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    margin: 0;
+    max-width: none;
+  }
+
+  .result-card__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  .result-card__stats {
+    display: flex;
+    gap: var(--space-4);
+  }
+
+  .result-card__stats span {
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    font-style: italic;
+    font-weight: 200;
+  }
+
+  /* Tag pills — same as recipe page */
+  .tag {
+    font-family: var(--font-sans);
+    font-size: var(--text-xs);
+    padding: var(--space-1) var(--space-3);
+    border-radius: var(--radius-sm);
+    white-space: nowrap;
+  }
+
+  .tag--personal {
+    background: rgba(222, 124, 90, 0.12);
+    color: var(--color-accent-2);
+    border: 1px solid rgba(222, 124, 90, 0.3);
+  }
+
+  .tag--dietary {
+    background: rgba(118, 130, 95, 0.12);
+    color: var(--color-accent-1);
+    border: 1px solid rgba(118, 130, 95, 0.3);
+  }
+
+  /* ── EMPTY / NO RESULTS ── */
+  .empty-state,
+  .no-results {
+    font-style: italic;
+    color: var(--color-text-muted);
+    padding: var(--space-16) 0;
+    text-align: center;
+    max-width: none;
+  }
+
+  /* ── MOBILE ── */
+  @media (max-width: 600px) {
+    .result-card {
+      gap: var(--space-4);
+    }
+
+    .result-card__img,
+    .result-card__img-placeholder {
+      width: 80px;
+      height: 80px;
+    }
+
+    .result-card__title {
+      font-size: var(--text-xl);
+    }
+  }
+</style>
+
+<script>
+  const filterBtns = document.querySelectorAll<HTMLButtonElement>('.tag-filter');
+  const listItems  = document.querySelectorAll<HTMLLIElement>('#recipe-list li');
+  const noResults  = document.getElementById('no-results')!;
+
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const tag = btn.dataset.tag!;
+
+      // Update active state — preserve variant class when setting active
+      filterBtns.forEach(f => f.classList.remove('tag-filter--active'));
+      btn.classList.add('tag-filter--active');
+
+      // Show / hide recipe items
+      let visible = 0;
+      listItems.forEach(item => {
+        const tags: string[] = JSON.parse(item.dataset.tags ?? '[]');
+        const show = tag === 'all' || tags.includes(tag);
+        item.hidden = !show;
+        if (show) visible++;
+      });
+
+      noResults.hidden = visible > 0;
+    });
+  });
+</script>

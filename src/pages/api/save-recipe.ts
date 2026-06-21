@@ -8,7 +8,7 @@ const CATEGORY_FOLDERS = {
   'Sides':    'sides',
   'Drinks':   'drinks',
   'Snacks':   'snacks',
-  'Basics':   'basics',
+  'Breakfast':   'breakfast',
 };
 
 // ── VALIDATION ──

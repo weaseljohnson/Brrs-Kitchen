@@ -1,0 +1,204 @@
+---
+export const prerender = true;
+import Layout from '../../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+import { buildWebPageSchema } from '../../utils/seo';
+
+const allRecipes = await getCollection('recipes', ({ data }) => !data.draft);
+
+// Extract unique categories and sort alphabetically
+const categories = [...new Set(allRecipes.map(r => r.data.category))]
+  .sort((a, b) => a.localeCompare(b));
+
+// Converts a category display name to a URL/filename slug
+// e.g. "Quick Meals" → "quick-meals"
+function categorySlug(name: string): string {
+  return name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+}
+
+const pageSchema = buildWebPageSchema(
+  'Recipes',
+  "Browse all recipes on Brr's Kitchen, organized by category.",
+  Astro.url.href,
+);
+---
+
+<Layout
+  title="Recipes"
+  description="Browse all recipes on Brr's Kitchen, organized by category."
+  schema={[pageSchema]}
+>
+  <main class="recipes-page">
+
+    <!-- ── BANNER ── -->
+    <section class="recipes-banner">
+      <img
+        src="/images/recipes-page/recipes-banner.jpg"
+        alt=""
+        class="recipes-banner__img"
+      />
+      <div class="recipes-banner__overlay">
+        <h1 class="recipes-banner__title">Recipes</h1>
+      </div>
+    </section>
+
+    <!-- ── CATEGORY GRID ── -->
+    <section class="categories-section">
+      <div class="container">
+        <div class="categories-grid">
+          {categories.map(category => {
+            const slug = categorySlug(category);
+            return (
+              <a href={`/recipes/category/${slug}`} class="category-card">
+                <img
+                  src={`/images/categories/${slug}.jpg`}
+                  alt=""
+                  class="category-card__img"
+                  onerror="this.style.display='none'"
+                />
+                <div class="category-card__overlay">
+                  <span class="category-card__label">{category}</span>
+                </div>
+              </a>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+
+  </main>
+</Layout>
+
+<style>
+  /* ── PAGE ── */
+  .recipes-page {
+    padding-bottom: var(--space-20);
+  }
+
+  /* ── BANNER ── */
+  .recipes-banner {
+    position: relative;
+    width: calc(100% - var(--space-12));
+    max-width: var(--max-width-content);
+    margin-inline: auto;
+    height: 300px;
+    overflow: hidden;
+    border-radius: var(--radius-lg);
+    border: 1px solid rgba(118, 130, 95, 0.25);
+    margin-bottom: var(--space-12);
+  }
+
+  .recipes-banner__img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+  }
+
+  .recipes-banner__overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to bottom,
+      transparent 25%,
+      rgba(28, 19, 23, 0.65) 100%
+    );
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .recipes-banner__title {
+    font-family: var(--font-serif);
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 700;
+    color: #fff;
+    text-align: center;
+    text-shadow: 0 2px 16px rgba(0, 0, 0, 0.45);
+  }
+
+  /* ── CATEGORY GRID ── */
+  .categories-section {
+    padding-top: var(--space-4);
+  }
+
+  .categories-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-5);
+  }
+
+  /* ── CATEGORY CARD ── */
+  .category-card {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    /* Olive placeholder — shows when no image is present */
+    background: rgba(118, 130, 95, 0.12);
+    border: 1px solid rgba(118, 130, 95, 0.2);
+    text-decoration: none;
+    display: block;
+    transition:
+      transform var(--transition-base),
+      box-shadow var(--transition-base),
+      border-color var(--transition-fast);
+  }
+
+  .category-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+    border-color: rgba(118, 130, 95, 0.45);
+  }
+
+  .category-card__img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .category-card__overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(28, 19, 23, 0.38);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-4);
+    transition: background var(--transition-base);
+  }
+
+  .category-card:hover .category-card__overlay {
+    background: rgba(28, 19, 23, 0.25);
+  }
+
+  .category-card__label {
+    font-family: var(--font-serif);
+    font-size: clamp(var(--text-xl), 2vw, var(--text-2xl));
+    font-weight: 700;
+    color: #fff;
+    text-align: center;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+    line-height: 1.2;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    .recipes-banner {
+      width: calc(100% - var(--space-8));
+      height: 220px;
+      margin-bottom: var(--space-8);
+    }
+
+    .categories-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--space-4);
+    }
+  }
+</style>
