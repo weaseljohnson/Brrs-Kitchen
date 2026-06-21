@@ -16,7 +16,7 @@ yield: 1 Quarts
 ingredients:
   - count: 3 Cups
     item: Heavy Cream
-  - count: '3'
+  - count: 3 Large
     item: Egg Yolks
   - count: 1/2 Cup
     item: Maple Syrup
