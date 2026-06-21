@@ -102,19 +102,21 @@ import Layout from '../layouts/Layout.astro';
     max-width: none;
   }
 
-  /* ── RESULTS ── */
+/* ── RESULTS ── */
   .search-results {
     list-style: none;
     padding: 0;
     display: flex;
     flex-direction: column;
-    gap: var(--space-2);
+    gap: var(--space-4); /* Added breathing room between cards */
   }
 
+  /* ── ROW CARD LAYOUT ── */
   .result-card {
     display: flex;
-    align-items: center;
-    gap: var(--space-5);
+    flex-direction: row; /* Forces left-to-right layout */
+    align-items: center; /* Centers items vertically */
+    gap: var(--space-6);
     padding: var(--space-4);
     border: 1px solid rgba(118, 130, 95, 0.15);
     border-radius: var(--radius-md);
@@ -126,31 +128,27 @@ import Layout from '../layouts/Layout.astro';
   .result-card:hover {
     background: rgba(118, 130, 95, 0.04);
     border-color: rgba(118, 130, 95, 0.3);
-    color: inherit;
   }
 
-  .result-card__img {
-    width: 80px;
-    height: 80px;
-    object-fit: cover;
-    border-radius: var(--radius-sm);
-    flex-shrink: 0;
-    background: rgba(118, 130, 95, 0.08);
-  }
-
+  /* ── IMAGE CONTROLS ── */
+  .result-card__img,
   .result-card__img-placeholder {
-    width: 80px;
-    height: 80px;
-    border-radius: var(--radius-sm);
-    flex-shrink: 0;
+    width: 120px; /* Search page size. Override to 60px for your dropdown */
+    height: 120px;
+    object-fit: cover;
+    border-radius: var(--radius-md);
+    flex-shrink: 0; /* Prevents the image from being squished by text */
     background: rgba(118, 130, 95, 0.08);
   }
 
   .result-card__body {
+    display: flex;
+    flex-direction: column;
     flex: 1;
     min-width: 0;
   }
 
+  /* ── TYPOGRAPHY (Mirrored from [slug].astro) ── */
   .result-card__category {
     font-family: var(--font-sans);
     font-size: var(--text-xs);
@@ -164,38 +162,46 @@ import Layout from '../layouts/Layout.astro';
 
   .result-card__title {
     font-family: var(--font-serif);
-    font-size: var(--text-lg);
+    font-size: var(--text-2xl); /* Scaled down for cards but still prominent */
     font-weight: 700;
     color: var(--color-text);
     margin-bottom: var(--space-2);
+    line-height: 1.2;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
   }
 
-  .result-card__excerpt {
+  .result-card__intro {
     font-size: var(--text-sm);
     color: var(--color-text-muted);
-    line-height: 1.5;
+    line-height: 1.7;
     display: -webkit-box;
-    -webkit-line-clamp: 2;
+    -webkit-line-clamp: 2; /* Truncates long intros at 2 lines */
     -webkit-box-orient: vertical;
     overflow: hidden;
-    max-width: none;
+    margin: 0;
   }
 
   /* Strip Pagefind's highlight marks from excerpts */
-  .result-card__excerpt mark {
+  .result-card__intro mark {
     background: none;
     color: var(--color-accent-3);
     font-weight: 500;
   }
 
+  /* ── MOBILE RESPONSIVENESS ── */
   @media (max-width: 480px) {
+    .result-card {
+      gap: var(--space-4);
+    }
     .result-card__img,
     .result-card__img-placeholder {
-      width: 60px;
-      height: 60px;
+      width: 80px;
+      height: 80px;
+    }
+    .result-card__title {
+      font-size: var(--text-xl);
     }
   }
 </style>
@@ -248,6 +254,9 @@ import Layout from '../layouts/Layout.astro';
     resultsEl.innerHTML = data.map(result => {
       const image    = result.meta?.image ?? '';
       const category = result.meta?.category ?? '';
+      // Pull Brianna's custom intro, fallback to Pagefind's excerpt if missing
+      const intro    = result.meta?.intro ?? result.excerpt ?? ''; 
+      
       const imgEl    = image
         ? `<img src="${image}" alt="" class="result-card__img" loading="lazy" />`
         : `<div class="result-card__img-placeholder" aria-hidden="true"></div>`;
@@ -257,9 +266,9 @@ import Layout from '../layouts/Layout.astro';
           <a href="${result.url}" class="result-card">
             ${imgEl}
             <div class="result-card__body">
-              ${category ? `<p class="result-card__category">${category}</p>` : ''}
-              <p class="result-card__title">${result.meta?.title ?? 'Untitled'}</p>
-              <p class="result-card__excerpt">${result.excerpt}</p>
+              ${category ? `<span class="result-card__category">${category}</span>` : ''}
+              <h3 class="result-card__title">${result.meta?.title ?? 'Untitled'}</h3>
+              <p class="result-card__intro">${intro}</p>
             </div>
           </a>
         </li>
