@@ -8,7 +8,6 @@ intro: The most delicious homemade vanilla ice cream recipe. Also serves as a gr
 tags:
   - Ice Cream
 image: /images/recipes/brrs-homemade-vanilla-ice-cream.jpg
-draft: true
 notes:
   - Up to two cups of the heavy cream can be substituted for whole milk. The final result will just be a less creamy, closer to a sorbet consistency.
   - The arrow root powder can be 1:1 substitute for cornstarch.
