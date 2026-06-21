@@ -210,7 +210,8 @@ import Layout from '../layouts/Layout.astro';
   async function loadPagefind() {
     if (pagefind) return;
     try {
-      pagefind = await import('/pagefind/pagefind.js' as string);
+      // @ts-ignore — pagefind index is generated at build time, not resolvable by Vite
+      pagefind = await import(/* @vite-ignore */ '/pagefind/pagefind.js');
       await pagefind.init();
     } catch {
       pagefind = null;
