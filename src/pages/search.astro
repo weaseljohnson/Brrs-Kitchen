@@ -108,11 +108,13 @@ import Layout from '../layouts/Layout.astro';
     padding: 0;
     display: flex;
     flex-direction: column;
-    gap: var(--space-4); /* Added breathing room between cards */
+    gap: var(--space-4); /* Breathing room between cards */
   }
 
+  /* EVERYTHING BELOW MUST BE :global() BECAUSE IT IS INJECTED BY JS */
+
   /* ── ROW CARD LAYOUT ── */
-  .result-card {
+  .search-results :global(.result-card) {
     display: flex;
     flex-direction: row; /* Forces left-to-right layout */
     align-items: center; /* Centers items vertically */
@@ -125,15 +127,15 @@ import Layout from '../layouts/Layout.astro';
     transition: background var(--transition-fast), border-color var(--transition-fast);
   }
 
-  .result-card:hover {
+  .search-results :global(.result-card:hover) {
     background: rgba(118, 130, 95, 0.04);
     border-color: rgba(118, 130, 95, 0.3);
   }
 
   /* ── IMAGE CONTROLS ── */
-  .result-card__img,
-  .result-card__img-placeholder {
-    width: 120px; /* Search page size. Override to 60px for your dropdown */
+  .search-results :global(.result-card__img),
+  .search-results :global(.result-card__img-placeholder) {
+    width: 120px; /* Larger 120px size for the dedicated search page */
     height: 120px;
     object-fit: cover;
     border-radius: var(--radius-md);
@@ -141,15 +143,15 @@ import Layout from '../layouts/Layout.astro';
     background: rgba(118, 130, 95, 0.08);
   }
 
-  .result-card__body {
+  .search-results :global(.result-card__body) {
     display: flex;
     flex-direction: column;
     flex: 1;
     min-width: 0;
   }
 
-  /* ── TYPOGRAPHY (Mirrored from [slug].astro) ── */
-  .result-card__category {
+  /* ── TYPOGRAPHY ── */
+  .search-results :global(.result-card__category) {
     font-family: var(--font-sans);
     font-size: var(--text-xs);
     font-weight: 200;
@@ -160,19 +162,19 @@ import Layout from '../layouts/Layout.astro';
     margin-bottom: var(--space-1);
   }
 
-  .result-card__title {
+  .search-results :global(.result-card__title) {
     font-family: var(--font-serif);
-    font-size: var(--text-2xl); /* Scaled down for cards but still prominent */
+    font-size: var(--text-2xl);
     font-weight: 700;
     color: var(--color-text);
-    margin-bottom: var(--space-2);
+    margin: 0 0 var(--space-2) 0;
     line-height: 1.2;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
   }
 
-  .result-card__intro {
+  .search-results :global(.result-card__intro) {
     font-size: var(--text-sm);
     color: var(--color-text-muted);
     line-height: 1.7;
@@ -184,23 +186,23 @@ import Layout from '../layouts/Layout.astro';
   }
 
   /* Strip Pagefind's highlight marks from excerpts */
-  .result-card__intro mark {
+  .search-results :global(.result-card__intro mark) {
     background: none;
     color: var(--color-accent-3);
-    font-weight: 500;
+    font-weight: 700;
   }
 
   /* ── MOBILE RESPONSIVENESS ── */
   @media (max-width: 480px) {
-    .result-card {
+    .search-results :global(.result-card) {
       gap: var(--space-4);
     }
-    .result-card__img,
-    .result-card__img-placeholder {
+    .search-results :global(.result-card__img),
+    .search-results :global(.result-card__img-placeholder) {
       width: 80px;
       height: 80px;
     }
-    .result-card__title {
+    .search-results :global(.result-card__title) {
       font-size: var(--text-xl);
     }
   }
@@ -256,7 +258,7 @@ import Layout from '../layouts/Layout.astro';
       const category = result.meta?.category ?? '';
       // Pull Brianna's custom intro, fallback to Pagefind's excerpt if missing
       const intro    = result.meta?.intro ?? result.excerpt ?? ''; 
-      
+
       const imgEl    = image
         ? `<img src="${image}" alt="" class="result-card__img" loading="lazy" />`
         : `<div class="result-card__img-placeholder" aria-hidden="true"></div>`;
