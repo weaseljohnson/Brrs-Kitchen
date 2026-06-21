@@ -274,10 +274,10 @@ const navItems = [
 
   /* ── MOBILE SEARCH BAR (below header row) ── */
   .mobile-search-bar {
-    display: none; /* hidden by default at all sizes */
+    display: none;
     background: var(--color-bg);
     border-top: 1px solid rgba(118, 130, 95, 0.2);
-    padding: var(--space-3) var(--space-6);
+    padding: var(--space-2) var(--space-4);
   }
 
   .mobile-search-bar__inner {
@@ -297,6 +297,7 @@ const navItems = [
 
   .mobile-search-bar__input {
     flex: 1;
+    min-width: 0;
     border: none;
     background: none;
     outline: none;
