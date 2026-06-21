@@ -107,7 +107,10 @@ const navItems = [
   <!-- Mobile search bar — expands below the header row on mobile -->
   <div class="mobile-search-bar" id="mobile-search-bar" aria-hidden="true">
     <div class="mobile-search-bar__inner">
-      <svg class="mobile-search-bar__icon" ...>...</svg>
+      <svg class="mobile-search-bar__icon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <circle cx="6.5" cy="6.5" r="5" stroke="currentColor" stroke-width="1.5"/>
+        <line x1="10.5" y1="10.5" x2="14.5" y2="14.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
       <label for="mobile-search-input" class="sr-only">Search recipes</label>
       <input
         type="search"
