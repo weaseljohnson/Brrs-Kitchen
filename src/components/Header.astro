@@ -107,10 +107,7 @@ const navItems = [
   <!-- Mobile search bar — expands below the header row on mobile -->
   <div class="mobile-search-bar" id="mobile-search-bar" aria-hidden="true">
     <div class="mobile-search-bar__inner">
-      <svg class="mobile-search-bar__icon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-        <circle cx="6.5" cy="6.5" r="5" stroke="currentColor" stroke-width="1.5"/>
-        <line x1="10.5" y1="10.5" x2="14.5" y2="14.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-      </svg>
+      <svg class="mobile-search-bar__icon" ...>...</svg>
       <label for="mobile-search-input" class="sr-only">Search recipes</label>
       <input
         type="search"
@@ -119,14 +116,14 @@ const navItems = [
         placeholder="Search recipes…"
         aria-label="Search recipes"
       />
-      <ul
-        class="search-dropdown search-dropdown--mobile"
-        id="mobile-search-dropdown"
-        role="listbox"
-        aria-label="Search suggestions"
-        hidden
-      ></ul>
     </div>
+    <ul
+      class="search-dropdown search-dropdown--mobile"
+      id="mobile-search-dropdown"
+      role="listbox"
+      aria-label="Search suggestions"
+      hidden
+    ></ul>
   </div>
 </header>
 
@@ -458,10 +455,13 @@ const navItems = [
     border-radius: var(--radius-md);
     box-shadow: var(--shadow-lg);
     list-style: none;
-    padding: var(--space-2) 0;
+    padding: var(--space-2);
     margin: 0;
     z-index: 300;
     min-width: 280px;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
   }
 
   .search-dropdown[hidden] { display: none; }
@@ -547,9 +547,12 @@ const navItems = [
   .search-dropdown--mobile {
     position: static;
     border-radius: 0 0 var(--radius-md) var(--radius-md);
+    border: 1px solid rgba(118, 130, 95, 0.22);
     border-top: none;
     box-shadow: none;
     min-width: 0;
+    width: 100%;
+    margin-top: var(--space-1);
   }
 
   /* The mobile search bar needs relative positioning for the desktop variant
