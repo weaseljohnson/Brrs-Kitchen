@@ -2,8 +2,8 @@
 title: Brr's Homemade Vanilla Ice Cream
 category: Desserts
 pubDate: '2026-06-21'
-prepTime: '15'
-cookTime: '25'
+prepTime: 15 min
+cookTime: 25 min
 intro: The most delicious homemade vanilla ice cream recipe. Also serves as a great base recipe for building additional flavors of ice cream.
 tags:
   - Ice Cream
