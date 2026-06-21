@@ -6,4 +6,11 @@ export default defineConfig({
   site: 'https://brrs-kitchen.com',
   output: 'server',
   adapter: vercel(),
+  vite: {
+    build: {
+      rollupOptions: {
+        external: ['/pagefind/pagefind.js'],
+      },
+    },
+  },
 });
