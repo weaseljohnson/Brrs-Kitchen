@@ -12,7 +12,7 @@ notes:
   - Up to two cups of the heavy cream can be substituted for whole milk. The final result will just be a less creamy, closer to a sorbet consistency.
   - The arrow root powder can be 1:1 substitute for cornstarch.
   - To add some special pizzazz, add half a vanilla bean (scrape out the seeds).
-  - '*CONSUMING RAW OR UNDERCOOKED MEATS, POULTRY, SEAFOOD, SHELLFISH, OR EGGS MAY INCREASE YOUR RISK OF FOODBORNE ILLNESS, ESPECIALLY IF YOU HAVE CERTAIN MEDICAL CONDITIONS.'
+  - '*CONSUMING RAW OR UNDERCOOKED EGGS MAY INCREASE YOUR RISK OF FOODBORNE ILLNESS, ESPECIALLY IF YOU HAVE CERTAIN MEDICAL CONDITIONS.'
 yield: 1 Quarts
 ingredients:
   - count: 3 Cups
