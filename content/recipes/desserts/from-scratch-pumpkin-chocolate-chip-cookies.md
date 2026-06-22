@@ -4,7 +4,7 @@ category: Desserts
 pubDate: '2026-06-22'
 prepTime: 25 min
 cookTime: 11-13 min
-intro: These pumpkin chocolate chip cookies are absolutely delicious. You'll find that using all the individual ingredients vs just pumpkin pie spice makes a world of difference and creates a perfectly spiced classic pumpkin flavor.
+intro: These pumpkin chocolate chip cookies are absolutely delicious. You'll find that using all the individual ingredients vs just pumpkin pie spice makes a world of difference and creates the perfectly spiced classic pumpkin flavor.
 tags:
   - Family Favorite
 image: /images/recipes/pumpkin-chocolate-chip-cookies.jpg
@@ -32,16 +32,16 @@ ingredients:
   - count: 3/4 Cup (100g)
     item: Granulated Sugar
   - count: 3/4 Cup (110g)
-    item: Packed Light-Brown Sugar or Dark Brown Sugar (170g)
+    item: Packed Brown Sugar
   - count: 3/4 Cup (120ml)
     item: Melted Butter
   - count: 1 Large
     item: Egg
-  - count: '1'
+  - count: 1 Large
     item: Egg Yolk
   - count: 1-1/2 tsp
     item: Vanilla Extract
-  - count: 1 Can (360-380g)
+  - count: 1 Can (360g)
     item: Pumpkin Puree
   - count: 2 Cups
     item: Semi-Sweet Chocolate Chips
