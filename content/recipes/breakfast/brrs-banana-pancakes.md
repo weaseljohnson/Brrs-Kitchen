@@ -4,7 +4,7 @@ category: Breakfast
 pubDate: '2026-06-30'
 prepTime: 15min
 cookTime: 10min
-intro: Naturally sweet and auper simple, these pancakes will hit the spot for breakfasts lunch, or dinner! These are a weekly staple in our house.
+intro: Naturally sweet and super simple, these pancakes will hit the spot for breakfasts lunch, or dinner! These are a weekly staple in our house.
 tags:
   - Family Favorite
 image: /images/recipes/brrs-banana-pancakes.png
