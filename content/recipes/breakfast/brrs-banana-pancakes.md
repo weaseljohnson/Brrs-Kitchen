@@ -4,12 +4,12 @@ category: Breakfast
 pubDate: '2026-06-30'
 prepTime: 15min
 cookTime: 10min
-intro: Naturally sweet and super simple, these pancakes will hit the spot for breakfasts lunch, or dinner! These are a weekly staple in our house.
+intro: Naturally sweet and super simple, these pancakes will hit the spot for breakfast, lunch, or dinner! These are a weekly staple in our house.
 tags:
   - Family Favorite
 image: /images/recipes/brrs-banana-pancakes.png
 notes:
-  - This recipe is very forgiving. You can add an extra banana without adjusting the ingredients, except the eggs. Always use one egg per 1 banana. We often will just adjust ingredient quantities to be close enough if we’re making quantities that aren’t quite double the basic recipe.
+  - This recipe is very forgiving. You can add an extra banana without adjusting the ingredients, except the eggs. Always use one egg per 1 banana. We often will adjust ingredient quantities to be “close enough” if we’re making quantities that aren’t quite double the basic recipe.
 yield: 8 Pancakes
 ingredients:
   - count: 3 large
@@ -28,7 +28,7 @@ directions:
   - title: Preheat
     body: Preheat a pan or griddle to 325 deg F.
   - title: Mash Bananas
-    body: In a medium bowl, mash the bananas to a mushing pudding-like consistency.
+    body: In a medium bowl, mash the bananas to a mushy pudding-like consistency.
   - title: Whisk in the eggs
     body: ''
   - title: Mix in the other ingredients
