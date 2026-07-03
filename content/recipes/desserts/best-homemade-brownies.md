@@ -1,7 +1,7 @@
 ---
 title: THE BEST Homemade Brownies, According To Science!
 category: Desserts
-pubDate: '2026-06-21'
+pubDate: '2026-07-03'
 prepTime: 35-40 min
 cookTime: 20–25 min
 intro: The only homemade brownies that will out-brownie your favorite box brownie mix. This recipe was specially crafted using the science behind makes a brownie a brownie. They're fudgy, rich, and have that perfect brownie crust and crackle. BEWARE, you won't be able to stop at just one.
@@ -19,9 +19,9 @@ panVariants:
         item: salt
       - count: 113g (8 tbsp)
         item: unsalted butter
-      - count: 75g
+      - count: 2 large
         item: eggs, room temperature
-      - count: 20g (1 large)
+      - count: 1 large
         item: egg yolk, room temperature
       - count: 165g (1¼ cup + 2 tbsp)
         item: powdered sugar
