@@ -2,7 +2,6 @@
 export const prerender = false;
 import AdminLayout from '../../layouts/AdminLayout.astro';
 
-const CATEGORIES = ['Desserts', 'Entrees', 'Sides', 'Drinks', 'Snacks', 'Basics'];
 ---
 <AdminLayout title="New Recipe">
 
@@ -36,11 +35,18 @@ const CATEGORIES = ['Desserts', 'Entrees', 'Sides', 'Drinks', 'Snacks', 'Basics'
       <h2 class="admin-section-title">Category & Times</h2>
       <div class="admin-row admin-row--3">
         <div class="admin-field admin-field--no-margin">
-          <label for="f-category" class="admin-label admin-label--required">Category</label>
-          <input type="text" id="f-category" class="admin-input" list="category-options" placeholder="Desserts" autocomplete="off" />
-          <datalist id="category-options">
-            {CATEGORIES.map(c => <option value={c} />)}
-          </datalist>
+          <label for="f-category-select" class="admin-label admin-label--required">Category</label>
+          <select id="f-category-select" class="admin-select">
+            <option value="">Loading categories…</option>
+          </select>
+          <div id="new-category-wrap" hidden>
+            <div class="chip-add-row" style="margin-top: var(--space-2);">
+              <input type="text" id="f-category-new" class="admin-input" placeholder="New category name" autocomplete="off" />
+              <button type="button" id="confirm-category-btn" class="admin-btn admin-btn--secondary">Add</button>
+              <button type="button" id="cancel-category-btn" class="admin-btn admin-btn--ghost">Cancel</button>
+            </div>
+          </div>
+          <input type="hidden" id="f-category" />
         </div>
         <div class="admin-field admin-field--no-margin">
           <label for="f-prep" class="admin-label">Prep Time</label>
@@ -71,7 +77,8 @@ const CATEGORIES = ['Desserts', 'Entrees', 'Sides', 'Drinks', 'Snacks', 'Basics'
         <label class="admin-label">Personal Tags</label>
         <div class="admin-chip-row" id="tags-chip-row"></div>
         <div class="chip-add-row">
-          <input type="text" id="f-tag-input" class="admin-input" placeholder="Hubby's Favorite" autocomplete="off" />
+          <input type="text" id="f-tag-input" class="admin-input" list="tag-suggestions" placeholder="Hubby's Favorite" autocomplete="off" />
+          <datalist id="tag-suggestions"></datalist>
           <button type="button" id="add-tag-btn" class="admin-btn admin-btn--secondary">Add</button>
         </div>
         <span class="admin-hint">Press Enter or click Add.</span>
@@ -529,6 +536,97 @@ const CATEGORIES = ['Desserts', 'Entrees', 'Sides', 'Drinks', 'Snacks', 'Basics'
 
 <script>
   import { slugify, makeIngRow, makeNoteEntry, makeVariantBlock, renumberVariants, makeIngredientGroupBlock, makeStepBlock, renumberSteps, addChip } from '../../scripts/adminFormHelpers.js';
+
+  // ── RECIPE META (categories + tags) ──
+  const categorySelect   = document.getElementById('f-category-select');
+  const categoryHidden   = document.getElementById('f-category');
+  const newCategoryWrap  = document.getElementById('new-category-wrap');
+  const newCategoryInput = document.getElementById('f-category-new');
+  const tagSuggestions   = document.getElementById('tag-suggestions');
+
+  async function loadRecipeMeta() {
+    try {
+      const res = await fetch('/api/recipe-meta');
+      if (!res.ok) return;
+      const { categories, tags } = await res.json();
+
+      // Populate category select
+      categorySelect.innerHTML = '<option value="">Select a category…</option>';
+      categories.forEach(cat => {
+        const opt = document.createElement('option');
+        opt.value = cat;
+        opt.textContent = cat;
+        categorySelect.appendChild(opt);
+      });
+      const newOpt = document.createElement('option');
+      newOpt.value = '__new__';
+      newOpt.textContent = '+ Add new category…';
+      categorySelect.appendChild(newOpt);
+
+      // Populate tag suggestions
+      tags.forEach(tag => {
+        const opt = document.createElement('option');
+        opt.value = tag;
+        tagSuggestions.appendChild(opt);
+      });
+
+    } catch {
+      // Fail silently — form still usable without suggestions
+      categorySelect.innerHTML = '<option value="">Could not load categories</option>';
+      const newOpt = document.createElement('option');
+      newOpt.value = '__new__';
+      newOpt.textContent = '+ Add new category…';
+      categorySelect.appendChild(newOpt);
+    }
+  }
+
+  categorySelect.addEventListener('change', () => {
+    if (categorySelect.value === '__new__') {
+      newCategoryWrap.hidden = false;
+      categoryHidden.value   = '';
+      newCategoryInput.focus();
+    } else {
+      newCategoryWrap.hidden = true;
+      categoryHidden.value   = categorySelect.value;
+    }
+  });
+
+  function confirmNewCategory() {
+    const val = newCategoryInput.value.trim();
+    if (!val) return;
+
+    // Avoid duplicates (case-insensitive check)
+    const exists = [...categorySelect.options]
+      .some(o => o.value.toLowerCase() === val.toLowerCase() && o.value !== '__new__');
+
+    if (!exists) {
+      const opt = document.createElement('option');
+      opt.value       = val;
+      opt.textContent = val;
+      // Insert before the "Add new…" option
+      const newOpt = categorySelect.querySelector('[value="__new__"]');
+      categorySelect.insertBefore(opt, newOpt);
+    }
+
+    categorySelect.value   = val;
+    categoryHidden.value   = val;
+    newCategoryWrap.hidden = true;
+    newCategoryInput.value = '';
+  }
+
+  document.getElementById('confirm-category-btn').addEventListener('click', confirmNewCategory);
+  document.getElementById('cancel-category-btn').addEventListener('click', () => {
+    newCategoryWrap.hidden = true;
+    // Revert select to whatever was previously chosen (or blank)
+    categorySelect.value = categoryHidden.value || '';
+    newCategoryInput.value = '';
+  });
+  newCategoryInput.addEventListener('keydown', e => {
+    if (e.key === 'Enter')  { e.preventDefault(); confirmNewCategory(); }
+    if (e.key === 'Escape') document.getElementById('cancel-category-btn').click();
+  });
+
+  loadRecipeMeta();
 
   // ── SLUG ──
   const titleInput = document.getElementById('f-title');

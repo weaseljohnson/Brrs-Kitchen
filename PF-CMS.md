@@ -85,7 +85,8 @@ Astro's middleware virtual module parser breaks on special characters (`.` `'`) 
 
 #### Key decisions made during Phase 2
 - `js-yaml` used for frontmatter serialization — handles special characters, unicode, and HTML in step bodies safely.
-- Category → folder mapping lives in `CATEGORY_FOLDERS` at the top of `save-recipe.js`. Add new categories there as the site grows.
+- Categories are dynamic, not hardcoded. The folder name is derived from the category display name via `slugifyCategory()` in `save-recipe.ts` (lowercased, spaces and special characters replaced with hyphens). The `CATEGORY_FOLDERS` lookup map was removed. New categories can be created directly from the recipe form with no code changes required.
+- Category and tag suggestions in the new/edit recipe form are fetched at page load from `/api/recipe-meta`, which reads existing recipe frontmatter from GitHub and returns the current union of all categories and tags in use. This keeps suggestions accurate without any manual maintenance.
 - Image filename: `{slug}.{ext}` (jpg or png). Extension derived from the uploaded file client-side.
 - Update flow (edit mode, Phase 3) is already supported: `githubWrite()` fetches the existing file's SHA before writing, so PUT calls work for both create and update.
 
@@ -112,6 +113,7 @@ Astro's middleware virtual module parser breaks on special characters (`.` `'`) 
 - **Pagefind chosen for search** — static index built at deploy time, no external services, no API calls at runtime. Scales to any number of recipes with no performance cost. Fails silently in `astro dev` (index only exists after `astro build`). Test search with `astro build && astro preview`.
 - **Search index scope** — `data-pagefind-body` on `<main>` in `[slug].astro`. Pan tabs and scale controls tagged `data-pagefind-ignore` to keep ingredient amounts out of results. Category, intro, and image path exposed via `data-pagefind-meta` for structured result display.
 - **Search URL state** — `/search` page syncs `?q=` param via `history.replaceState` as user types, keeping results shareable and back-button friendly without page reloads.
+- **`/api/recipe-meta` is the one exception** — this endpoint exists specifically to serve the CMS form, not the dashboard. It returns the live union of all categories and tags from recipe frontmatter, used to populate the category select and tag autocomplete on the new/edit recipe forms. Admin-only; never called from public-facing pages.
 
 
 ### Phase 4 — Polish

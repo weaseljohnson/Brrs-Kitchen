@@ -174,7 +174,7 @@ function convertUnit(value: number, unit: string): string {
 
 const NUM_PAT  = `[${FRAC_CHARS}\\d][${FRAC_CHARS}\\d\\.]*(?:\\/\\d+)?`;
 const UNIT_PAT =
-  'tbsp|tsp|fl\\.?\\s*oz|cups?|gallons?|pints?|quarts?|ml|lbs?|oz|kg|g|l|large|medium|small|whole';
+  'tbsp|tsp|fl\\.?\\s*oz|cups?|gallons?|pints?|quarts?|can?|ml|lbs?|oz|kg|g|l|large|medium|small|whole';
 
 const MEASURE_RE = new RegExp(
   `(?<![a-zA-Z])(${NUM_PAT})\\s*(${UNIT_PAT})(?=[^a-zA-Z]|$)`,

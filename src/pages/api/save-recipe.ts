@@ -1,15 +1,13 @@
 import yaml from 'js-yaml';
 
-// ── CATEGORY → CONTENT FOLDER MAP ──
-// Add new categories here as the site grows.
-const CATEGORY_FOLDERS = {
-  'Desserts': 'desserts',
-  'Entrees':  'entrees',
-  'Sides':    'sides',
-  'Drinks':   'drinks',
-  'Snacks':   'snacks',
-  'Breakfast':   'breakfast',
-};
+// Derives a filesystem-safe folder name from the category display name.
+function slugifyCategory(str: string): string {
+  return str
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
 
 // ── VALIDATION ──
 function validate(payload) {
@@ -17,9 +15,6 @@ function validate(payload) {
   if (!payload.title?.trim())    errors.push('Title is required.');
   if (!payload.slug?.trim())     errors.push('Slug is required.');
   if (!payload.category?.trim()) errors.push('Category is required.');
-  if (!CATEGORY_FOLDERS[payload.category]) {
-    errors.push(`Unknown category: "${payload.category}". Add it to CATEGORY_FOLDERS in save-recipe.js.`);
-  }
   if (!payload.directions?.length) {
     errors.push('At least one direction step is required.');
   }
@@ -199,7 +194,7 @@ export const POST = async ({ request }) => {
     const mdContent = buildMarkdown(payload);
 
     // 2c — Commit .md file to GitHub
-    const folder = CATEGORY_FOLDERS[payload.category];
+    const folder = slugifyCategory(payload.category);
     const mdPath = `content/recipes/${folder}/${payload.slug}.md`;
     await githubWrite(mdPath, mdContent);
 
