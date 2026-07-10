@@ -1,0 +1,160 @@
+---
+export const prerender = true;
+import Layout from '../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+
+const allTerms = await getCollection('glossary');
+const sorted = [...allTerms].sort((a, b) => a.data.term.localeCompare(b.data.term));
+
+const grouped = sorted.reduce((acc, entry) => {
+  const letter = entry.data.term.charAt(0).toUpperCase();
+  (acc[letter] ??= []).push(entry);
+  return acc;
+}, {} as Record<string, typeof sorted>);
+
+const letters = Object.keys(grouped).sort();
+---
+
+<Layout
+  title="Glossary"
+  description="Common culinary terms used throughout Brr's Kitchen."
+>
+  <main class="glossary-page">
+    <div class="container">
+      <h1>Glossary</h1>
+
+      <nav class="alpha-index" aria-label="Jump to letter">
+        {letters.map(l => (
+          <a href={`#letter-${l}`} class="alpha-index__link">{l}</a>
+        ))}
+      </nav>
+
+      {letters.map(letter => (
+        <section class="letter-group" id={`letter-${letter}`}>
+          <h2 class="letter-group__heading">{letter}</h2>
+          <div class="term-list">
+            {grouped[letter].map(entry => (
+              <details class="term-entry">
+                <summary class="term-entry__term">
+                  {entry.data.term}
+                </summary>
+                <div class="term-entry__definition" set:html={entry.data.definitionHtml} />
+              </details>
+            ))}
+          </div>
+        </section>
+      ))}
+    </div>
+  </main>
+</Layout>
+
+<style>
+  .glossary-page {
+    padding: var(--space-12) 0 var(--space-20);
+  }
+
+  .glossary-page h1 {
+    margin-bottom: var(--space-6);
+  }
+
+  /* ── ALPHABET INDEX ── */
+  .alpha-index {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    padding-bottom: var(--space-6);
+    margin-bottom: var(--space-10);
+    border-bottom: 2px solid rgba(121, 59, 2, 0.12);
+    position: sticky;
+    top: 125px; /* matches header height */
+    background: var(--color-bg);
+    z-index: 10;
+  }
+
+  .alpha-index__link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border: 1px solid var(--color-accent-1);
+    border-radius: var(--radius-sm);
+    color: var(--color-accent-1);
+    font-family: var(--font-sans);
+    font-size: var(--text-sm);
+    text-decoration: none;
+    transition: background var(--transition-fast), color var(--transition-fast);
+  }
+
+  .alpha-index__link:hover {
+    background: var(--color-accent-1);
+    color: var(--cream);
+  }
+
+  @media (max-width: 768px) {
+    .alpha-index { top: 90px; }
+  }
+
+  /* ── LETTER GROUPS ── */
+  .letter-group {
+    margin-bottom: var(--space-10);
+    scroll-margin-top: 160px; /* clears sticky header + sticky index */
+  }
+
+  .letter-group__heading {
+    font-size: var(--text-3xl);
+    color: var(--color-accent-2);
+    margin-bottom: var(--space-4);
+    padding-bottom: var(--space-2);
+    border-bottom: 1px solid rgba(118, 130, 95, 0.2);
+  }
+
+  .term-list {
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── TERM ENTRIES (accordion via <details>) ── */
+  .term-entry {
+    border-bottom: 1px solid rgba(118, 130, 95, 0.15);
+  }
+
+  .term-entry__term {
+    font-family: var(--font-serif);
+    font-size: var(--text-lg);
+    font-weight: 700;
+    color: var(--color-text);
+    padding: var(--space-4) 0;
+    cursor: pointer;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .term-entry__term::-webkit-details-marker { display: none; }
+
+  .term-entry__term::after {
+    content: '+';
+    font-family: var(--font-sans);
+    font-weight: 400;
+    color: var(--color-accent-2);
+    font-size: var(--text-xl);
+    transition: transform var(--transition-fast);
+  }
+
+  .term-entry[open] .term-entry__term::after {
+    transform: rotate(45deg);
+  }
+
+  .term-entry__definition {
+    color: var(--color-text-muted);
+    line-height: 1.75;
+    max-width: var(--max-width-prose);
+    padding-bottom: var(--space-5);
+  }
+
+  .term-entry__definition :global(a) {
+    color: var(--color-accent-2);
+  }
+</style>

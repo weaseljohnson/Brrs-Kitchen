@@ -2,6 +2,7 @@
 export const prerender = false;
 import AdminLayout from '../../layouts/AdminLayout.astro';
 import yaml from 'js-yaml';
+import AdminPageSwitcher from '../../components/AdminPageSwitcher.astro';
 
 const GITHUB_TOKEN  = import.meta.env.GITHUB_TOKEN;
 const GITHUB_OWNER  = import.meta.env.GITHUB_OWNER;
@@ -84,7 +85,7 @@ const archived  = recipes.filter(r =>  r.archived);
   )}
 
   <div class="dash-head">
-    <h1>Recipes</h1>
+    <AdminPageSwitcher current="recipes" />
     <a href="/admin/new" class="admin-btn admin-btn--primary">+ New Recipe</a>
   </div>
 

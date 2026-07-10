@@ -1,0 +1,121 @@
+---
+interface Props { current: 'recipes' | 'glossary'; }
+const { current } = Astro.props;
+
+const pageTypes = [
+  { key: 'recipes',  label: 'Recipes',  href: '/admin' },
+  { key: 'glossary', label: 'Glossary', href: '/admin/glossary' },
+];
+
+const currentLabel = pageTypes.find(p => p.key === current)?.label ?? 'Recipes';
+---
+
+<div class="page-switcher">
+  <h1 class="page-switcher__label">{currentLabel}</h1>
+  <button
+    type="button"
+    class="page-switcher__toggle"
+    id="page-switcher-toggle"
+    aria-expanded="false"
+    aria-label="Switch page type"
+  >
+    <svg width="12" height="8" viewBox="0 0 10 6" fill="none" aria-hidden="true">
+      <path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </button>
+
+  <ul class="page-switcher__list" id="page-switcher-list" hidden role="listbox">
+    {pageTypes.map(p => (
+      <li>
+        
+          href={p.href}
+          class={`page-switcher__item${p.key === current ? ' page-switcher__item--active' : ''}`}
+        <a>
+          {p.label}
+        </a>
+      </li>
+    ))}
+  </ul>
+</div>
+
+<style>
+  .page-switcher {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .page-switcher__label {
+    font-size: var(--text-3xl);
+    margin: 0;
+  }
+
+  .page-switcher__toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--color-text-muted);
+    padding: var(--space-2);
+    display: flex;
+    align-items: center;
+    transition: color var(--transition-fast), transform var(--transition-fast);
+  }
+
+  .page-switcher__toggle:hover { color: var(--color-accent-3); }
+  .page-switcher__toggle[aria-expanded="true"] { transform: rotate(180deg); }
+
+  .page-switcher__list {
+    position: absolute;
+    top: calc(100% + var(--space-2));
+    left: 0;
+    background: var(--color-bg);
+    border: 1px solid rgba(118, 130, 95, 0.22);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-lg);
+    list-style: none;
+    padding: var(--space-2);
+    margin: 0;
+    min-width: 180px;
+    z-index: 200;
+  }
+
+  .page-switcher__list[hidden] { display: none; }
+
+  .page-switcher__item {
+    display: block;
+    padding: var(--space-2) var(--space-3);
+    font-family: var(--font-sans);
+    font-size: var(--text-sm);
+    color: var(--color-text);
+    text-decoration: none;
+    border-radius: var(--radius-sm);
+    transition: background var(--transition-fast);
+  }
+
+  .page-switcher__item:hover { background: rgba(118, 130, 95, 0.08); }
+
+  .page-switcher__item--active {
+    color: var(--color-accent-3);
+    font-weight: 500;
+  }
+</style>
+
+<script>
+  const toggle = document.getElementById('page-switcher-toggle');
+  const list   = document.getElementById('page-switcher-list') as HTMLElement;
+
+  toggle?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const isOpen = list.hidden;
+    list.hidden = !isOpen;
+    toggle.setAttribute('aria-expanded', String(isOpen));
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!list.hidden && !(e.target as Element).closest('.page-switcher')) {
+      list.hidden = true;
+      toggle?.setAttribute('aria-expanded', 'false');
+    }
+  });
+</script>

@@ -1,0 +1,17 @@
+[
+  {
+    "slug": "dice",
+    "term": "Dice",
+    "definitionHtml": "To cut food into small, uniform cubes, typically \u00bc\" to \u00bd\" in size. See also <a href=\"/learn/knife-skills\">knife skills</a>."
+  },
+  {
+    "slug": "maillard-reaction",
+    "term": "Maillard Reaction",
+    "definitionHtml": "The chemical reaction between amino acids and sugars that occurs when food is browned, creating complex flavors and aromas. Responsible for the crust on a seared steak or the golden color of toasted bread."
+  },
+  {
+    "slug": "sear",
+    "term": "Sear",
+    "definitionHtml": "To cook the surface of food (usually meat) at high heat until browned, locking in flavor via the <a href=\"/glossary#letter-M\">Maillard reaction</a>."
+  }
+]

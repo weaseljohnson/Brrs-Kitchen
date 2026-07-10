@@ -1,0 +1,249 @@
+---
+export const prerender = false;
+import AdminLayout from '../../../layouts/AdminLayout.astro';
+import AdminPageSwitcher from '../../../components/AdminPageSwitcher.astro';
+
+const GITHUB_TOKEN  = import.meta.env.GITHUB_TOKEN;
+const GITHUB_OWNER  = import.meta.env.GITHUB_OWNER;
+const GITHUB_REPO   = import.meta.env.GITHUB_REPO;
+const GITHUB_BRANCH = import.meta.env.GITHUB_BRANCH;
+
+let terms: any[] = [];
+let fetchError: string | null = null;
+
+try {
+  const res = await fetch(
+    `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/content/glossary/glossary.json?ref=${GITHUB_BRANCH}`,
+    { headers: { Authorization: `Bearer ${GITHUB_TOKEN}`, Accept: 'application/vnd.github+json' } }
+  );
+  if (!res.ok) throw new Error(res.statusText);
+  const file = await res.json();
+  terms = JSON.parse(Buffer.from(file.content, 'base64').toString('utf8'));
+  terms.sort((a, b) => a.term.localeCompare(b.term));
+} catch (err: any) {
+  fetchError = err.message;
+}
+---
+
+<AdminLayout title="Glossary">
+
+  {fetchError && (
+    <div class="dash-error">⚠️ Could not load glossary: {fetchError}</div>
+  )}
+
+  <div class="dash-head">
+    <AdminPageSwitcher current="glossary" />
+    <button type="button" id="add-term-btn" class="admin-btn admin-btn--primary">+ New Term</button>
+  </div>
+
+  {terms.length === 0 ? (
+    <div class="dash-empty">
+      <p>No glossary terms yet.</p>
+    </div>
+  ) : (
+    <ul class="dash-list" role="list" id="terms-list">
+      {terms.map(t => (
+        <li class="dash-row" data-slug={t.slug}>
+          <div class="dash-row__info">
+            <span class="dash-row__title">{t.term}</span>
+          </div>
+          <div class="dash-row__actions">
+            <button
+              type="button"
+              class="admin-btn admin-btn--secondary"
+              data-action="edit"
+              data-slug={t.slug}
+              data-term={t.term}
+              data-definition={t.definitionHtml}
+            >
+              Edit
+            </button>
+            <button
+              type="button"
+              class="admin-btn admin-btn--danger"
+              data-action="delete"
+              data-slug={t.slug}
+              data-term={t.term}
+            >
+              Delete
+            </button>
+          </div>
+        </li>
+      ))}
+    </ul>
+  )}
+
+  <!-- Term form modal -->
+  <div class="modal-backdrop" id="term-modal" hidden aria-modal="true" role="dialog" aria-labelledby="term-modal-title">
+    <div class="modal">
+      <h2 class="modal-title" id="term-modal-title">New Term</h2>
+
+      <div class="admin-field">
+        <label for="term-input" class="admin-label admin-label--required">Term</label>
+        <input type="text" id="term-input" class="admin-input" autocomplete="off" />
+      </div>
+
+      <div class="admin-field">
+        <label for="definition-input" class="admin-label admin-label--required">Definition</label>
+        <div class="html-toolbar">
+          <button type="button" data-wrap="b">Bold</button>
+          <button type="button" data-wrap="i">Italic</button>
+          <button type="button" id="link-btn">Link</button>
+        </div>
+        <textarea
+          id="definition-input"
+          class="admin-textarea"
+          rows="5"
+          placeholder='To cut into cubes. See also <a href="/learn/knife-skills">knife skills</a>.'
+        ></textarea>
+        <span class="admin-hint">HTML is supported. Select text, then use the toolbar to wrap it in tags.</span>
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" id="term-cancel" class="admin-btn admin-btn--secondary">Cancel</button>
+        <button type="button" id="term-save" class="admin-btn admin-btn--primary">Save Term</button>
+      </div>
+    </div>
+  </div>
+
+</AdminLayout>
+
+<style>
+  .html-toolbar {
+    display: flex;
+    gap: var(--space-2);
+    margin-bottom: var(--space-2);
+  }
+
+  .html-toolbar button {
+    font-family: var(--font-sans);
+    font-size: var(--text-xs);
+    padding: var(--space-1) var(--space-3);
+    border: 1px solid rgba(118, 130, 95, 0.3);
+    border-radius: var(--radius-sm);
+    background: transparent;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    transition: background var(--transition-fast);
+  }
+
+  .html-toolbar button:hover { background: rgba(118, 130, 95, 0.08); }
+</style>
+
+<script>
+  const modal            = document.getElementById('term-modal') as HTMLElement;
+  const modalTitle        = document.getElementById('term-modal-title')!;
+  const termInput          = document.getElementById('term-input') as HTMLInputElement;
+  const definitionInput   = document.getElementById('definition-input') as HTMLTextAreaElement;
+  const saveBtn            = document.getElementById('term-save') as HTMLButtonElement;
+  const cancelBtn          = document.getElementById('term-cancel')!;
+  const addBtn             = document.getElementById('add-term-btn')!;
+  const termsList          = document.getElementById('terms-list');
+
+  let editingSlug: string | null = null;
+
+  function openModal(mode: 'new' | 'edit', data: { slug?: string; term?: string; definition?: string } = {}) {
+    editingSlug = mode === 'edit' ? data.slug! : null;
+    modalTitle.textContent = mode === 'edit' ? `Edit "${data.term}"` : 'New Term';
+    termInput.value = data.term ?? '';
+    definitionInput.value = data.definition ?? '';
+    modal.hidden = false;
+    termInput.focus();
+  }
+
+  function closeModal() {
+    modal.hidden = true;
+    editingSlug = null;
+  }
+
+  addBtn.addEventListener('click', () => openModal('new'));
+  cancelBtn.addEventListener('click', closeModal);
+  modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && !modal.hidden) closeModal(); });
+
+  // ── TOOLBAR: wrap selected textarea text in tags ──
+  document.querySelectorAll<HTMLButtonElement>('[data-wrap]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const tag = btn.dataset.wrap;
+      const start = definitionInput.selectionStart;
+      const end   = definitionInput.selectionEnd;
+      const value = definitionInput.value;
+      const selected = value.slice(start, end) || 'text';
+      const wrapped = `<${tag}>${selected}</${tag}>`;
+      definitionInput.value = value.slice(0, start) + wrapped + value.slice(end);
+      definitionInput.focus();
+    });
+  });
+
+  document.getElementById('link-btn')!.addEventListener('click', () => {
+    const url = prompt('Link URL (e.g. /learn/knife-skills):');
+    if (!url) return;
+    const start = definitionInput.selectionStart;
+    const end   = definitionInput.selectionEnd;
+    const value = definitionInput.value;
+    const selected = value.slice(start, end) || 'link text';
+    const wrapped = `<a href="${url}">${selected}</a>`;
+    definitionInput.value = value.slice(0, start) + wrapped + value.slice(end);
+    definitionInput.focus();
+  });
+
+  // ── EDIT / DELETE ──
+  termsList?.addEventListener('click', async (e) => {
+    const btn = (e.target as HTMLElement).closest('button[data-action]') as HTMLButtonElement | null;
+    if (!btn) return;
+
+    if (btn.dataset.action === 'edit') {
+      openModal('edit', {
+        slug: btn.dataset.slug,
+        term: btn.dataset.term,
+        definition: btn.dataset.definition,
+      });
+    }
+
+    if (btn.dataset.action === 'delete') {
+      if (!confirm(`Delete "${btn.dataset.term}"? This cannot be undone.`)) return;
+      btn.disabled = true;
+      try {
+        const res = await fetch('/api/glossary/delete-term', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ slug: btn.dataset.slug }),
+        });
+        if (!res.ok) throw new Error((await res.json()).error ?? 'Delete failed.');
+        btn.closest('.dash-row')?.remove();
+      } catch (err: any) {
+        alert(`Error: ${err.message}`);
+        btn.disabled = false;
+      }
+    }
+  });
+
+  // ── SAVE ──
+  saveBtn.addEventListener('click', async () => {
+    const term = termInput.value.trim();
+    const definitionHtml = definitionInput.value.trim();
+    if (!term || !definitionHtml) {
+      alert('Term and definition are required.');
+      return;
+    }
+
+    saveBtn.disabled = true;
+    saveBtn.textContent = 'Saving…';
+
+    try {
+      const res = await fetch('/api/glossary/save-term', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ term, definitionHtml, originalSlug: editingSlug }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error ?? 'Save failed.');
+      window.location.reload();
+    } catch (err: any) {
+      alert(`Error: ${err.message}`);
+    } finally {
+      saveBtn.disabled = false;
+      saveBtn.textContent = 'Save Term';
+    }
+  });
+</script>
