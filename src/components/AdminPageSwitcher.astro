@@ -27,10 +27,9 @@ const currentLabel = pageTypes.find(p => p.key === current)?.label ?? 'Recipes';
   <ul class="page-switcher__list" id="page-switcher-list" hidden role="listbox">
     {pageTypes.map(p => (
       <li>
-        
+        <a>
           href={p.href}
           class={`page-switcher__item${p.key === current ? ' page-switcher__item--active' : ''}`}
-        <a>
           {p.label}
         </a>
       </li>
