@@ -23,6 +23,13 @@ try {
 } catch (err: any) {
   fetchError = err.message;
 }
+
+const grouped = terms.reduce((acc: Record<string, any[]>, t: any) => {
+  const letter = t.term.charAt(0).toUpperCase();
+  (acc[letter] ??= []).push(t);
+  return acc;
+}, {});
+const letters = Object.keys(grouped).sort();
 ---
 
 <AdminLayout title="Glossary">
@@ -41,36 +48,49 @@ try {
       <p>No glossary terms yet.</p>
     </div>
   ) : (
-    <ul class="dash-list" role="list" id="terms-list">
-      {terms.map(t => (
-        <li class="dash-row" data-slug={t.slug}>
-          <div class="dash-row__info">
-            <span class="dash-row__title">{t.term}</span>
-          </div>
-          <div class="dash-row__actions">
-            <button
-              type="button"
-              class="admin-btn admin-btn--secondary"
-              data-action="edit"
-              data-slug={t.slug}
-              data-term={t.term}
-              data-definition={t.definitionHtml}
-            >
-              Edit
-            </button>
-            <button
-              type="button"
-              class="admin-btn admin-btn--danger"
-              data-action="delete"
-              data-slug={t.slug}
-              data-term={t.term}
-            >
-              Delete
-            </button>
-          </div>
-        </li>
+    <>
+      <nav class="alpha-index" aria-label="Jump to letter">
+        {letters.map(l => (
+          <a href={`#letter-${l}`} class="alpha-index__link">{l}</a>
+        ))}
+      </nav>
+
+      {letters.map(letter => (
+        <section class="letter-group" id={`letter-${letter}`}>
+          <h2 class="letter-group__heading">{letter}</h2>
+          <ul class="dash-list" role="list">
+            {grouped[letter].map(t => (
+              <li class="dash-row" data-slug={t.slug}>
+                <div class="dash-row__info">
+                  <span class="dash-row__title">{t.term}</span>
+                </div>
+                <div class="dash-row__actions">
+                  <button
+                    type="button"
+                    class="admin-btn admin-btn--secondary"
+                    data-action="edit"
+                    data-slug={t.slug}
+                    data-term={t.term}
+                    data-definition={t.definitionHtml}
+                  >
+                    Edit
+                  </button>
+                  <button
+                    type="button"
+                    class="admin-btn admin-btn--danger"
+                    data-action="delete"
+                    data-slug={t.slug}
+                    data-term={t.term}
+                  >
+                    Delete
+                  </button>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </section>
       ))}
-    </ul>
+    </>
   )}
 
   <!-- Term form modal -->
@@ -109,6 +129,154 @@ try {
 </AdminLayout>
 
 <style>
+  /* ── HEADER ── */
+  .dash-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--space-6);
+    padding-bottom: var(--space-5);
+    border-bottom: 2px solid rgba(121, 59, 2, 0.12);
+  }
+
+  .dash-error {
+    background: rgba(189, 8, 28, 0.06);
+    border: 1px solid rgba(189, 8, 28, 0.25);
+    border-radius: var(--radius-md);
+    padding: var(--space-4) var(--space-5);
+    margin-bottom: var(--space-6);
+    color: #bd081c;
+    font-size: var(--text-sm);
+  }
+
+  .dash-empty {
+    padding: var(--space-16) var(--space-6);
+    text-align: center;
+    border: 1px dashed rgba(118, 130, 95, 0.3);
+    border-radius: var(--radius-md);
+    color: var(--color-text-muted);
+  }
+
+  .dash-empty p { max-width: none; margin-bottom: var(--space-2); }
+
+  /* ── ALPHABET INDEX ── */
+  .alpha-index {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    padding-bottom: var(--space-6);
+    margin-bottom: var(--space-8);
+    border-bottom: 1px solid rgba(118, 130, 95, 0.15);
+    position: sticky;
+    top: 0;
+    background: var(--color-bg);
+    z-index: 10;
+  }
+
+  .alpha-index__link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border: 1px solid var(--color-accent-1);
+    border-radius: var(--radius-sm);
+    color: var(--color-accent-1);
+    font-family: var(--font-sans);
+    font-size: var(--text-xs);
+    text-decoration: none;
+    transition: background var(--transition-fast), color var(--transition-fast);
+  }
+
+  .alpha-index__link:hover {
+    background: var(--color-accent-1);
+    color: var(--cream);
+  }
+
+  /* ── LETTER GROUPS ── */
+  .letter-group {
+    margin-bottom: var(--space-8);
+    scroll-margin-top: var(--space-6);
+  }
+
+  .letter-group__heading {
+    font-size: var(--text-xl);
+    color: var(--color-accent-2);
+    margin-bottom: var(--space-3);
+    padding-bottom: var(--space-2);
+    border-bottom: 1px solid rgba(118, 130, 95, 0.12);
+  }
+
+  /* ── LIST ── */
+  .dash-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .dash-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    padding: var(--space-4) var(--space-2);
+    border-bottom: 1px solid rgba(118, 130, 95, 0.1);
+    transition: background var(--transition-fast);
+  }
+
+  .dash-row:hover { background: rgba(118, 130, 95, 0.03); }
+
+  .dash-row__info {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .dash-row__title {
+    font-family: var(--font-serif);
+    font-size: var(--text-base);
+    color: var(--color-text);
+    word-break: break-word;
+  }
+
+  .dash-row__actions {
+    display: flex;
+    gap: var(--space-1);
+    flex-shrink: 0;
+  }
+
+  /* ── MODAL ── */
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(28, 19, 23, 0.5);
+    z-index: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-6);
+  }
+
+  .modal-backdrop[hidden] { display: none; }
+
+  .modal {
+    background: var(--color-bg);
+    border-radius: var(--radius-lg);
+    padding: var(--space-8);
+    max-width: 520px;
+    width: 100%;
+    box-shadow: var(--shadow-lg);
+  }
+
+  .modal-title { font-size: var(--text-xl); margin-bottom: var(--space-4); }
+
+  .modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--space-3);
+    margin-top: var(--space-6);
+  }
+
+  /* ── HTML TOOLBAR ── */
   .html-toolbar {
     display: flex;
     gap: var(--space-2);
@@ -128,6 +296,17 @@ try {
   }
 
   .html-toolbar button:hover { background: rgba(118, 130, 95, 0.08); }
+
+  /* ── MOBILE ── */
+  @media (max-width: 640px) {
+    .dash-row__title {
+      font-size: var(--text-sm);
+    }
+    .dash-row__actions .admin-btn {
+      padding: var(--space-1) var(--space-3);
+      font-size: var(--text-xs);
+    }
+  }
 </style>
 
 <script>
