@@ -48,7 +48,7 @@ const letters = Object.keys(grouped).sort();
       <p>No glossary terms yet.</p>
     </div>
   ) : (
-    <>
+    <div id="terms-list">
       <nav class="alpha-index" aria-label="Jump to letter">
         {letters.map(l => (
           <a href={`#letter-${l}`} class="alpha-index__link">{l}</a>
@@ -90,7 +90,7 @@ const letters = Object.keys(grouped).sort();
           </ul>
         </section>
       ))}
-    </>
+    </div>
   )}
 
   <!-- Term form modal -->

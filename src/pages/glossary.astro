@@ -37,6 +37,9 @@ const letters = Object.keys(grouped).sort();
               <details class="term-entry">
                 <summary class="term-entry__term">
                   {entry.data.term}
+                  <svg class="term-entry__chevron" width="12" height="8" viewBox="0 0 10 6" fill="none" aria-hidden="true">
+                    <path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
                 </summary>
                 <div class="term-entry__definition" set:html={entry.data.definitionHtml} />
               </details>
@@ -134,17 +137,14 @@ const letters = Object.keys(grouped).sort();
 
   .term-entry__term::-webkit-details-marker { display: none; }
 
-  .term-entry__term::after {
-    content: '+';
-    font-family: var(--font-sans);
-    font-weight: 400;
+  .term-entry__chevron {
+    flex-shrink: 0;
     color: var(--color-accent-2);
-    font-size: var(--text-xl);
     transition: transform var(--transition-fast);
   }
 
-  .term-entry[open] .term-entry__term::after {
-    transform: rotate(45deg);
+  .term-entry[open] .term-entry__chevron {
+    transform: rotate(180deg);
   }
 
   .term-entry__definition {
