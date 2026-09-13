@@ -63,7 +63,7 @@ directions:
   - title: Scoop Dough
     body: Using either a cookie scoop or two spoons, scoop about 2 tbsps of dough at a time and arrange on your cookie sheets about 2 inches apart. You should be able to fit a dozen cookies per sheet.
   - title: Bake
-    body: Bake in preheated oven on the middle racks for about 11-13 mins or until the cookies are nearly set.   No longer wet or shiny they should look matte and cake like in texture, with no signs of browning toward the bottom (browning on the bottom means they’re overdone).
+    body: Bake in preheated oven on the middle racks for about 11-13 mins or until the cookies are nearly set.    Once they’ve lost their shiny exterior and they look matte and cake like in texture, they’re done. Signs of browning toward the bottom equals overdone.
   - title: Cool and Store
     body: Remove cookies from the oven and allow them to cool in the pan for several minutes before transferring to wire racks to finish cooling completely. Store in an airtight container, and enjoy!
 ---
