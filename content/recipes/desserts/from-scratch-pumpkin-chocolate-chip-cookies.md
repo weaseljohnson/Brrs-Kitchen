@@ -4,7 +4,7 @@ category: Desserts
 pubDate: '2026-09-13'
 prepTime: 25 min
 cookTime: 11-13 min
-intro: These pumpkin chocolate chip cookies are absolutely delicious. You'll find that using all the individual ingredients vs just pumpkin pie spice makes a world of difference and creates the perfectly spiced classic pumpkin flavor.
+intro: These pumpkin chocolate chip cookies are absolutely delicious. You'll find that using all the individual ingredients vs just pumpkin pie spice makes a world of difference and creates the perfectly spiced classic pumpkin cookie flavor.
 tags:
   - Family Favorite
 image: /images/recipes/pumpkin-chocolate-chip-cookies.jpg
@@ -36,7 +36,7 @@ ingredients:
   - count: 3/4 Cup
     item: Packed Brown Sugar
   - count: 3/4 Cup
-    item: Melted Butter
+    item: Butter, melted
   - count: 1 Large
     item: Egg
   - count: 1 Large
@@ -49,13 +49,13 @@ ingredients:
     item: Semi-Sweet Chocolate Chips
 directions:
   - title: Preheat and Prepare
-    body: Make sure the racks of your oven are positioned in the middle, then preheat to 350 degrees, and line the baking sheets with silicone baking mats or parchment paper.
+    body: Make sure the racks of your oven are positioned in the middle, then preheat the oven to 350 degrees, and line baking sheets with silicone baking mats or parchment paper.
   - title: Whisk Dry Ingredients
-    body: In a medium sized mixing bowl, gently whisk together flour, baking powder, baking soda, cinnamon, nutmeg, ginger, cloves and salt for 20 seconds or until incorporated, then set aside.
-  - title: Blend Sugars and Butter
-    body: In the bowl of an electric stand mixer fitted with the paddle attachment, blend together granulated sugar, brown sugar and melted butter on medium-low speed until combined.
+    body: In a medium sized bowl, gently whisk together flour, baking powder, baking soda, cinnamon, nutmeg, ginger, cloves, and salt for 20 seconds or until well incorporated, then set aside.
+  - title: Cream Sugars and Butter
+    body: In the bowl of an electric stand mixer fitted with the paddle attachment, blend together granulated sugar, brown sugar and melted butter, first on low speed for the initial combining, then up to medium speed to cream. Beat on medium for about 2 minutes till lightened in color and fluffy.
   - title: Add Wet Ingredients
-    body: Add in the egg, egg yolk, and vanilla, then mix till smooth and emulsified. Add the pumpkin puree and mix till incorporated.
+    body: Turn to low speed, then add in the egg allowing it to combine fully before adding the egg yolk and vanilla. Once fully incorporated, add in the pumpkin puree and continue to mix on low speed till combined. If the mixture curdles/looks grainy once you add the puree, do not try to remedy it by mixing on higher speeds; this is completely normal and will correct itself once the dry ingredients are added.
   - title: Combine Flour and Wet Mixtures
     body: With the mixer on low speed, slowly add the flour mixture into the wet ingredients about 1/2 cup at a time. Pause between each addition to allow the flour time to incorporate, stopping to scrape down the sides of the bowl as needed.
   - title: Fold in Chocolate Chips
