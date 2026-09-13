@@ -1,5 +1,5 @@
 ---
-title: From Scratch Pumpkin Chocolate Chip Cookies
+title: Pumpkin Chocolate Chip Cookies
 category: Desserts
 pubDate: '2026-09-13'
 prepTime: 25 min
@@ -13,7 +13,7 @@ credit:
   url: https://www.cookingclassy.com/wprm_print/pumpkin-chocolate-chip-cookies
 draft: true
 notes:
-  - Store in an airtight container. These cookies are best once they've rested in an airtight container a few hours, they soften throughout.
+  - These cookies are best once they've rested in an airtight container for a few hours. This allows them to soften and get more of that perfectly moistened yet plush texture that we love! If you can't help yourself from diving in fresh out the oven though, I don't blame you! They're still delicious.
 yield: 40 cookies
 ingredients:
   - count: 3 Cups
@@ -66,5 +66,5 @@ directions:
   - title: Bake
     body: Bake in preheated oven on the middle racks for about 11-13 mins or until the cookies are nearly set.   No longer wet or shiny they should look matte and cake like in texture, with no signs of browning toward the bottom (browning on the bottom means they’re overdone).
   - title: Cool and Store
-    body: Remove cookies from the oven and allow them to cool in the pan for several minutes before transferring to wire racks to cool completely. You’re done! Enjoy 😋
+    body: Remove cookies from the oven and allow them to cool in the pan for several minutes before transferring to wire racks to finish cooling completely. Store in an airtight container, and enjoy!
 ---
