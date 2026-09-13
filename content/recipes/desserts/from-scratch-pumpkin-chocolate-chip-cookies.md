@@ -4,7 +4,7 @@ category: Desserts
 pubDate: '2026-09-13'
 prepTime: 25 min
 cookTime: 11-13 min
-intro: 'Warning: it will be nearly impossible to eat just one! These pumpkin chocolate chip cookies are so scrumptious. You''ll find that using all the individual ingredients vs pre-made pumpkin pie spice makes a world of difference and creates the perfectly spiced pumpkin cookie flavor. It’s a must! I hope you enjoy these as much as we do ❤️'
+intro: 'Warning: it will be nearly impossible to eat just one! These pumpkin chocolate chip cookies are so scrumptious. You''ll find that using all the individual ingredients vs pre-made pumpkin pie spice makes a world of difference and creates the perfectly spiced pumpkin cookie flavor. It’s a must! I hope you enjoy these as much as we do 🧡'
 tags:
   - Family Favorite
 image: /images/recipes/pumpkin-chocolate-chip-cookies.jpg
