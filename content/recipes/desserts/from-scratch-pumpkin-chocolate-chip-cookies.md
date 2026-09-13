@@ -51,7 +51,7 @@ directions:
   - title: Preheat and Prepare
     body: Make sure the racks of your oven are positioned in the middle, then preheat the oven to 350 degrees, and line baking sheets with silicone baking mats or parchment paper.
   - title: Whisk Dry Ingredients
-    body: In a medium sized bowl, gently whisk together flour, baking powder, baking soda, cinnamon, nutmeg, ginger, cloves, and salt for 20 seconds or until well incorporated, then set aside.
+    body: In a medium sized bowl, carefully whisk together flour, baking powder, baking soda, cinnamon, nutmeg, ginger, cloves, and salt for 20 seconds or until well incorporated, then set aside.
   - title: Cream Sugars and Butter
     body: In the bowl of an electric stand mixer fitted with the paddle attachment, blend together granulated sugar, brown sugar and melted butter, first on low speed for the initial combining, then up to medium speed to cream. Beat on medium for about 2 minutes till lightened in color and fluffy.
   - title: Add Wet Ingredients
