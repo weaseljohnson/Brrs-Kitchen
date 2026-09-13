@@ -1,5 +1,5 @@
 ---
-title: Pumpkin Chocolate Chip Cookies
+title: Spiced Pumpkin Chocolate Chip Cookies
 category: Desserts
 pubDate: '2026-09-13'
 prepTime: 25 min
