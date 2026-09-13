@@ -59,9 +59,9 @@ directions:
   - title: Combine Dry and Wet Ingredients
     body: With mixer on low speed, slowly add the flour mixture into the wet about 1/2 cup at a time. Pause between each addition to allow the flour time to incorporate, stopping to scrape down the sides of the bowl as needed.
   - title: Fold in Chocolate Chips
-    body: Remove the mixing bowl, dump in your chocolate chips, then fold them into the batter with a rubber spatula until evenly dispersed throughout.
+    body: Remove the mixing bowl, dump in your chocolate chips, then fold them into the batter with a rubber spatula until evenly dispersed throughout the dough
   - title: Scoop Dough
-    body: Using either a cookie scoop or two spoons, scoop about 2tbsps of dough at a time and arrange on your cookie sheets about 2 inches apart. You should be able to fit a dozen cookies per sheet.
+    body: Using either a cookie scoop or two spoons, scoop about 2 tbsps of dough at a time and arrange on your cookie sheets about 2 inches apart. You should be able to fit a dozen cookies per sheet.
   - title: Bake
     body: Bake in preheated oven on the middle racks for about 11-13 mins or until the cookies are nearly set.   No longer wet or shiny they should look matte and cake like in texture, with no signs of browning toward the bottom (browning on the bottom means they’re overdone).
   - title: Cool and Store
