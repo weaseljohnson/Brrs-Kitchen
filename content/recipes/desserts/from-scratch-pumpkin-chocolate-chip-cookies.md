@@ -11,9 +11,8 @@ image: /images/recipes/pumpkin-chocolate-chip-cookies.jpg
 credit:
   name: Cooking Classy
   url: https://www.cookingclassy.com/wprm_print/pumpkin-chocolate-chip-cookies
-draft: true
 notes:
-  - These cookies are best once they've rested in an airtight container for a few hours. This allows them to soften and get more of that perfectly moistened yet plush texture that we love! If you can't help yourself from diving in fresh out the oven though, I don't blame you! They're still delicious.
+  - These cookies are best once they've rested in an airtight container for a few hours. This allows them to soften and get that perfectly moistened yet plush texture that we love! If you can't help yourself from diving in fresh out the oven though (🙋‍♀️), I don't blame you! They're still delicious.
 yield: 40 cookies
 ingredients:
   - count: 3 Cups
