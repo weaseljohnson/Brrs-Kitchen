@@ -1,7 +1,7 @@
 ---
-title: Spiced Pumpkin Chocolate Chip Cookies
+title: The Perfect Pumpkin Chocolate Chip Cookies
 category: Desserts
-pubDate: '2026-09-13'
+pubDate: '2026-09-14'
 prepTime: 25 min
 cookTime: 11-13 min
 intro: 'Warning: it will be nearly impossible to eat just one! These pumpkin chocolate chip cookies are so scrumptious. You''ll find that using all the individual ingredients vs pre-made pumpkin pie spice makes a world of difference and creates the perfectly spiced pumpkin cookie flavor. It’s a must! I hope you enjoy these as much as we do 🧡'
@@ -51,19 +51,22 @@ directions:
   - title: Preheat and Prepare
     body: Make sure the racks of your oven are positioned in the middle, then preheat the oven to 350 degrees, and line baking sheets with silicone baking mats or parchment paper.
   - title: Whisk Dry Ingredients
-    body: In a medium sized bowl, carefully whisk together flour, baking powder, baking soda, cinnamon, nutmeg, ginger, cloves, and salt for 20 seconds or until well incorporated, then set aside.
+    body: In a medium sized bowl, whisk together flour, baking powder, baking soda, cinnamon, nutmeg, ginger, cloves, and salt for 20 seconds or until well incorporated, then set aside.
   - title: Cream Sugars and Butter
-    body: In the bowl of an electric stand mixer fitted with the paddle attachment, blend together granulated sugar, brown sugar and melted butter, first on low speed for the initial combining, then up to medium speed to cream. Beat on medium for about 2 minutes till lightened in color and fluffy.
-  - title: Add Wet Ingredients
-    body: Turn to low speed, then add in the egg and allow it to combine fully before adding the egg yolk and vanilla. Once fully incorporated, add in the pumpkin puree and continue to mix on low speed till combined. If the mixture curdles/looks grainy once you add the puree, do not try to remedy it by mixing on higher speeds; this is completely normal and will correct itself once the dry ingredients are added.
+    body: In the bowl of an electric stand mixer fitted with the paddle attachment, blend together the granulated sugar, brown sugar and melted butter, first on low speed for the initial combining, then up to medium speed to cream. Beat on medium for about 2-3 minutes.
+  - title: Add the Egg and Vanilla
+    body: Add the egg, egg yolk, and vanilla to the stand mixer. Mix on medium-low speed. Once fully incorporated, add in the pumpkin puree and continue to mix on medium-low speed till combined.
   - title: Combine Dry and Wet Ingredients
-    body: With mixer on low speed, slowly add the flour mixture into the wet about 1/2 cup at a time. Pause between each addition to allow the flour time to incorporate, stopping to scrape down the sides of the bowl as needed.
+    body: With mixer on low speed, slowly add the flour mixture into the wet about 1/3 cup at a time. Pause between each addition to allow the flour time to incorporate, stopping to scrape down the sides of the bowl as needed.
   - title: Fold in Chocolate Chips
     body: Remove the mixing bowl, dump in your chocolate chips, then fold them into the batter with a rubber spatula until evenly dispersed throughout the dough.
   - title: Scoop Dough
-    body: Using either a cookie scoop or two spoons, scoop about 2 tbsps of dough at a time and arrange on your cookie sheets about 2 inches apart. You should be able to fit a dozen cookies per sheet.
+    body: Scoop balls of about 2 tbsps of dough at a time and arrange on your cookie sheet(s) about 2 inches apart. You should be able to fit a dozen cookies per sheet.
   - title: Bake
-    body: Bake in preheated oven on the middle racks for about 11-13 mins or until the cookies are nearly set.    Once they’ve lost their shiny exterior and they look matte and cake like in texture, they’re done. Signs of browning toward the bottom means they’re overdone.
+    body: |-
+      Bake in preheated oven on the middle racks for about 11-13 mins. 
+
+      Once they’ve lost their shiny exterior and they look matte and cake like in texture, they’re done. Signs of browning toward the bottom means they’re overdone.
   - title: Cool and Store
     body: Remove cookies from the oven and allow them to cool in the pan for several minutes before transferring to wire racks to finish cooling completely. Store in an airtight container, and enjoy!
 ---
