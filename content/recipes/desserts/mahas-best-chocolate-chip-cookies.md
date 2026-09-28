@@ -1,5 +1,6 @@
 ---
 title: Maha's Best Chocolate Chip Cookies
+formatVersion: 1
 category: Desserts
 pubDate: '2026-06-20'
 prepTime: 20-25 min
@@ -30,7 +31,7 @@ ingredients:
     item: Chocolate chips
 directions:
   - title: Preheat the oven to 350 degrees
-    body: ''
+    body: ' '
   - title: Soften Butter
     body: |-
       Soften the butter by your chosen method. A pan on the stove on medium low works best. If you're in a hurry a microwave works too.

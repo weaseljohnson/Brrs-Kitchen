@@ -1,5 +1,6 @@
 ---
 title: Brr's Homemade Vanilla Ice Cream
+formatVersion: 1
 category: Desserts
 pubDate: '2026-06-21'
 prepTime: 15 min

@@ -1,5 +1,6 @@
 ---
 title: THE BEST Homemade Brownies, According To Science!
+formatVersion: 1
 category: Desserts
 pubDate: '2026-07-03'
 prepTime: 35-40 min

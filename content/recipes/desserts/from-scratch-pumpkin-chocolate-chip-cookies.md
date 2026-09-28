@@ -1,5 +1,6 @@
 ---
 title: The Perfect Pumpkin Chocolate Chip Cookies
+formatVersion: 1
 category: Desserts
 pubDate: '2026-09-14'
 prepTime: 25 min
