@@ -1,11 +1,11 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import { getCollection } from 'astro:content';
 import { buildWebPageSchema } from '../utils/seo';
+import { getPublishedRecipes } from '../utils/recipes';
 
 export const prerender = true;
 
-const allRecipes = await getCollection('recipes');
+const allRecipes = await getPublishedRecipes();
 
 // Latest recipes — sort by pubDate if present, otherwise take last N added
 const latestRecipes = [...allRecipes]

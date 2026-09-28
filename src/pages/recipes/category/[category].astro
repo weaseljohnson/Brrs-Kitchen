@@ -1,11 +1,12 @@
 ---
 export const prerender = true;
 import Layout from '../../../layouts/Layout.astro';
-import { getCollection } from 'astro:content';
 import { buildWebPageSchema } from '../../../utils/seo';
+import { getPublishedRecipes } from '../../../utils/recipes';
+import { categorySlug } from '../../utils/slug';
 
 export async function getStaticPaths() {
-  const allRecipes = await getCollection('recipes', ({ data }) => !data.draft);
+  const allRecipes = await getPublishedRecipes();
 
   // Group recipes by category
   const categoryMap = new Map<string, typeof allRecipes>();
@@ -16,10 +17,7 @@ export async function getStaticPaths() {
   }
 
   return [...categoryMap.entries()].map(([categoryName, recipes]) => {
-    const slug = categoryName
-      .toLowerCase()
-      .replace(/\s+/g, '-')
-      .replace(/[^a-z0-9-]/g, '');
+    const slug = categorySlug(categoryName);
     return {
       params: { category: slug },
       props:  { categoryName, recipes },
@@ -27,7 +25,7 @@ export async function getStaticPaths() {
   });
 }
 
-type Recipe = Awaited<ReturnType<typeof getCollection<'recipes'>>>[number];
+type Recipe = Awaited<ReturnType<typeof getPublishedRecipes>>[number];
 
 interface Props {
   categoryName: string;

@@ -1,12 +1,7 @@
 // src/scripts/adminFormHelpers.js
 // Shared form-building utilities for the admin recipe form.
 
-export function slugify(str) {
-  return str.toLowerCase().trim()
-    .replace(/[^a-z0-9\s-]/g, '')
-    .replace(/\s+/g, '-')
-    .replace(/-+/g, '-');
-}
+export { slugify } from '../utils/slug';
 
 export function makeIngRow(count = '', item = '') {
   const row = document.createElement('div');

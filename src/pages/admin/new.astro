@@ -909,6 +909,7 @@ import AdminLayout from '../../layouts/AdminLayout.astro';
     async function submitRecipe(isDraft) {
       const payload = collectPayload();
       payload.draft = isDraft;
+      payload.mode = 'create'; // never overwrite an existing recipe from the New form
 
       if (imageFile) {
         try {

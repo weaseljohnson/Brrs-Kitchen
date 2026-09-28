@@ -1,20 +1,15 @@
 ---
 export const prerender = true;
 import Layout from '../../layouts/Layout.astro';
-import { getCollection } from 'astro:content';
 import { buildWebPageSchema } from '../../utils/seo';
+import { getPublishedRecipes } from '../../utils/recipes';
+import { categorySlug } from '../../utils/slug';
 
-const allRecipes = await getCollection('recipes', ({ data }) => !data.draft);
+const allRecipes = await getPublishedRecipes();
 
 // Extract unique categories and sort alphabetically
 const categories = [...new Set(allRecipes.map(r => r.data.category))]
   .sort((a, b) => a.localeCompare(b));
-
-// Converts a category display name to a URL/filename slug
-// e.g. "Quick Meals" → "quick-meals"
-function categorySlug(name: string): string {
-  return name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
-}
 
 const pageSchema = buildWebPageSchema(
   'Recipes',
