@@ -1,5 +1,6 @@
 ---
 title: Brr’s Banana Pancakes
+formatVersion: 1
 category: Breakfast
 pubDate: '2026-06-30'
 prepTime: 15min
