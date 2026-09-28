@@ -3,7 +3,7 @@ export const prerender = true;
 import Layout from '../../../layouts/Layout.astro';
 import { buildWebPageSchema } from '../../../utils/seo';
 import { getPublishedRecipes } from '../../../utils/recipes';
-import { categorySlug } from '../../utils/slug';
+import { categorySlug } from '../../../utils/slug';
 
 export async function getStaticPaths() {
   const allRecipes = await getPublishedRecipes();
