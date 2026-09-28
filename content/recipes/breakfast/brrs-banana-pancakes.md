@@ -31,7 +31,7 @@ directions:
   - title: Mash Bananas
     body: In a medium bowl, mash the bananas to a mushy pudding-like consistency.
   - title: Whisk in the eggs
-    body: ''
+    body: ' '
   - title: Mix in the other ingredients
     body: |-
       Add baking powder, salt, and cinnamon, and vanilla. Mix until incorporated. 
@@ -40,5 +40,5 @@ directions:
 
       The more flour you add, the faster the pancakes will cook, so keep that in mind as well.
   - title: Cook the pancakes
-    body: ''
+    body: ' '
 ---
