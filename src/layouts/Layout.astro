@@ -9,6 +9,7 @@ interface Props {
   ogImage?:     string;
   ogType?:      'website' | 'article';
   schema?:      object[];
+  noindex?: boolean;
 }
 
 const {
@@ -17,6 +18,7 @@ const {
   ogImage     = '/images/og/og-default.jpg',
   ogType      = 'website',
   schema      = [],
+  noindex     = false
 } = Astro.props;
 
 const origin         = Astro.url.origin;
@@ -51,7 +53,7 @@ const allSchemas = [...sitewideSchemas, ...schema];
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={description} />
     <link rel="canonical" href={canonicalURL} />
-    <meta name="robots" content="index, follow" />
+    <meta name="robots" content={noindex ? "noindex, nofollow" : "index, follow"} />
     <title>{formattedTitle}</title>
 
     <!-- Open Graph -->

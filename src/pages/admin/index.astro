@@ -74,6 +74,13 @@ try {
 const published = recipes.filter(r => !r.draft && !r.archived);
 const drafts    = recipes.filter(r =>  r.draft  && !r.archived);
 const archived  = recipes.filter(r =>  r.archived);
+
+// Success banner after an import redirect
+const importedSlug   = Astro.url.searchParams.get('imported');
+const importedStatus = Astro.url.searchParams.get('status') === 'published' ? 'published' : 'draft';
+const importedTitle  = importedSlug
+  ? (recipes.find(r => r.slug === importedSlug)?.title ?? importedSlug)
+  : null;
 ---
 
 <AdminLayout title="Dashboard">
@@ -84,9 +91,20 @@ const archived  = recipes.filter(r =>  r.archived);
     </div>
   )}
 
+    {importedTitle && (
+    <div class="dash-success" role="status">
+      ✓ “{importedTitle}” was imported {importedStatus === 'draft'
+        ? 'as a draft. Find it under Drafts.'
+        : 'and published. It will be live in about 30–60 seconds, once the site finishes rebuilding.'}
+    </div>
+  )}
+
   <div class="dash-head">
-    <AdminPageSwitcher current="recipes" />
-    <a href="/admin/new" class="admin-btn admin-btn--primary">+ New Recipe</a>
+    <h1>Recipes</h1>
+    <div class="dash-head__actions">
+      <a href="/admin/new" class="admin-btn admin-btn--primary">+ New Recipe</a>
+      <a href="/admin/import" class="admin-btn admin-btn--secondary">Import Recipe</a>
+    </div>
   </div>
 
   <div class="dash-tabs" role="tablist">
@@ -228,6 +246,21 @@ const archived  = recipes.filter(r =>  r.archived);
   }
 
   .dash-head h1 { font-size: var(--text-3xl); }
+
+    .dash-head__actions {
+    display: flex;
+    gap: var(--space-3);
+  }
+
+  .dash-success {
+    background: rgba(118, 130, 95, 0.1);
+    border: 1px solid rgba(118, 130, 95, 0.35);
+    border-radius: var(--radius-md);
+    padding: var(--space-4) var(--space-5);
+    margin-bottom: var(--space-6);
+    color: var(--color-text);
+    font-size: var(--text-sm);
+  }
 
   .dash-error {
     background: rgba(189, 8, 28, 0.06);
@@ -425,10 +458,18 @@ const archived  = recipes.filter(r =>  r.archived);
     .dash-row__info { width: 100%; }
     .dash-row__actions { width: 100%; justify-content: flex-end; }
     .dash-row__date { display: none; }
+    .dash-head { flex-direction: column; align-items: stretch; gap: var(--space-4); }
+    .dash-head__actions { flex-direction: column; }
+    .dash-head__actions .admin-btn { justify-content: center; }
   }
 </style>
 
 <script>
+
+  if (new URLSearchParams(location.search).has('imported')) {
+    history.replaceState(null, '', '/admin');
+  }
+
   // ── TABS ──
   const tabs   = document.querySelectorAll<HTMLButtonElement>('.dash-tab');
   const panels = document.querySelectorAll<HTMLElement>('.dash-panel');

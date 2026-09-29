@@ -1,0 +1,404 @@
+---
+export const prerender = false;
+import AdminLayout from '../../layouts/AdminLayout.astro';
+---
+
+<AdminLayout title="Import Recipe">
+  <div class="imp-root">
+
+    <div class="imp-head">
+      <a href="/admin" class="imp-back">← Dashboard</a>
+      <h1>Import Recipe</h1>
+      <p class="imp-step" id="step-label">Step 1 of 3 · Recipe file</p>
+    </div>
+
+    <!-- ── STEP 1: FILE ── -->
+    <section id="stage-file" class="admin-section">
+      <h2 class="admin-section-title">Recipe file</h2>
+
+      <div class="imp-drop" id="file-drop" role="button" tabindex="0" aria-label="Choose a recipe file">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+          <path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/>
+          <polyline points="14 3 14 9 20 9"/>
+        </svg>
+        <p>Drag &amp; drop a <strong>.md</strong> recipe file, or <span class="imp-link">browse</span></p>
+        <span class="admin-hint">One recipe at a time</span>
+      </div>
+      <input type="file" id="file-input" accept=".md,.markdown,text/markdown,text/plain" hidden />
+      <p class="imp-status" id="file-status" aria-live="polite"></p>
+
+      <div class="imp-errors" id="file-errors" hidden>
+        <p class="imp-errors__title" id="file-errors-title"></p>
+        <pre class="imp-errors__list" id="file-errors-list"></pre>
+        <button type="button" class="admin-btn admin-btn--secondary" data-copy="file">Copy errors for Claude</button>
+      </div>
+    </section>
+
+    <!-- ── STEP 2: IMAGE ── -->
+    <section id="stage-image" class="admin-section" hidden>
+      <h2 class="admin-section-title">Recipe photo</h2>
+      <p class="imp-lead">Add a photo for <strong id="image-recipe-title"></strong>, or skip and add one later from Edit.</p>
+
+      <div class="imp-drop imp-drop--compact" id="img-drop" role="button" tabindex="0" aria-label="Choose a photo">
+        <p>Drag &amp; drop a JPG or PNG here</p>
+      </div>
+      <input type="file" id="img-input" accept="image/jpeg,image/png" hidden />
+      <p class="imp-status" id="img-status" aria-live="polite"></p>
+
+      <div class="imp-actions">
+        <button type="button" id="img-choose-btn" class="admin-btn admin-btn--primary">Choose File</button>
+        <button type="button" id="img-skip-btn" class="admin-btn admin-btn--secondary">Skip</button>
+        <button type="button" class="admin-btn admin-btn--ghost" data-restart>Start over</button>
+      </div>
+    </section>
+
+    <!-- ── STEP 3: REVIEW (live preview) ── -->
+    <section id="stage-review" hidden>
+      <div class="imp-warnings" id="warnings" hidden>
+        <p class="imp-warnings__title">Heads up</p>
+        <ul id="warnings-list"></ul>
+      </div>
+
+      <div class="imp-toolbar">
+        <div class="imp-viewport" role="group" aria-label="Preview width">
+          <button type="button" class="admin-btn admin-btn--secondary imp-vp is-active" data-width="100%">Desktop</button>
+          <button type="button" class="admin-btn admin-btn--secondary imp-vp" data-width="390px">Mobile</button>
+        </div>
+        <span class="admin-hint">This is how the recipe will look when it's live.</span>
+      </div>
+
+      <div class="imp-frame-wrap">
+        <iframe name="preview-frame" id="preview-frame" title="Recipe preview" class="imp-frame"></iframe>
+      </div>
+
+      <form id="preview-form" method="post" action="/admin/preview" target="preview-frame" hidden>
+        <input type="hidden" name="markdown" id="pf-markdown" />
+        <input type="hidden" name="image" id="pf-image" />
+      </form>
+
+      <div class="imp-errors" id="commit-errors" hidden>
+        <p class="imp-errors__title" id="commit-errors-title"></p>
+        <pre class="imp-errors__list" id="commit-errors-list"></pre>
+      </div>
+
+      <div class="imp-actions imp-actions--bar">
+        <button type="button" class="admin-btn admin-btn--ghost" data-restart>Start over</button>
+        <button type="button" id="back-image-btn" class="admin-btn admin-btn--ghost">Change photo</button>
+        <span class="imp-spacer"></span>
+        <button type="button" id="draft-btn" class="admin-btn admin-btn--secondary">Save as Draft</button>
+        <button type="button" id="publish-btn" class="admin-btn admin-btn--primary">Publish Now</button>
+      </div>
+    </section>
+
+  </div>
+</AdminLayout>
+
+<style is:global>
+  .imp-root [hidden] { display: none !important; }
+
+  .imp-head { margin-bottom: var(--space-6); }
+  .imp-head h1 { font-size: var(--text-3xl); }
+  .imp-back {
+    display: inline-block; margin-bottom: var(--space-2);
+    font-size: var(--text-sm); color: var(--color-text-muted); text-decoration: none;
+  }
+  .imp-back:hover { color: var(--color-accent-3); }
+  .imp-step {
+    margin-top: var(--space-2); max-width: none;
+    font-size: var(--text-sm); font-style: italic; color: var(--color-text-muted);
+  }
+  .imp-lead { max-width: none; margin-bottom: var(--space-4); color: var(--color-text-muted); }
+  .imp-status {
+    max-width: none; min-height: 1.4em; margin-top: var(--space-3);
+    font-size: var(--text-sm); font-style: italic; color: var(--color-text-muted);
+  }
+
+  .imp-drop {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: var(--space-2); min-height: 160px; padding: var(--space-8);
+    border: 2px dashed rgba(118, 130, 95, 0.3); border-radius: var(--radius-md);
+    color: var(--color-text-muted); text-align: center; cursor: pointer;
+    transition: border-color var(--transition-fast), background var(--transition-fast);
+  }
+  .imp-drop--compact { min-height: 96px; padding: var(--space-5); }
+  .imp-drop:hover, .imp-drop:focus-visible, .imp-drop.is-drag-over {
+    border-color: var(--color-accent-1); background: rgba(118, 130, 95, 0.04); outline: none;
+  }
+  .imp-drop p { max-width: none; font-size: var(--text-sm); margin: 0; }
+  .imp-link { color: var(--color-accent-2); text-decoration: underline; text-underline-offset: 2px; }
+
+  .imp-actions { display: flex; flex-wrap: wrap; gap: var(--space-3); margin-top: var(--space-5); align-items: center; }
+  .imp-actions--bar {
+    position: sticky; bottom: 0; z-index: 50; margin-top: var(--space-5);
+    padding: var(--space-4) 0; background: var(--color-bg);
+    border-top: 1px solid rgba(118, 130, 95, 0.2);
+  }
+  .imp-spacer { flex: 1; }
+
+  .imp-errors {
+    margin-top: var(--space-5); padding: var(--space-4) var(--space-5);
+    background: rgba(189, 8, 28, 0.05); border: 1px solid rgba(189, 8, 28, 0.25);
+    border-radius: var(--radius-md);
+  }
+  .imp-errors__title { max-width: none; margin-bottom: var(--space-3); font-weight: 400; color: #bd081c; }
+  .imp-errors__list {
+    margin-bottom: var(--space-4); white-space: pre-wrap; word-break: break-word;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: var(--text-xs);
+    color: var(--color-text);
+  }
+
+  .imp-warnings {
+    margin-bottom: var(--space-5); padding: var(--space-4) var(--space-5);
+    background: rgba(189, 122, 87, 0.08); border: 1px solid rgba(189, 122, 87, 0.3);
+    border-radius: var(--radius-md); font-size: var(--text-sm);
+  }
+  .imp-warnings__title { max-width: none; margin-bottom: var(--space-2); font-weight: 400; color: var(--color-accent-3); }
+  .imp-warnings ul { padding-left: var(--space-5); display: flex; flex-direction: column; gap: var(--space-1); }
+
+  .imp-toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-4); margin-bottom: var(--space-4); }
+  .imp-viewport { display: flex; gap: var(--space-2); }
+  .imp-vp.is-active { background: var(--color-accent-1); color: var(--cream); }
+
+  .imp-frame-wrap { display: flex; justify-content: center; }
+  .imp-frame {
+    width: 100%; height: 78vh; background: #fff;
+    border: 1px solid rgba(118, 130, 95, 0.3); border-radius: var(--radius-md);
+    transition: width var(--transition-base);
+  }
+
+  @media (max-width: 640px) {
+    .imp-viewport { display: none; } /* preview is already phone-width */
+    .imp-actions--bar { flex-direction: column; align-items: stretch; }
+    .imp-actions--bar .imp-spacer { display: none; }
+    .imp-actions--bar .admin-btn { justify-content: center; }
+  }
+</style>
+
+<script>
+  const MAX_MD_BYTES = 100_000;
+  const MAX_IMG_DIM  = 1600;
+  const MAX_IMG_B64  = 3_400_000; // server limit is 3.5M
+
+  const el = <T extends HTMLElement = HTMLElement>(id: string) =>
+    document.getElementById(id) as T;
+
+  const stages = { file: el('stage-file'), image: el('stage-image'), review: el('stage-review') };
+  const labels = {
+    file:   'Step 1 of 3 · Recipe file',
+    image:  'Step 2 of 3 · Photo',
+    review: 'Step 3 of 3 · Review and publish',
+  };
+  type Stage = keyof typeof stages;
+
+  const state = {
+    markdown: '',
+    title:    '',
+    warnings: [] as string[],
+    image:    null as null | { data: string; dataUrl: string },
+  };
+
+  function show(stage: Stage) {
+    (Object.keys(stages) as Stage[]).forEach(s => { stages[s].hidden = s !== stage; });
+    el('step-label').textContent = labels[stage];
+    window.scrollTo({ top: 0 });
+  }
+
+  // ── ERRORS ──
+  function renderErrors(prefix: 'file' | 'commit', title: string, lines: string[]) {
+    el(`${prefix}-errors`).hidden = false;
+    el(`${prefix}-errors-title`).textContent = title;
+    el(`${prefix}-errors-list`).textContent = lines.join('\n');
+  }
+  const clearErrors = (prefix: 'file' | 'commit') => { el(`${prefix}-errors`).hidden = true; };
+
+  document.querySelectorAll<HTMLButtonElement>('[data-copy]').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const lines = el(`${btn.dataset.copy}-errors-list`).textContent ?? '';
+      await navigator.clipboard.writeText(
+        `The Brr's Kitchen importer rejected my recipe file. Please fix these problems and give me a corrected file:\n\n${lines}`,
+      );
+      const original = btn.textContent;
+      btn.textContent = 'Copied!';
+      setTimeout(() => { btn.textContent = original; }, 1500);
+    });
+  });
+
+  document.querySelectorAll('[data-restart]').forEach(b =>
+    b.addEventListener('click', () => location.reload()));
+
+  // ── API ──
+  async function api(body: Record<string, unknown>) {
+    const res = await fetch('/api/import-recipe', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify(body),
+    });
+    if (res.status === 401) { location.href = '/admin/login'; throw new Error('Session expired.'); }
+    if (res.status === 413) return { ok: false, errors: ['The photo is too large. Try a smaller one.'] } as any;
+    return (await res.json().catch(() => ({ ok: false, errors: ['Unexpected server response.'] }))) as any;
+  }
+
+  // ── DROP ZONES ──
+  function wireDrop(zone: HTMLElement, input: HTMLInputElement, onFile: (f: File) => void) {
+    const open = () => input.click();
+    zone.addEventListener('click', open);
+    zone.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); }
+    });
+    zone.addEventListener('dragover',  e => { e.preventDefault(); zone.classList.add('is-drag-over'); });
+    zone.addEventListener('dragleave', () => zone.classList.remove('is-drag-over'));
+    zone.addEventListener('drop', e => {
+      e.preventDefault();
+      zone.classList.remove('is-drag-over');
+      const f = e.dataTransfer?.files[0];
+      if (f) onFile(f);
+    });
+    input.addEventListener('change', () => {
+      const f = input.files?.[0];
+      if (f) onFile(f);
+      input.value = ''; // allow re-selecting the same file
+    });
+  }
+
+  // ── STEP 1: FILE ──
+  async function handleMarkdown(file: File) {
+    clearErrors('file');
+    const status = el('file-status');
+
+    if (!/\.(md|markdown|txt)$/i.test(file.name)) {
+      renderErrors('file', 'That doesn’t look like a recipe file.',
+        ['Choose the .md file created by your Claude recipe project.']);
+      return;
+    }
+    if (file.size > MAX_MD_BYTES) {
+      renderErrors('file', 'That file is too large to be a recipe.', ['Limit is 100 KB.']);
+      return;
+    }
+
+    status.textContent = 'Checking recipe…';
+    try {
+      const markdown = await file.text();
+      const data = await api({ action: 'preview', markdown });
+
+      if (!data.ok) {
+        renderErrors('file', 'This file can’t be imported yet. Fix these problems and try again:',
+          data.errors ?? ['Unknown error.']);
+        return;
+      }
+      if (data.conflict) {
+        renderErrors('file', `“${data.recipe.title}” already exists, so nothing was imported.`, [
+          `Existing file: ${data.conflict.path}`,
+          'Rename the recipe in the file, or edit the existing recipe from the dashboard.',
+        ]);
+        return;
+      }
+
+      state.markdown = markdown;
+      state.title    = data.recipe.title;
+      state.warnings = data.warnings ?? [];
+      el('image-recipe-title').textContent = state.title;
+      el('img-status').textContent = '';
+      show('image');
+    } catch (e: any) {
+      renderErrors('file', 'Something went wrong.', [e?.message ?? String(e)]);
+    } finally {
+      status.textContent = '';
+    }
+  }
+
+  wireDrop(el('file-drop'), el<HTMLInputElement>('file-input'), handleMarkdown);
+
+  // ── STEP 2: IMAGE ──
+  async function resizeImage(file: File): Promise<{ data: string; dataUrl: string }> {
+    const bitmap = await createImageBitmap(file);
+    const scale  = Math.min(1, MAX_IMG_DIM / Math.max(bitmap.width, bitmap.height));
+    const w = Math.round(bitmap.width * scale);
+    const h = Math.round(bitmap.height * scale);
+
+    const canvas = document.createElement('canvas');
+    canvas.width = w;
+    canvas.height = h;
+    const ctx = canvas.getContext('2d')!;
+    ctx.fillStyle = '#fff'; // flatten PNG transparency instead of going black
+    ctx.fillRect(0, 0, w, h);
+    ctx.drawImage(bitmap, 0, 0, w, h);
+
+    const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
+    return { dataUrl, data: dataUrl.split(',')[1] };
+  }
+
+  async function handleImage(file: File) {
+    const status = el('img-status');
+    status.textContent = 'Preparing photo…';
+    try {
+      if (!/^image\/(jpeg|png)$/.test(file.type)) throw new Error('Please choose a JPG or PNG.');
+      const img = await resizeImage(file);
+      if (img.data.length > MAX_IMG_B64) throw new Error('That photo is still too large. Try a smaller one.');
+      state.image = img;
+      goReview();
+    } catch (e: any) {
+      state.image = null;
+      status.textContent = e?.message ?? 'Could not read that photo.';
+    }
+  }
+
+  wireDrop(el('img-drop'), el<HTMLInputElement>('img-input'), handleImage);
+  el('img-choose-btn').addEventListener('click', () => el<HTMLInputElement>('img-input').click());
+  el('img-skip-btn').addEventListener('click', () => { state.image = null; goReview(); });
+  el('back-image-btn').addEventListener('click', () => show('image'));
+
+  // ── STEP 3: REVIEW ──
+  function goReview() {
+    const list = el('warnings-list');
+    list.replaceChildren(...state.warnings.map(w => {
+      const li = document.createElement('li');
+      li.textContent = w;
+      return li;
+    }));
+    el('warnings').hidden = state.warnings.length === 0;
+    clearErrors('commit');
+
+    show('review');
+    el<HTMLInputElement>('pf-markdown').value = state.markdown;
+    el<HTMLInputElement>('pf-image').value    = state.image?.dataUrl ?? '';
+    el<HTMLFormElement>('preview-form').submit();
+  }
+
+  document.querySelectorAll<HTMLButtonElement>('.imp-vp').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.imp-vp').forEach(b => b.classList.remove('is-active'));
+      btn.classList.add('is-active');
+      el<HTMLIFrameElement>('preview-frame').style.width = btn.dataset.width ?? '100%';
+    });
+  });
+
+  async function commit(draft: boolean) {
+    clearErrors('commit');
+    const buttons = [el<HTMLButtonElement>('draft-btn'), el<HTMLButtonElement>('publish-btn')];
+    const labels  = buttons.map(b => b.textContent);
+    buttons.forEach(b => { b.disabled = true; });
+    (draft ? buttons[0] : buttons[1]).textContent = draft ? 'Saving…' : 'Publishing…';
+
+    try {
+      const data = await api({
+        action:   'commit',
+        markdown: state.markdown,
+        draft,
+        image:    state.image ? { data: state.image.data, ext: 'jpg' } : undefined,
+      });
+
+      if (data.ok) {
+        location.href = `/admin?imported=${encodeURIComponent(data.slug)}&status=${draft ? 'draft' : 'published'}`;
+        return;
+      }
+      renderErrors('commit', 'The import failed. Nothing was published.', data.errors ?? ['Unknown error.']);
+    } catch (e: any) {
+      renderErrors('commit', 'The import failed. Nothing was published.', [e?.message ?? String(e)]);
+    }
+
+    buttons.forEach((b, i) => { b.disabled = false; b.textContent = labels[i]; });
+  }
+
+  el('draft-btn').addEventListener('click', () => commit(true));
+  el('publish-btn').addEventListener('click', () => commit(false));
+</script>
