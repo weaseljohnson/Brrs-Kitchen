@@ -42,7 +42,7 @@ import AdminLayout from '../../layouts/AdminLayout.astro';
       <div class="imp-drop imp-drop--compact" id="img-drop" role="button" tabindex="0" aria-label="Choose a photo">
         <p>Drag &amp; drop a JPG or PNG here</p>
       </div>
-      <input type="file" id="img-input" accept="image/jpeg,image/png" hidden />
+        <input type="file" id="img-input" accept="image/jpeg,image/png,image/webp" hidden />
       <p class="imp-status" id="img-status" aria-live="polite"></p>
 
       <div class="imp-actions">
@@ -331,7 +331,7 @@ import AdminLayout from '../../layouts/AdminLayout.astro';
     const status = el('img-status');
     status.textContent = 'Preparing photo…';
     try {
-      if (!/^image\/(jpeg|png)$/.test(file.type)) throw new Error('Please choose a JPG or PNG.');
+         if (!/^image\/(jpeg|png|webp)$/.test(file.type)) throw new Error('Please choose a JPG, PNG or WebP.');
       const img = await resizeImage(file);
       if (img.data.length > MAX_IMG_B64) throw new Error('That photo is still too large. Try a smaller one.');
       state.image = img;

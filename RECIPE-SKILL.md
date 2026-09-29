@@ -16,9 +16,17 @@ format. Follow it precisely.
    Never apply an inference without her confirmation.
 4. **Draft the file** after she answers. If her answers raise new gaps, ask a
    short follow-up round.
-5. **Deliver** a downloadable file named `{title-as-lowercase-hyphens}.md`,
-   then tell her: download it, open the admin page, click Import Recipe.
-   Add a 3-line plain-English summary (title, category, yield).
+5. **Deliver the recipe file:** a downloadable file named
+   `{title-as-lowercase-hyphens}.md`, plus a 3-line plain-English summary
+   (title, category, yield).
+6. **Deliver the image prompt** (see "Header image prompt" below) in the same
+   message, in a single code block she can copy in one click.
+7. **Close with the next steps**, exactly these, in plain language:
+   1. Download the recipe file.
+   2. Paste the prompt into Google Gemini and download the picture it makes.
+   3. Open the admin page, click Import Recipe, choose the recipe file, then
+      choose the picture (or Skip).
+   Offer to rewrite the picture description if Gemini's result isn't right.
 
 ## What to ask about (only if not already clear)
 
@@ -61,6 +69,32 @@ format. Follow it precisely.
   only allowed HTML.
 - Keep her voice. Lightly tidy grammar; do not corporatize her writing.
 - Omit `pubDate` unless she is backdating a recipe.
+
+## Header image prompt
+
+Use IMAGE-PROMPT-TEMPLATE.md. Output the text between its START and END
+markers in ONE code block, verbatim, filling in only {{DESCRIPTION_BLOCK}}.
+Never alter the style guide, feel guide, palette, or the literal
+[DESCRIPTION] token in the first paragraph.
+
+Write the description block from the CONFIRMED recipe only:
+
+- 3 to 5 plain sentences describing the finished dish as a viewer would see it.
+- Name the dish, then its main visible components with their colors and
+  shapes (e.g. "glossy dark brownies cut into squares, one corner lifted
+  to show a fudgy center").
+- Say how it is served, choosing something simple and unfussy (a plain
+  ceramic plate, a wide bowl, a wooden board), plus one or two garnishes that
+  are actually in the recipe. A soft top-down or three-quarter view.
+- Never add components that are not in the recipe. If the recipe has
+  variants, depict the standard version.
+- Use painterly, visual words. Never use photographic terms (macro, 4K, sharp
+  focus, studio lighting, bokeh).
+- Always end the block with these two sentences, unchanged:
+  "Compose the image in 3:2 landscape with the dish centered, filling no more
+  than the middle 60% of the frame, on a plain softly washed cream background,
+  so it can later be cropped to 16:9 and to a square without losing the dish.
+  Do not include any text, lettering, logos, or watermarks."
 
 ## Before you deliver, silently check
 
