@@ -1,0 +1,56 @@
+---
+export const prerender = false;
+import Layout from '../../layouts/Layout.astro';
+import RecipeView from '../../components/RecipeView.astro';
+import { parseRecipeMarkdown } from '../../utils/recipeImport';
+import { slugify } from '../../utils/slug';
+
+let errors: string[] = [];
+let recipe: any = null;
+let slug = '';
+
+if (Astro.request.method === 'POST') {
+  const form     = await Astro.request.formData();
+  const markdown = String(form.get('markdown') ?? '');
+  const imageUrl = String(form.get('image') ?? '');
+
+  const parsed = parseRecipeMarkdown(markdown);
+  if (!parsed.ok) {
+    errors = parsed.errors;
+  } else {
+    slug = slugify(parsed.data.title);
+    // Only accept a real JPEG/PNG data URL as the preview image
+    const imageOk = /^data:image\/(jpeg|png);base64,[A-Za-z0-9+/=]+$/.test(imageUrl);
+    recipe = { ...parsed.data, image: imageOk ? imageUrl : undefined };
+  }
+} else {
+  errors = ['Open the preview from the Import Recipe page.'];
+}
+---
+
+<Layout title="Preview" noindex>
+  <div class="preview-banner" role="note">Preview · not published yet</div>
+
+  {recipe
+    ? <RecipeView data={recipe} slug={slug} preview />
+    : (
+      <main class="container preview-errors">
+        <h1>Can’t preview this recipe</h1>
+        <ul>{errors.map(e => <li>{e}</li>)}</ul>
+      </main>
+    )}
+</Layout>
+
+<style>
+  .preview-banner {
+    background: var(--color-accent-3);
+    color: var(--cream);
+    text-align: center;
+    padding: var(--space-2) var(--space-4);
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .preview-errors { padding-block: var(--space-12); }
+  .preview-errors ul { margin-top: var(--space-4); }
+</style>
