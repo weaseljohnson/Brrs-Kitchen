@@ -6,7 +6,7 @@ prepTime: 30 min
 cookTime: 30 min
 yield: 6 servings
 intro: Crispy, golden chicken tossed in a sweet and spicy honey glaze, piled over rice with a cool, tangy cilantro lime slaw. It's a perfectly balanced weeknight bowl with a little bit of a kick... or a lot a bit if that's how you roll.
-image: /images/recipes/baja-hot-honey-chicken-bowls.jpg
+image: /images/recipes/baja-hot-honey-chicken-bowls.png
 ingredients:
   - groupName: Chicken
     ingredients:
