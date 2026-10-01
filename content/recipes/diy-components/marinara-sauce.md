@@ -5,7 +5,7 @@ pubDate: '2026-10-01'
 prepTime: 15 min
 cookTime: 45 min – 2+ hrs
 yield: 5 cups
-intro: 'This is my kind of perfect marinara sauce: it''s rich, umami, beautifully sweetened with just enough tang, with a touch of Italian herbal essence to round out the flavor. Gone are the days of subpar jarred marinara, or versions that lean too acidic, sweet, or bland. We want aaalll the flavor in all the right places, and this sauce has it, as well as what has now become my irreplaceable secret ingredient. It''s so easy, and so so good.'
+intro: 'This is my kind of perfect marinara sauce: it''s rich, umami, unctuous and sweet, with Italian herbal notes to elevate the flavor. Gone are the days of subpar jarred marinara, or versions that lean too acidic, or bland. We want aaalll the flavor in all the right places, and this sauce has it, as well as what has now become my irreplaceable secret ingredient. It''s so easy, and so so good.'
 tags:
   - Sauces
   - Family Favorite
