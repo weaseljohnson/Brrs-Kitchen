@@ -7,7 +7,6 @@ cookTime: 30 min
 yield: 6 servings
 intro: Crispy, golden chicken tossed in a sweet and spicy honey glaze, piled over rice with a cool, tangy cilantro lime slaw. It's a perfectly balanced weeknight bowl with a little bit of a kick... or a lot a bit if that's how you roll.
 image: /images/recipes/baja-hot-honey-chicken-bowls.jpg
-draft: true
 ingredients:
   - groupName: Chicken
     ingredients:
@@ -21,7 +20,7 @@ ingredients:
         item: avocado oil
       - count: 1 tbsp
         item: toasted sesame oil
-      - item: salt and pepper
+      - item: salt and pepper, to taste
   - groupName: Glaze
     ingredients:
       - count: ½ cup
@@ -34,7 +33,7 @@ ingredients:
         item: honey
       - item: 1 dash of hot sauce (or up to 2 tbsp if you really like heat)
       - count: 1 tbsp
-        item: arrowroot powder
+        item: arrowroot powder (or any other kind of thickening start, e.g., cornstarch, tapioca starch, etc.
   - groupName: Cilantro Lime Coleslaw
     ingredients:
       - count: 4 cups
