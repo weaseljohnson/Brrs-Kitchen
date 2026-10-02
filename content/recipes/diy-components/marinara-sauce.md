@@ -31,7 +31,7 @@ ingredients:
     item: Worcestershire sauce
   - count: 3 tbsp
     item: Trader Joes Organic Coconut Aminos (secret ingredient!)
-  - count: ¼ cup
+  - count: 3-4 tbsp
     item: cane sugar (or regular is fine)
   - item: salt and pepper, to taste
   - count: 1 lb
