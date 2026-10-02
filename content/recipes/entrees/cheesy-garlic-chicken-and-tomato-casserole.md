@@ -5,7 +5,7 @@ pubDate: '2026-10-02'
 prepTime: 30 min
 cookTime: 1 hr 30 min
 yield: 8 servings
-intro: Crispy bacon, seared chicken, and toasty garlic rice all baked under a blanket of melty cheese. Pure comfort in one dish.
+intro: Crispy bacon, seared chicken, and toasty garlic and tomato rice all baked under a blanket of melty cheese. Pure comfort in one dish. Yum!
 tags:
   - Family Favorite
 image: /images/recipes/cheesy-garlic-chicken-and-tomato-casserole.jpg
