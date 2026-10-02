@@ -9,7 +9,6 @@ intro: The most delicious homemade vanilla ice cream recipe. Also serves as a gr
 tags:
   - Ice Cream
 image: /images/recipes/brrs-homemade-vanilla-ice-cream.jpg
-draft: true
 ingredients:
   - count: 3 Cups
     item: Heavy Cream
@@ -21,13 +20,15 @@ ingredients:
     item: arrow root powder
   - count: 1 tsp
     item: Vanilla Extract
+  - count: 1/2
+    item: vanilla bean seeds (optional, but seriously elevates the vanilla flavor)
 directions:
   - title: Mix Ingredients
     body: Whisk all the ingredients together in a bowl. Don't whisk too quickly, you don't want to add a lot of air to the mixture.
   - title: Add to ice cream maker
-    body: Pour the ingredient mixture into your ice cream maker while it is running. Run the mixer until the ice cream thickens up, about 20-30min, depending on the size of your ice cream maker and how much ice cream you're making.
+    body: Pour into an ice cream maker while it is running. Run the mixer until the ice cream thickens into soft serve ice cream consistency, about 20-30min, depending on the size of your ice cream maker and how much ice cream you're making.
 notes:
-  - Up to two cups of the heavy cream can be substituted for whole milk. The final result will just be a less creamy, closer to a sorbet consistency.
+  - Up to two cups of the heavy cream can be substituted for whole milk. The final result will just be a little less thick/fatty.
   - The arrow root powder can be 1:1 substitute for cornstarch.
-  - '*CONSUMING RAW OR UNDERCOOKED EGGS MAY INCREASE YOUR RISK OF FOODBORNE ILLNESS, ESPECIALLY IF YOU HAVE CERTAIN MEDICAL CONDITIONS.'
+  - nacre.*CONSUMING RAW OR UNDERCOOKED EGGS MAY INCREASE YOUR RISK OF FOODBORNE ILLNESS, ESPECIALLY IF YOU HAVE CERTAIN MEDICAL CONDITIONS.
 ---
