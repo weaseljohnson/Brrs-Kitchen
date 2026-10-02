@@ -1,11 +1,11 @@
 ---
 title: Marinara Sauce
 category: DIY Components
-pubDate: '2026-10-01'
+pubDate: '2026-10-02'
 prepTime: 15 min
 cookTime: 45 min – 2+ hrs
 yield: 5 cups
-intro: 'This is my kind of perfect marinara sauce: it''s rich, umami, savory and sweet, with those classic Italian herbal notes and of course the fruity tang of the tomato base. Gone are the days of subpar jarred marinara, or versions that lean too acidic, or bland. We want aaalll the flavor in all the right places, and this sauce has it, as well as what has now become my irreplaceable secret ingredient. It''s so easy, and so so good.'
+intro: 'This is my kind of perfect marinara sauce: it''s rich, umami, savory and sweet. Gone are the days of subpar jarred marinara, or versions that lean too acidic, or bland. We want aaalll the flavor in all the right places, and this sauce has it, as well as what has now become my irreplaceable secret ingredient. It''s so easy, and so so good.'
 tags:
   - Sauces
   - Family Favorite
