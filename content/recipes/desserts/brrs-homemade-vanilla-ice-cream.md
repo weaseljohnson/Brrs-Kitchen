@@ -5,7 +5,7 @@ pubDate: '2026-10-02'
 prepTime: 15 min
 cookTime: 25 min
 yield: 1 Quarts
-intro: The most delicious homemade vanilla ice cream recipe. Also serves as a great base recipe for building additional flavors of ice cream.
+intro: Simple yet delicious homemade vanilla ice cream recipe. Also serves as a great base recipe for building additional flavors of ice cream.
 tags:
   - Ice Cream
 image: /images/recipes/brrs-homemade-vanilla-ice-cream.jpg
