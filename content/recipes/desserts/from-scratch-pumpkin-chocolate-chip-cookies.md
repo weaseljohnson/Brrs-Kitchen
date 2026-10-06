@@ -1,10 +1,10 @@
 ---
 title: The Perfect Pumpkin Chocolate Chip Cookies
-formatVersion: 1
 category: Desserts
-pubDate: '2026-09-14'
+pubDate: '2026-10-06'
 prepTime: 25 min
 cookTime: 11-13 min
+yield: 40 cookies
 intro: 'Warning: it will be nearly impossible to eat just one! These pumpkin chocolate chip cookies are so scrumptious. You''ll find that using all the individual ingredients vs pre-made pumpkin pie spice makes a world of difference and creates the perfectly spiced pumpkin cookie flavor. It’s a must! I hope you enjoy these as much as we do 🧡'
 tags:
   - Family Favorite
@@ -12,9 +12,6 @@ image: /images/recipes/pumpkin-chocolate-chip-cookies.jpg
 credit:
   name: Cooking Classy
   url: https://www.cookingclassy.com/wprm_print/pumpkin-chocolate-chip-cookies
-notes:
-  - These cookies are best once they've rested in an airtight container for a few hours. This allows them to soften and get that perfectly moistened yet plush texture that we love! If you can't help yourself from diving in fresh out the oven though (🙋‍♀️), I don't blame you! They're still delicious.
-yield: 40 cookies
 ingredients:
   - count: 3 Cups
     item: All-Purpose Flour
@@ -55,7 +52,7 @@ directions:
     body: In a medium sized bowl, whisk together flour, baking powder, baking soda, cinnamon, nutmeg, ginger, cloves, and salt for 20 seconds or until well incorporated, then set aside.
   - title: Cream Sugars and Butter
     body: In the bowl of an electric stand mixer fitted with the paddle attachment, blend together the granulated sugar, brown sugar and melted butter, first on low speed for the initial combining, then up to medium speed to cream. Beat on medium for about 2-3 minutes.
-  - title: Add the Egg and Vanilla
+  - title: Add the Egg, Vanilla, and Pumpkin
     body: Add the egg, egg yolk, and vanilla to the stand mixer. Mix on medium-low speed. Once fully incorporated, add in the pumpkin puree and continue to mix on medium-low speed till combined.
   - title: Combine Dry and Wet Ingredients
     body: With mixer on low speed, slowly add the flour mixture into the wet about 1/3 cup at a time. Pause between each addition to allow the flour time to incorporate, stopping to scrape down the sides of the bowl as needed.
@@ -70,4 +67,6 @@ directions:
       Once they’ve lost their shiny exterior and they look matte and cake like in texture, they’re done. Signs of browning toward the bottom means they’re overdone.
   - title: Cool and Store
     body: Remove cookies from the oven and allow them to cool in the pan for several minutes before transferring to wire racks to finish cooling completely. Store in an airtight container, and enjoy!
+notes:
+  - These cookies are best once they've rested in an airtight container for a few hours. This allows them to soften and get that perfectly moistened yet plush texture that we love! If you can't help yourself from diving in fresh out the oven though (🙋‍♀️), I don't blame you! They're still delicious.
 ---
