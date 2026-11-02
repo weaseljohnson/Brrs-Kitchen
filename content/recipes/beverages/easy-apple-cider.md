@@ -5,7 +5,7 @@ pubDate: '2026-11-02'
 prepTime: 10 min
 cookTime: 30 min–2 hr
 yield: 8 cups
-intro: You can make your own completely from scratch, but for an incredibly low effort yet still good quality cider this is an excellent option. No added sugar, just the natural sweetness of apple juice infused with the delectable spices of fall. The only thing that could make it easier is buying cider from the store, but it wouldn't be nearly as good, so it's worth it.
+intro: You can make your own completely from scratch, but for an incredibly low effort yet still quality cider this is an excellent option. No added sugar, just the natural sweetness of apple juice infused with the quintessential cozy spices of fall. The only thing that could make this easier is buying cider from the store, but it wouldn't be nearly as good, so trust me, it's worth it.
 tags:
   - Family Favorite
 dietary:
@@ -16,7 +16,6 @@ dietary:
   - Nut Free
   - Egg Free
 image: /images/recipes/easy-apple-cider.jpg
-draft: true
 ingredients:
   - count: 64 fl oz (1.9 l)
     item: good quality unsweetened apple juice (we like TJ's organic, but I'm sure there are even better options out there too!)
@@ -25,7 +24,7 @@ ingredients:
   - count: 7 whole
     item: whole cloves
   - count: 1 whole
-    item: nutmeg, chopped into chunks
+    item: nutmeg, chopped into chunks (big enough they won't slip through the cheese cloth)
   - count: 1 whole
     item: knob of ginger root, about 1 inch (2.5 cm), thinly sliced (no need to peel, just wash beforehand)
 directions:
@@ -38,6 +37,7 @@ directions:
   - title: Enjoy
     body: That's it! Ladle into mugs and enjoy your apple cider.
 notes:
-  - 'Equipment: a large pot with a lid, food-safe cheesecloth, and kitchen twine (or a thin strip of cheesecloth to tie the pouch).'
-  - For less cider, just use less spice. The exact amount doesn't really matter, but if you're only making a couple of cups, you probably only need half the spices (round down).
+  - 'Equipment Needed: a large pot with a lid, food-safe cheesecloth, and kitchen twine (or a thin strip of cheesecloth to tie the pouch).'
+  - For less cider, just use less spices. The exact amount doesn't really matter, but if you're only making a couple of cups, you probably only need half the spices (round down).
+  - Whole nutmeg can be expensive, so you can use ground if you prefer and just add a generous sprinkle or 2 to the cider. Taste test to see if you think it needs more.
 ---
