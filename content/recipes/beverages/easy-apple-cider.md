@@ -37,7 +37,7 @@ directions:
   - title: Enjoy
     body: Fish out the spice pouch and discard. Ladle your apple cider into mugs and enjoy!
 notes:
-  - 'Equipment Needed: a large pot with a lid, food-safe cheesecloth, and kitchen twine (or a thin strip of cheesecloth used like string).'
+  - 'Equipment Needed: a large pot with a lid, food-safe cheesecloth, and kitchen twine (or a thin strip of cheesecloth used as string).'
   - For less cider, just use less spices. The exact amount doesn't really matter, but if you're only making a couple of cups, you probably only need half the spices (round down).
   - Whole nutmeg can be expensive, so you can use ground if you prefer and just add a generous sprinkle or 2 to the cider. Taste test to see if you think it needs more.
 ---
