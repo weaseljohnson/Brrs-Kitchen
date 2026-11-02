@@ -5,7 +5,7 @@ pubDate: '2026-11-02'
 prepTime: 10 min
 cookTime: 30 min–2 hr
 yield: 8 cups
-intro: You can make your own completely from scratch, but for an incredibly low effort yet still quality cider this is an excellent option. No added sugar, just the natural sweetness of apple juice infused with the quintessential cozy spices of fall. The only thing that could make this easier is buying cider from the store, but it wouldn't be nearly as good, so trust me, it's worth it.
+intro: You can make your own completely from scratch, but for an incredibly low effort yet still quality cider this is an excellent option. No added sugar, just the natural sweetness of apple juice infused with the quintessential cozy spices of fall. The only thing that could make this easier is buying cider from the store, but it wouldn't be nearly as good, so trust me on this one and make your own. It's worth it.
 tags:
   - Family Favorite
 dietary:
