@@ -19,14 +19,14 @@ image: /images/recipes/easy-apple-cider.jpg
 ingredients:
   - count: 64 fl oz (1.9 l)
     item: good quality unsweetened apple juice (we like TJ's organic, but I'm sure there are even better options out there too!)
-  - count: 3 whole
+  - count: '3'
     item: cinnamon sticks
-  - count: 7 whole
-    item: whole cloves
-  - count: 1 whole
+  - count: '7'
+    item: cloves, whole
+  - count: '1'
     item: nutmeg, chopped into chunks (big enough they won't slip through the cheese cloth)
-  - count: 1 whole
-    item: knob of ginger root, about 1 inch (2.5 cm), thinly sliced (no need to peel, just wash beforehand)
+  - count: 1"
+    item: knob of ginger root, thinly sliced discs (no need to peel, just wash before slicing)
 directions:
   - title: Heat the apple juice
     body: Pour the entire jug of apple juice into a large pot that has a lid. Set it over medium-high heat and let it heat until it is hot but not boiling. Turn the heat to low to hold it at that temperature.
