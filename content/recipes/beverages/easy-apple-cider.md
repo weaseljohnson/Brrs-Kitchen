@@ -24,8 +24,8 @@ ingredients:
   - count: '7'
     item: cloves, whole
   - count: '1'
-    item: nutmeg, chopped into chunks (big enough they won't slip through the cheese cloth)
-  - count: 1"
+    item: nutmeg, whole, chopped into chunks (big enough they won't slip through the cheese cloth)
+  - count: '1'
     item: knob of ginger root, thinly sliced discs (no need to peel, just wash before slicing)
 directions:
   - title: Heat the apple juice
