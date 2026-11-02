@@ -31,7 +31,7 @@ directions:
   - title: Heat the apple juice
     body: Pour the entire jug of apple juice into a large pot. Set it over medium-high heat and let it heat until it is hot but not boiling. Turn the heat to low to hold it at that temperature.
   - title: Make the spice pouch
-    body: Cut a strip of food-safe cheesecloth about 5 inches (13 cm) wide, then fold it in half lengthwise so it makes a double-lined square. Arrange the cinnamon sticks, cloves, nutmeg and ginger on the cheesecloth, then gather all four corners together to make a pouch. Tie it shut with kitchen twine, or use a thin strip of cheesecloth.
+    body: Cut a strip of food-safe cheesecloth about 6 inches wide, then fold it in half lengthwise so it makes a double-lined square. Arrange the cinnamon sticks, cloves, nutmeg and ginger on the cheesecloth, then gather all four corners together to make a pouch. Tie it shut with kitchen twine, or use a thin strip of cheesecloth.
   - title: Steep the cider
     body: Once the juice is hot, add the spice pouch straight into the pot and cover it halfway with the lid. Again, you don't want it to boil. You just want it to steep so the juice becomes infused with all that spicy goodness. Let it steep for at least 30 minutes. The longer it sits the more flavorful it gets, so if you can give it a couple of hours, it will be even better!
   - title: Enjoy
