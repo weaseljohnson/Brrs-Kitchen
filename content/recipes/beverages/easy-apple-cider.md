@@ -29,7 +29,7 @@ ingredients:
     item: knob of ginger root, thinly sliced (no need to peel, just wash before slicing)
 directions:
   - title: Heat the apple juice
-    body: Pour the entire jug of apple juice into a large pot that has a lid. Set it over medium-high heat and let it heat until it is hot but not boiling. Turn the heat to low to hold it at that temperature.
+    body: Pour the entire jug of apple juice into a large pot. Set it over medium-high heat and let it heat until it is hot but not boiling. Turn the heat to low to hold it at that temperature.
   - title: Make the spice pouch
     body: Cut a strip of food-safe cheesecloth about 5 inches (13 cm) wide, then fold it in half lengthwise so it makes a double-lined square. Arrange the cinnamon sticks, cloves, nutmeg and ginger on the cheesecloth, then gather all four corners together to make a pouch. Tie it shut with kitchen twine, or use a thin strip of cheesecloth.
   - title: Steep the cider
