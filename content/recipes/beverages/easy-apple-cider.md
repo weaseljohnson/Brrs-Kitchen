@@ -35,7 +35,7 @@ directions:
   - title: Steep the cider
     body: Once the juice is hot, add the spice pouch straight into the pot and cover it halfway with the lid. Again, you don't want it to boil. You just want it to steep so the juice becomes infused with all that spicy goodness. Let it steep for at least 30 minutes. The longer it sits the more flavorful it gets, so if you can give it a couple of hours, it will be even better!
   - title: Enjoy
-    body: That's it! Ladle into mugs and enjoy your apple cider.
+    body: Fish out the spice pouch and discard. Ladle your apple cider into mugs and enjoy!
 notes:
   - 'Equipment Needed: a large pot with a lid, food-safe cheesecloth, and kitchen twine (or a thin strip of cheesecloth to tie the pouch).'
   - For less cider, just use less spices. The exact amount doesn't really matter, but if you're only making a couple of cups, you probably only need half the spices (round down).
