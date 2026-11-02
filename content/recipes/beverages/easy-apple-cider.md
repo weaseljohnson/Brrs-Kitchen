@@ -18,7 +18,7 @@ dietary:
 image: /images/recipes/easy-apple-cider.jpg
 ingredients:
   - count: 64 fl oz (1.9 l)
-    item: good quality unsweetened apple juice (we like TJ's organic, but I'm sure there are even better options out there too!)
+    item: good quality unfiltered 100% apple juice (we like TJ's organic, but I'm sure there are even better options out there too!)
   - count: '3'
     item: cinnamon sticks
   - count: '7'
