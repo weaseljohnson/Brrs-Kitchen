@@ -26,7 +26,7 @@ ingredients:
   - count: '1'
     item: nutmeg, whole, chopped into chunks (big enough they won't slip through the cheese cloth)
   - count: '1'
-    item: knob of ginger root, thinly sliced discs (no need to peel, just wash before slicing)
+    item: knob of ginger root, thinly sliced (no need to peel, just wash before slicing)
 directions:
   - title: Heat the apple juice
     body: Pour the entire jug of apple juice into a large pot that has a lid. Set it over medium-high heat and let it heat until it is hot but not boiling. Turn the heat to low to hold it at that temperature.
