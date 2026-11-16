@@ -25,8 +25,8 @@ ingredients:
         item: ground pepper
       - count: 3 tsp
         item: ground cumin
-      - count: 2 tsp
-        item: paprika (you can go up to 3 tsp if you like)
+      - count: 2-3 tsp
+        item: paprika
       - count: 2 tsp
         item: garlic powder
       - count: 2 tsp
