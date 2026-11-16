@@ -5,7 +5,7 @@ pubDate: '2026-11-16'
 prepTime: 10 min
 cookTime: 1 hr
 yield: 4–6 servings
-intro: Juicy, glazed chicken thighs over creamy sweet potato mash, with a zesty corn and bean sauté and a cool lime yogurt sauce. Everything tastes amazing together, so build your plate however you like.
+intro: Juicy, glazed chicken thighs over creamy sweet potato mash, with a zesty corn and bean sauté and a cool lime yogurt sauce. It was an instant hubby and family favorite from the first time I made it. Winner winner chicken dinner! So good.
 tags:
   - Family Favorite
 dietary:
@@ -19,6 +19,10 @@ ingredients:
         item: boneless, skinless chicken thighs
       - count: 3+ tbsp
         item: neutral oil (like avocado)
+      - count: 1 tsp
+        item: salt
+      - count: 1/2 tsp
+        item: ground pepper
       - count: 3 tsp
         item: ground cumin
       - count: 2 tsp
@@ -33,7 +37,6 @@ ingredients:
         item: lime, juiced
       - count: ¼ cup
         item: maple syrup (or 3 tbsp honey)
-      - item: salt and pepper, to taste
   - groupName: Sautéed Topping
     ingredients:
       - count: ½ whole
@@ -74,16 +77,16 @@ ingredients:
 directions:
   - title: Make the yogurt sauce
     body: Add all of the yogurt sauce ingredients to a bowl and mix until everything is incorporated. Taste for salt or anything else it may need. Cover and let it sit in the fridge until you are ready to eat.
+  - title: Coat the chicken
+    body: Pat the chicken thighs dry with a paper towel. Place them in a large bowl, drizzle with a couple tbsps of oil, add salt and pepper, cumin, paprika, garlic powder, onion powder, and oregano. Toss until every piece is evenly coated in the oil and spices. Set aside.
   - title: Make the mash
     body: Place the sweet potato cubes in a medium pot and add water until the potatoes are just covered. Add a generous sprinkle of salt and give it a quick stir with your fingers. Set the pot over high heat, and once it boils, turn the heat down to medium to keep a rapid simmer. Let it go untouched until the potatoes can be easily pierced through with a fork, then drain and return them to the pot over medium-low heat. Use a hand mixer on the lowest setting to break up the potatoes, but only for a couple of seconds. Add the butter, cream, and salt and pepper, then mix and fold with a rubber spatula, scraping the bottom of the pot often so nothing sticks, until everything is smooth and incorporated. Taste to see if it needs more of anything, then turn the heat to low and cover to keep warm.
-  - title: Coat the chicken
-    body: While the potatoes are boiling, pat the chicken thighs dry with a paper towel. Place them in a large bowl and add the oil, salt and pepper, cumin, paprika, garlic powder, onion powder, and oregano. Toss until every piece is evenly coated in the oil and spices.
   - title: Sear the chicken
-    body: Set a large skillet over medium heat and let it heat up until you can see faint wisps coming from the pan at eye level. Add the chicken in batches, arranging each piece so that there is visible space between them to avoid overcrowding and steaming rather than searing the meat.  Cook on one side for 2 to 3 minutes, or until golden brown, then flip and cook the other side until the internal temperature reaches 155°F. Set the chicken aside and cover with a lid to keep hot and allow it to continue cooking from the inside.
+    body: While the potatoes are boiling, set a large skillet over medium heat and let it heat up until you can see faint wisps coming from the pan at eye level. Add the chicken in batches, arranging each piece so that there is visible space between them to avoid overcrowding and steaming rather than searing the meat.  Cook on one side for 2 to 3 minutes, or until golden brown, then flip and cook the other side until the internal temperature reaches 155°F. Set the chicken aside uncovered, on a cutting board or plate, to allow it to continue cooking from the inside.
   - title: Make the glaze
-    body: Once all the thighs are cooked, turn the heat to medium-low. Add the lime juice and maple syrup (or honey), stir to combine, then let it simmer for a few minutes until it thickens slightly. You may need to turn the heat back up to medium. Chop the chicken into smaller pieces, add it back to the pan and toss to coat in the glaze. Remove everything from the pan and cover to keep warm while you make the topping.
+    body: Once all the thighs are cooked, turn the heat to medium-low. Add the lime juice and maple syrup (or honey), stir to combine, then let it simmer for a few minutes until it thickens slightly. You may need to turn the heat back up to medium. Chop the chicken into smaller pieces, add them back to the pan and toss to coat in the glaze. Remove everything from the pan and cover to keep warm while you make the topping.
   - title: Sauté the topping
-    body: Turn the heat back to medium and add the onion to the same pan. There is no need to clean it out, but you may need a little more oil. Sprinkle with salt and pepper and cook for a few minutes, until the onion is translucent and golden. Add the corn and season with salt, then let it simmer until the water has evaporated. Toss periodically until the kernels get some color and browning on the outside. Add the beans, season with salt and pepper, and toss periodically until the beans are heated through. Taste and add a little more lime juice and/or sweetener if you like, then remove from the heat, add the cilantro, and toss.
+    body: Turn the heat back to medium and add the onion to the same pan. There is no need to clean it out, but you may need a little more oil. Sprinkle with salt and pepper and cook for a few minutes, until the onion starts to turn translucent. Add the corn and season with salt, then let it simmer until the water has evaporated. Toss periodically until the kernels get some color and browning on the outside. Add the beans, season with salt and pepper, and toss periodically until the beans are heated through. Taste and add a little more lime juice and/or sweetener if you like, then remove from the heat, add the cilantro, and toss.
   - title: Serve
     body: 'Add the components to your plate however you like: potato mash on the side, or chicken on top of the mash, with the sauté on the side or as a topping for the chicken or potatoes. Drizzle the yogurt sauce over whatever you like. Everything tastes amazing together, so you really can''t go wrong. Enjoy!'
 notes:
