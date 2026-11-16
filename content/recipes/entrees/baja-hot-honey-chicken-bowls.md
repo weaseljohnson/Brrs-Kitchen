@@ -1,7 +1,7 @@
 ---
 title: Baja Hot Honey Chicken Bowls
 category: Entrees
-pubDate: '2026-09-30'
+pubDate: '2026-11-16'
 prepTime: 30 min
 cookTime: 30 min
 yield: 6 servings
@@ -64,12 +64,12 @@ ingredients:
 directions:
   - title: Make the coleslaw
     body: Add the shredded cabbage and carrots to a medium bowl, then add all of the other coleslaw ingredients on top. Mix thoroughly until everything is evenly incorporated, then taste for salt. Cover and let it sit in the fridge until you are ready to serve.
+  - title: Mix the glaze
+    body: In a liquid measuring cup, combine all of the glaze ingredients and set aside.
   - title: Heat the pan
     body: Set a large pan over medium-high heat and add the 3 tbsp of oil (the avocado and sesame oil from the chicken ingredients). Prepare the chicken while the oil comes up to temperature.
   - title: Marinate the first half of the chicken
-    body: Place half of your thinly sliced chicken strips in a medium-large bowl. Pour over half of the coconut aminos and toss and squish the chicken around for about 30 seconds to help it absorb the liquid. Sprinkle with salt and pepper, drizzle a little avocado oil over top, then toss again. Last, add half of the arrowroot powder and toss with your hand or hands until every piece of chicken is coated.
-  - title: Mix the glaze
-    body: In a liquid measuring cup, combine all of the glaze ingredients and set aside.
+    body: Place half of your thinly sliced chicken strips in a medium-large bowl. Pour over half of the coconut aminos and toss and squish the chicken around for about 30 seconds to help it absorb the liquid. Sprinkle with salt and pepper, drizzle a little avocado oil over top, then toss again. Last, add half of the arrowroot powder and toss until every piece of chicken is coated.
   - title: Cook the chicken in batches
     body: 'Once the oil in the pan is hot (it will start to get wispy), place the chicken in the pan in batches. Do not crowd the pan: if the pieces are packed together they will release all their liquid and steam instead of browning, which ruins their flavor. Let the chicken sit for about 3 minutes before flipping, then cook on the other side for another couple of minutes, until golden brown on both sides and cooked through. Because the chicken is so thinly sliced it cooks really fast, but leave it long enough on each side to get a nice golden color. Pure flavor! Transfer the cooked chicken to a bowl on the side and cover with a lid to keep the heat and moisture in. Marinate the second half of the chicken the same way and cook it once the first half is finished, adding more avocado oil as needed so each batch continues to fry properly.'
   - title: Glaze the chicken
