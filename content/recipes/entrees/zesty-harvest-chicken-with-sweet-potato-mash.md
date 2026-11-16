@@ -5,7 +5,7 @@ pubDate: '2026-11-16'
 prepTime: 10 min
 cookTime: 1 hr
 yield: 4–6 servings
-intro: Juicy, glazed chicken thighs over creamy sweet potato mash, with a zesty corn and bean sauté and a cool lime yogurt sauce. It was an instant hubby and family favorite from the first time I made it. Winner winner chicken dinner! So good.
+intro: Juicy glazed chicken thighs over creamy sweet potato mash, with a zesty corn and bean sauté and a cool lime yogurt sauce. It was an instant hubby and family favorite from the first time I made it. Winner winner chicken dinner! So good.
 tags:
   - Family Favorite
 dietary:
