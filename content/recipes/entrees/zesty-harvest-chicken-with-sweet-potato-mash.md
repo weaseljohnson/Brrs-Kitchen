@@ -12,13 +12,12 @@ dietary:
   - Gluten Free
   - Nut Free
 image: /images/recipes/zesty-harvest-chicken-with-sweet-potato-mash.jpg
-draft: true
 ingredients:
   - groupName: Chicken and Glaze
     ingredients:
       - count: 2 lb
         item: boneless, skinless chicken thighs
-      - count: 3 tbsp
+      - count: 3+ tbsp
         item: neutral oil (like avocado)
       - count: 3 tsp
         item: ground cumin
@@ -34,15 +33,15 @@ ingredients:
         item: lime, juiced
       - count: ¼ cup
         item: maple syrup (or 3 tbsp honey)
-      - item: salt and pepper
+      - item: salt and pepper, to taste
   - groupName: Sautéed Topping
     ingredients:
+      - count: ½ whole
+        item: red onion (yellow works too), small dice
       - count: 15 oz
         item: canned corn
       - count: 15 oz
         item: canned beans (black or pinto)
-      - count: ½ whole
-        item: red onion (yellow works too), small dice
       - count: ½ cup
         item: fresh cilantro, chopped
       - item: extra lime juice and sweetener, if the topping needs more flavor
@@ -68,9 +67,9 @@ ingredients:
         item: garlic powder
       - count: ¼ tsp
         item: onion powder
-      - item: ground coriander, just a sprinkle
-      - count: 1 whole
-        item: lime, zested
+      - count: 1/8 tsp
+        item: ground coriander
+      - item: zest of one lime
       - item: salt and pepper, to taste
 directions:
   - title: Make the yogurt sauce
@@ -80,16 +79,16 @@ directions:
   - title: Coat the chicken
     body: While the potatoes are boiling, pat the chicken thighs dry with a paper towel. Place them in a large bowl and add the oil, salt and pepper, cumin, paprika, garlic powder, onion powder, and oregano. Toss until every piece is evenly coated in the oil and spices.
   - title: Sear the chicken
-    body: Set a large skillet over medium heat and let it heat up until you can see faint wisps coming from the pan at eye level. Add the chicken in batches so the pan does not get overcrowded and steam the meat instead of searing it. Arrange each piece so there is visible space between them. Cook on one side for 2 to 3 minutes, until golden brown, then flip and cook the other side until the internal temperature reaches 160°F (71°C). Set the chicken aside and cover with a lid to keep it hot.
+    body: Set a large skillet over medium heat and let it heat up until you can see faint wisps coming from the pan at eye level. Add the chicken in batches, arranging each piece so that there is visible space between them to avoid overcrowding and steaming rather than searing the meat.  Cook on one side for 2 to 3 minutes, or until golden brown, then flip and cook the other side until the internal temperature reaches 155°F. Set the chicken aside and cover with a lid to keep hot and allow it to continue cooking from the inside.
   - title: Make the glaze
-    body: Once all the thighs are cooked, turn the heat to medium-low. Chop the chicken into smaller pieces and add it back to the pan along with the lime juice and maple syrup (or honey). Stir to combine, then let it simmer for a few minutes until the glaze thickens slightly. You may need to turn the heat back up to medium. Toss to coat, then remove everything from the pan and cover to keep warm while you make the topping.
+    body: Once all the thighs are cooked, turn the heat to medium-low. Add the lime juice and maple syrup (or honey), stir to combine, then let it simmer for a few minutes until it thickens slightly. You may need to turn the heat back up to medium. Chop the chicken into smaller pieces, add it back to the pan and toss to coat in the glaze. Remove everything from the pan and cover to keep warm while you make the topping.
   - title: Sauté the topping
     body: Turn the heat back to medium and add the onion to the same pan. There is no need to clean it out, but you may need a little more oil. Sprinkle with salt and pepper and cook for a few minutes, until the onion is translucent and golden. Add the corn and season with salt, then let it simmer until the water has evaporated. Toss periodically until the kernels get some color and browning on the outside. Add the beans, season with salt and pepper, and toss periodically until the beans are heated through. Taste and add a little more lime juice and/or sweetener if you like, then remove from the heat, add the cilantro, and toss.
   - title: Serve
-    body: 'Add the components to your plate however you like: potato mash on the side, or chicken on top of the mash, with the sauté on the side or as a topping for the chicken or potatoes. Drizzle the yogurt sauce over whatever you like. Everything tastes amazing together, so you really can''t go wrong.'
+    body: 'Add the components to your plate however you like: potato mash on the side, or chicken on top of the mash, with the sauté on the side or as a topping for the chicken or potatoes. Drizzle the yogurt sauce over whatever you like. Everything tastes amazing together, so you really can''t go wrong. Enjoy!'
 notes:
   - Salt as you go. With each new addition, sprinkle with salt. This is an important rule of thumb no matter what recipe you are making. It is much easier to add salt as you go than to try to add all the salt you need at the end, and your dishes will come out more evenly salted. Even so, always taste before serving. Exact measurements only take you so far, and we all have different preferences for salty or sweet, so don't be afraid to go outside the recipe to make it perfect for you.
   - Your pan needs to be hot enough to create a great sear on the meat. Wait until you see faint wisps coming from the pan at eye level before adding the chicken. If the pan is not hot enough, the chicken can cook through before it has a chance to sear, leaving it colorless, bland, and dry. A proper sear means great flavor and a juicier interior.
-  - Why an internal temp of 160°F (71°C)? The FDA says 165°F (74°C), because at that point there is absolutely no risk, no matter how inexperienced the cook. But that also means your meat is overcooked. Pro chefs cook poultry to about 160°F (71°C), which leaves it perfectly cooked yet still moist, tender, and flavorful. If you don't have a proper thermometer to check this, get one. You need it.
+  - Why an internal temp of 155°F (71°C)? The FDA says 165°F (74°C), because at that point there is absolutely no risk, no matter how inexperienced the cook. But that also means your meat is woefully overcooked. Insert the bland dry and chewy chicken people are used to. Pro chefs cook poultry to about 155°F, then allow it to rest off heat for at least 5 minutes before cutting. This is called "Carryover cooking", and it allows the chicken to continue cooking from the inside whilst maintaining all of it's moisture. This technique leaves poultry perfectly cooked yet still moist, tender, and flavorful. If you don't have a proper thermometer, get one. You need it.
   - 'You can absolutely sauté the onion, corn, and bean mixture in a separate pan. I like cooking it in the same pan as the chicken and glaze because it picks up all those yummy flavors from before: the umami of the seared meat and the sweet citrus of the glaze.'
 ---
